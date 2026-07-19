@@ -12,7 +12,15 @@
 *.class
 *.jar
 *.war
+git checkout utkarsh-dev
 
+# Work on backend
+
+git add .
+
+git commit -m "Completed Department Module"
+
+git push
 # Maven
 **/.settings/
 **/.classpath
