@@ -60,4 +60,5 @@ public class Doctor {
         NOT_AVAILABLE,
         ON_LEAVE
     }
+
 }

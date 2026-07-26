@@ -8,7 +8,7 @@ import com.hospital.hospital_management_system.model.AppointmentStatus;
 import java.util.List;
 
 public interface AppointmentService {
-    ResponseDTO bookAppointment(AppointmentDTO appointmentdto);
+    ResponseDTO bookAppointment(AppointmentDTO appointmentdto,String email);
 
     List<Appointment> getAllAppointmentsByPatientId(Long patientId);
     List<Appointment> getAppointmentsByDoctorId(Long doctoId);
@@ -16,4 +16,6 @@ public interface AppointmentService {
     List<Appointment> getAllAppointmentByPatientAndDoctorName(String firstName ,String lastName);
 
     List<Appointment> getAllAppointmentByStatus(AppointmentStatus status);
+
+    ResponseDTO CancelAppointment(Long AppointmentId,String email);
 }

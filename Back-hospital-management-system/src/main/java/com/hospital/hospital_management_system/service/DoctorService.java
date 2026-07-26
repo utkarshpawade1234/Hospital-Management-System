@@ -4,7 +4,6 @@ import com.hospital.hospital_management_system.DTO.ResponseDTO;
 import com.hospital.hospital_management_system.model.Appointment;
 import com.hospital.hospital_management_system.model.AppointmentStatus;
 import com.hospital.hospital_management_system.model.Doctor;
-import org.apache.coyote.Response;
 
 import java.util.List;
 

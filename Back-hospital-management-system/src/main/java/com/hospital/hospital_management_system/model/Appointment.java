@@ -43,6 +43,15 @@ public class Appointment {
     @Column(name="appointment_end_time",nullable = false)
     private LocalTime endTime;
 
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AppointmentType appointmentType;
+
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AppointmentStatus status;

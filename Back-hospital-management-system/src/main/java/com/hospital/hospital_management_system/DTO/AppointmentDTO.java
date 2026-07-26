@@ -16,12 +16,8 @@ import java.time.LocalTime;
 @Getter
 public class AppointmentDTO {
 
-    @NotNull(message = "Please Enter the patient Details")
-
-    private Long patientId;
 
     @NotNull
-
     private Long doctorId;
 
     @DateTimeFormat(pattern = "dd-mm-yyy")

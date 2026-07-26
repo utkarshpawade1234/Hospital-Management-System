@@ -1,11 +1,9 @@
 package com.hospital.hospital_management_system.service;
 
 import com.hospital.hospital_management_system.DTO.*;
+import com.hospital.hospital_management_system.Exceptions.NoSuchDepartmentException;
 import com.hospital.hospital_management_system.model.*;
-import com.hospital.hospital_management_system.repository.DoctorRepo;
-import com.hospital.hospital_management_system.repository.PasswordResetRepo;
-import com.hospital.hospital_management_system.repository.PatientRepo;
-import com.hospital.hospital_management_system.repository.UserRepo;
+import com.hospital.hospital_management_system.repository.*;
 import com.hospital.hospital_management_system.utils.JwtUtils;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -35,6 +33,7 @@ public class PatientServiceImplement implements PatientService{
     private final EmailService emailService;
     private final ModelMapper mapper;
     private final DoctorRepo doctorrepo;
+    private final DepartmentRepo departmentRepo;
     private final PasswordResetRepo resetRepo;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
@@ -279,6 +278,14 @@ public class PatientServiceImplement implements PatientService{
 
 
         return doctors.stream().map(this::convertToDTO).toList();
+    }
+
+    @Override
+    public List<DoctorDTO> fetchDoctorDetailsByDepartment(String departmentName) {
+        Department d=departmentRepo.findBydepartmentName(departmentName).orElseThrow(()->new NoSuchDepartmentException("No such Department Exist within the records"));
+        return d.getDoctors().stream()
+                .map(doctor -> mapper.map(doctor, DoctorDTO.class))
+                .toList();
     }
 
     @Override

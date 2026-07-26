@@ -18,7 +18,6 @@ public class PatientController {
     private final PatientService patientservice;
     private final AuthenticationManager authenticationManager;
 
-
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody @Valid  RegistrationDTO registration){
         ResponseDTO resp=patientservice.registerUser(registration);
@@ -79,5 +78,10 @@ public class PatientController {
         ResponseDTO response = patientservice.updatePatientDetails(dto);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/DoctorByDepartment")
+    public List<DoctorDTO> getDoctorsByDepartment(@RequestBody @Valid DoctorSearchDTO depSearch){
+        return patientservice.fetchDoctorDetailsByDepartment(depSearch.getDepartmentName());
     }
 }

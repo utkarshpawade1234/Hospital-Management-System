@@ -4,6 +4,8 @@ import com.hospital.hospital_management_system.model.Appointment;
 import com.hospital.hospital_management_system.model.AppointmentStatus;
 import com.hospital.hospital_management_system.model.Doctor;
 import com.hospital.hospital_management_system.model.Patient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +22,7 @@ public interface AppointmentRepo extends JpaRepository<Appointment,Long> {
 
     List<Appointment> findByPatientPatientId(Long patientId);
     List<Appointment> findByDoctorDoctorId(Long doctorId);
-    List<Appointment> findByStatus(AppointmentStatus status);
+
     @Query("""
     SELECT a
     FROM Appointment a
@@ -30,4 +32,14 @@ public interface AppointmentRepo extends JpaRepository<Appointment,Long> {
        OR LOWER(a.patient.user.lastName) LIKE LOWER(CONCAT('%', :lastname, '%'))
 """)
     List<Appointment> searchAppointmentsByDoctorOrPatientName(@Param("firstname") String firstname,@Param("lastname") String lastname);
+    void delete(Appointment appointment);
+
+    Long countByStatus(AppointmentStatus appointmentStatus);
+    List<Appointment> findByStatus(AppointmentStatus appointmentStatus);
+
+    Page<Appointment> findByStatus(AppointmentStatus appointmentStatus, Pageable pageable);
+
+    Page<Appointment> findByDoctor_doctorId(Long doctorId, Pageable pageable);
+
+    Page<Appointment> findByPatient_patientId(Long patientId,Pageable page);
 }
