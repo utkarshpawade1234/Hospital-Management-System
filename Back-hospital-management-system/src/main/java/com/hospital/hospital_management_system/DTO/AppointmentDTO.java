@@ -1,15 +1,11 @@
 package com.hospital.hospital_management_system.DTO;
 
-import com.hospital.hospital_management_system.model.Doctor;
-import com.hospital.hospital_management_system.model.Patient;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Setter

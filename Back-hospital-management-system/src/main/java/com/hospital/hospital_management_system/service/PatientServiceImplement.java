@@ -5,8 +5,6 @@ import com.hospital.hospital_management_system.Exceptions.NoSuchDepartmentExcept
 import com.hospital.hospital_management_system.model.*;
 import com.hospital.hospital_management_system.repository.*;
 import com.hospital.hospital_management_system.utils.JwtUtils;
-import jakarta.mail.MessagingException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;

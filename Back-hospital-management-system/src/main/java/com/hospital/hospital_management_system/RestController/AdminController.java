@@ -2,9 +2,6 @@ package com.hospital.hospital_management_system.RestController;
 
 import com.hospital.hospital_management_system.DTO.*;
 import com.hospital.hospital_management_system.model.*;
-import com.hospital.hospital_management_system.repository.DoctorRepo;
-import com.hospital.hospital_management_system.repository.PatientRepo;
-import com.hospital.hospital_management_system.repository.UserRepo;
 import com.hospital.hospital_management_system.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
