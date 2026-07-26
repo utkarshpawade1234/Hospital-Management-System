@@ -7,14 +7,10 @@ import com.hospital.hospital_management_system.model.*;
 import com.hospital.hospital_management_system.repository.AppointmentRepo;
 import com.hospital.hospital_management_system.repository.DoctorRepo;
 import com.hospital.hospital_management_system.repository.PatientRepo;
-import com.hospital.hospital_management_system.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +18,6 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class AppointmentServiceImplement implements AppointmentService {
-
-    private final UserRepo userRepo;
 
     private final PatientRepo patientrepo;
 

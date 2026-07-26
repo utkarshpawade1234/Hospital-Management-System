@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PatientController {
     private final PatientService patientservice;
-    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody @Valid  RegistrationDTO registration){

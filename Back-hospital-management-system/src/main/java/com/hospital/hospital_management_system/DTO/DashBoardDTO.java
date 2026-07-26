@@ -1,7 +1,6 @@
 package com.hospital.hospital_management_system.DTO;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter
