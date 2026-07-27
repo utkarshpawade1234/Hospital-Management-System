@@ -2,7 +2,6 @@ package com.hospital.hospital_management_system.repository;
 
 import com.hospital.hospital_management_system.model.Doctor;
 import com.hospital.hospital_management_system.model.User;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Pageable;
@@ -22,5 +21,5 @@ public interface DoctorRepo extends  JpaRepository<Doctor,Long> {
 
     Optional<Doctor> findByUserEmail(String email);
 
-    Doctor findByUser(User user);
+
 }
