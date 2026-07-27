@@ -18,6 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import com.hospital.hospital_management_system.service.CommonMethods;
+
 
 @Service
 @Transactional
@@ -26,7 +28,7 @@ public class PatientServiceImplement implements PatientService{
 
 
     private final UserRepo userrepo;
-
+    private  final CommonMethods commonMethods;
     private final PatientRepo patientrepo;
     private final EmailService emailService;
     private final ModelMapper mapper;
@@ -157,7 +159,7 @@ public class PatientServiceImplement implements PatientService{
 
 
         return new ResponseDTO(
-                u.getUser_role(),
+               Role.PATIENT,
                 "Patient details added succesfully"
         );
     }
@@ -258,7 +260,7 @@ public class PatientServiceImplement implements PatientService{
         }
 
 
-        return doctors.stream().map(this::convertToDTO).toList();
+        return doctors.stream().map(commonMethods::convertToDTO).toList();
     }
 
     @Override
@@ -275,7 +277,7 @@ public class PatientServiceImplement implements PatientService{
         }
 
 
-        return doctors.stream().map(this::convertToDTO).toList();
+        return doctors.stream().map(commonMethods::convertToDTO).toList();
     }
 
     @Override
@@ -308,60 +310,6 @@ public class PatientServiceImplement implements PatientService{
         );
     }
 
-
-
-    private DoctorDTO convertToDTO(Doctor doctor) {
-
-        DoctorDTO dto = new DoctorDTO();
-
-        dto.setDoctorId(doctor.getDoctorId());
-
-        // User Table Fields
-        dto.setFirstName(
-                doctor.getUser().getFirstName());
-
-        dto.setLastName(
-                doctor.getUser().getLastName());
-
-        dto.setEmail(
-                doctor.getUser().getEmail());
-
-        dto.setPhoneNumber(
-                doctor.getUser().getContactNumber());
-
-        dto.setProfilePhoto(
-                doctor.getUser().getProfilePhoto());
-
-        // Doctor Table Fields
-        dto.setSpecialization(
-                doctor.getSpecialization());
-
-        dto.setQualification(
-                doctor.getQualification());
-
-        dto.setYearsOfExperience(
-                doctor.getYearsOfExperience());
-
-        dto.setConsultationFee(
-                doctor.getConsultationFee());
-
-        if (doctor.getDepartment() != null) {
-            dto.setDepartment(doctor.getDepartment().toString());
-        } else {
-            dto.setDepartment("Not Assigned");
-        }
-
-        dto.setDescription(
-                doctor.getDescription());
-
-        dto.setRoomNumber(
-                doctor.getRoomNumber());
-
-        dto.setAvailabilityStatus(
-                doctor.getAvailabilityStatus());
-
-        return dto;
-    }
 
 
 }

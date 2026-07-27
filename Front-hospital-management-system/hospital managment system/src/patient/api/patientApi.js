@@ -45,3 +45,6 @@ export const bookAppointment = (data) =>
 
 export const getMyAppointments = (patientId) =>
   patientAxios.get(`/appointment/patient/${patientId}`).then((r) => r.data);
+
+export const cancelAppointment = (appointmentId) =>
+  patientAxios.delete(`/appointment/${appointmentId}`).then((r) => r.data);

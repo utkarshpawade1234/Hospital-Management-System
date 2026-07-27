@@ -42,4 +42,9 @@ public interface AppointmentRepo extends JpaRepository<Appointment,Long> {
     Page<Appointment> findByDoctor_doctorId(Long doctorId, Pageable pageable);
 
     Page<Appointment> findByPatient_patientId(Long patientId,Pageable page);
+
+    Page<Appointment> findByDoctorUserEmail(String email, Pageable pageable);
+
+    Optional<Appointment> findByDoctorUserEmailAndAppointmentId(String email,Long appointmentId);
+
 }

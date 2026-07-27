@@ -90,7 +90,7 @@ export default function DepartmentsPage() {
   const handleEdit = async (dept) => {
     try {
       const detail = await getDepartmentById(dept.departmentId);
-      setFormData(detail);
+      setFormData({ ...detail, departmentId: dept.departmentId });
       setFormOpen(true);
     } catch {
       toast.error('Failed to load department details');

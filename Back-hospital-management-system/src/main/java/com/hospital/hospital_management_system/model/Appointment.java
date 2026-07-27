@@ -1,5 +1,6 @@
 package com.hospital.hospital_management_system.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,13 +34,16 @@ public class Appointment {
     )
     private Doctor doctor;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "appointment_date",
             nullable = false)
     private LocalDate appointmentDate;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     @Column(name = "appointment_start_time",nullable = false)
     private LocalTime startTime;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     @Column(name="appointment_end_time",nullable = false)
     private LocalTime endTime;
 

@@ -55,6 +55,8 @@ public class Doctor {
     private User user;
 
 
+
+
     public enum AvailabilityStatus {
         AVAILABLE,
         NOT_AVAILABLE,

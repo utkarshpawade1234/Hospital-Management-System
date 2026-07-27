@@ -3,9 +3,12 @@ import {
   IconCalendarEvent,
   IconClock,
   IconNotes,
+  IconTrash,
+  IconStethoscope,
 } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
-import { getMyAppointments } from '../api/patientApi';
+import { getMyAppointments, cancelAppointment } from '../api/patientApi';
+import ConfirmModal from '../components/ConfirmModal';
 
 const STATUS_MAP = {
   CONFIRMED: { cls: 'pill-green', label: 'Confirmed' },
@@ -17,6 +20,10 @@ const STATUS_MAP = {
 export default function MyAppointmentsPage() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Cancellation modal state
+  const [cancelTarget, setCancelTarget] = useState(null);
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     fetchAppointments();
@@ -32,11 +39,37 @@ export default function MyAppointmentsPage() {
 
     try {
       const data = await getMyAppointments(patientId);
-      setAppointments(Array.isArray(data) ? data : []);
+      const list = Array.isArray(data) ? data : [];
+      // Sort soonest first (ascending by date + time)
+      list.sort((a, b) => {
+        const strA = `${a.appointmentDate || ''}T${a.startTime || '00:00:00'}`;
+        const strB = `${b.appointmentDate || ''}T${b.startTime || '00:00:00'}`;
+        return new Date(strA) - new Date(strB);
+      });
+      setAppointments(list);
     } catch {
       toast.error('Failed to load appointments');
+      setAppointments([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!cancelTarget) return;
+    setCancelling(true);
+
+    try {
+      await cancelAppointment(cancelTarget.appointmentId);
+      toast.success('Appointment cancelled successfully');
+      setCancelTarget(null);
+      fetchAppointments();
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || 'Failed to cancel appointment'
+      );
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -44,7 +77,7 @@ export default function MyAppointmentsPage() {
     <div>
       <div className="page-header">
         <h1 className="page-title">My Appointments</h1>
-        <p className="page-subtitle">View all your appointment bookings</p>
+        <p className="page-subtitle">View and manage your appointment bookings</p>
       </div>
 
       {loading ? (
@@ -75,23 +108,28 @@ export default function MyAppointmentsPage() {
       ) : (
         <div className="appt-list">
           {appointments.map((appt, i) => {
-            // Appointment entity has nested doctor/patient objects
             const doctorUser = appt.doctor?.user;
             const doctorName = doctorUser
               ? `Dr. ${doctorUser.firstName || ''} ${doctorUser.lastName || ''}`
               : `Doctor #${appt.doctor?.doctorId || '—'}`;
-            const doctorDept = appt.department?.departmentName || '';
+            const doctorDept = appt.department?.departmentName || 'General';
             const initials = doctorUser
               ? `${(doctorUser.firstName || '?')[0]}${(doctorUser.lastName || '')[0] || ''}`.toUpperCase()
               : '?';
 
-            const status = STATUS_MAP[appt.status] || {
+            const statusKey = appt.status ? appt.status.toUpperCase() : 'PENDING';
+            const status = STATUS_MAP[statusKey] || {
               cls: 'pill-blue',
-              label: appt.status || '—',
+              label: appt.status || 'Pending',
             };
 
             const date = appt.appointmentDate || '—';
             const time = appt.startTime || '—';
+            const apptType = appt.appointmentType
+              ? appt.appointmentType.replace('_', ' ')
+              : 'Consultation';
+
+            const canCancel = statusKey === 'PENDING' || statusKey === 'CONFIRMED';
 
             return (
               <div key={appt.appointmentId || i} className="appt-card">
@@ -112,6 +150,10 @@ export default function MyAppointmentsPage() {
                     <IconClock size={14} />
                     {time}
                   </div>
+                  <div className="appt-meta-item" style={{ textTransform: 'capitalize' }}>
+                    <IconStethoscope size={14} />
+                    {apptType}
+                  </div>
                   {appt.remarks && (
                     <div className="appt-meta-item">
                       <IconNotes size={14} />
@@ -119,12 +161,35 @@ export default function MyAppointmentsPage() {
                     </div>
                   )}
                   <span className={`pill ${status.cls}`}>{status.label}</span>
+
+                  {canCancel && (
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      style={{ color: '#E5503E', borderColor: '#E5503E', padding: '4px 10px' }}
+                      onClick={() => setCancelTarget(appt)}
+                      title="Cancel appointment"
+                    >
+                      <IconTrash size={14} />
+                      Cancel
+                    </button>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
       )}
+
+      {/* ─── Task 9: Cancellation Confirmation Modal ─────────── */}
+      <ConfirmModal
+        open={!!cancelTarget}
+        title="Cancel appointment"
+        message="This will permanently remove this appointment"
+        confirmLabel="Yes, cancel appointment"
+        onConfirm={handleConfirmCancel}
+        onCancel={() => setCancelTarget(null)}
+        loading={cancelling}
+      />
     </div>
   );
 }

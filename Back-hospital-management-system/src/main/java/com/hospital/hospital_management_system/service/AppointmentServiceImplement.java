@@ -89,7 +89,7 @@ public class AppointmentServiceImplement implements AppointmentService {
     @Override
     public ResponseDTO CancelAppointment(Long AppointmentId, String email) {
         appointmentRepo.delete(appointmentRepo.findById(AppointmentId).orElseThrow(()->new NoSuchAppointmentException("No such Appointment exist within our records")));
-        return new ResponseDTO(null,"Appointment is succesfully ca+ncelled");
+        return new ResponseDTO(null,"Appointment is successfully cancelled");
     }
 
 }

@@ -12,6 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 public class DepartmentDTO {
 
+    private Long departmentId;
+
     @NotBlank(message = "Department name is required")
     private String departmentName;
 
