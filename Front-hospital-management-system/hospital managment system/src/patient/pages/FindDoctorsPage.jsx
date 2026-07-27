@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   IconStethoscope,
   IconSearch,
   IconCalendarEvent,
+  IconUser,
+  IconBuildingHospital,
+  IconCurrencyRupee,
 } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import {
@@ -24,6 +28,25 @@ const STATUS_MAP = {
   ON_LEAVE: { cls: 'pill-amber', label: 'On leave' },
 };
 
+// 30-minute time slots between 09:00 and 17:00
+const TIME_SLOTS = [
+  { value: '09:00:00', label: '09:00 AM' },
+  { value: '09:30:00', label: '09:30 AM' },
+  { value: '10:00:00', label: '10:00 AM' },
+  { value: '10:30:00', label: '10:30 AM' },
+  { value: '11:00:00', label: '11:00 AM' },
+  { value: '11:30:00', label: '11:30 AM' },
+  { value: '12:00:00', label: '12:00 PM' },
+  { value: '12:30:00', label: '12:30 PM' },
+  { value: '14:00:00', label: '02:00 PM' },
+  { value: '14:30:00', label: '02:30 PM' },
+  { value: '15:00:00', label: '03:00 PM' },
+  { value: '15:30:00', label: '03:30 PM' },
+  { value: '16:00:00', label: '04:00 PM' },
+  { value: '16:30:00', label: '04:30 PM' },
+  { value: '17:00:00', label: '05:00 PM' },
+];
+
 export default function FindDoctorsPage() {
   const [tab, setTab] = useState('name');
   const [searchFields, setSearchFields] = useState({
@@ -36,7 +59,7 @@ export default function FindDoctorsPage() {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Booking modal
+  // Booking modal state
   const [bookingDoc, setBookingDoc] = useState(null);
   const [bookingForm, setBookingForm] = useState({
     appointmentDate: '',
@@ -44,6 +67,8 @@ export default function FindDoctorsPage() {
     remarks: '',
   });
   const [bookingLoading, setBookingLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -53,10 +78,14 @@ export default function FindDoctorsPage() {
     try {
       let results;
       if (tab === 'name') {
-        results = await searchDoctorsByName(
-          searchFields.firstName.trim(),
-          searchFields.lastName.trim()
-        );
+        const fn = searchFields.firstName.trim();
+        const ln = searchFields.lastName.trim();
+        if (!fn && !ln) {
+          toast.error('Please enter a first name or last name');
+          setLoading(false);
+          return;
+        }
+        results = await searchDoctorsByName(fn, ln);
       } else if (tab === 'specialization') {
         results = await searchDoctorsBySpecialization(
           searchFields.specialization.trim()
@@ -75,12 +104,13 @@ export default function FindDoctorsPage() {
     }
   };
 
-  const handleBook = async (e) => {
+  const handleBookSubmit = async (e) => {
     e.preventDefault();
     if (!bookingForm.appointmentDate || !bookingForm.appointmentTime) {
-      toast.error('Please select date and time');
+      toast.error('Please select both appointment date and time slot.');
       return;
     }
+
     setBookingLoading(true);
     try {
       const res = await bookAppointment({
@@ -89,13 +119,23 @@ export default function FindDoctorsPage() {
         appointmentTime: bookingForm.appointmentTime,
         remarks: bookingForm.remarks,
       });
-      toast.success(res.message || 'Appointment booked!');
+
+      toast.success(res.message || 'Appointment booked successfully!');
       setBookingDoc(null);
       setBookingForm({ appointmentDate: '', appointmentTime: '', remarks: '' });
+      navigate('/my-appointments');
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || 'Failed to book appointment'
-      );
+      const errMsg = err.response?.data?.message || err.message || '';
+      
+      if (errMsg.toLowerCase().includes('already booked') || errMsg.toLowerCase().includes('exist')) {
+        toast.error('That time is no longer available, please pick another');
+        // Modal stays open so user can select another slot
+      } else if (errMsg.toLowerCase().includes('leave') || errMsg.toLowerCase().includes('unavailable')) {
+        toast.error("This doctor isn't taking appointments right now");
+        setBookingDoc(null);
+      } else {
+        toast.error(errMsg || 'Failed to book appointment');
+      }
     } finally {
       setBookingLoading(false);
     }
@@ -136,17 +176,15 @@ export default function FindDoctorsPage() {
           <>
             <input
               className="form-input"
-              placeholder="First name"
+              placeholder="First name (optional)"
               value={searchFields.firstName}
               onChange={setField('firstName')}
-              required
             />
             <input
               className="form-input"
-              placeholder="Last name"
+              placeholder="Last name (optional)"
               value={searchFields.lastName}
               onChange={setField('lastName')}
-              required
             />
           </>
         )}
@@ -174,7 +212,7 @@ export default function FindDoctorsPage() {
         </button>
       </form>
 
-      {/* Results */}
+      {/* Doctor Cards Grid */}
       {loading ? (
         <div className="doctor-grid">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -195,6 +233,7 @@ export default function FindDoctorsPage() {
         <div className="doctor-grid">
           {doctors.map((doc) => {
             const initials = `${(doc.firstName || '?')[0]}${(doc.lastName || '')[0] || ''}`.toUpperCase();
+            const isAvailable = doc.availabilityStatus === 'AVAILABLE';
             const status = STATUS_MAP[doc.availabilityStatus] || {
               cls: 'pill-blue',
               label: doc.availabilityStatus || '—',
@@ -249,8 +288,15 @@ export default function FindDoctorsPage() {
                   </span>
                   <button
                     className="btn btn-outline-teal btn-sm"
-                    onClick={() => setBookingDoc(doc)}
-                    disabled={doc.availabilityStatus !== 'AVAILABLE'}
+                    onClick={() => {
+                      if (!isAvailable) {
+                        toast.error("This doctor isn't taking appointments right now");
+                        return;
+                      }
+                      setBookingDoc(doc);
+                    }}
+                    disabled={!isAvailable}
+                    title={!isAvailable ? "This doctor isn't taking appointments right now" : "Book appointment"}
                   >
                     <IconCalendarEvent size={14} />
                     Book appointment
@@ -272,19 +318,45 @@ export default function FindDoctorsPage() {
         </div>
       ) : null}
 
-      {/* ─── Booking Modal ────────────────────────────────── */}
+      {/* ─── Task 8: Book Appointment Modal ────────────────────── */}
       {bookingDoc && (
         <div className="modal-overlay" onClick={() => setBookingDoc(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-title">Book appointment</div>
             <div className="modal-subtitle">
-              Dr. {bookingDoc.firstName} {bookingDoc.lastName} —{' '}
-              {bookingDoc.specialization}
+              Fill in the details below to schedule your consultation
             </div>
 
-            <form onSubmit={handleBook}>
+            {/* Read-only Doctor Summary */}
+            <div
+              style={{
+                backgroundColor: 'var(--color-bg)',
+                borderRadius: '10px',
+                padding: '14px 16px',
+                marginBottom: '20px',
+                border: '1px solid var(--color-border)',
+              }}
+            >
+              <div style={{ fontWeight: 600, fontSize: '15px', color: 'var(--color-navy)', marginBottom: '4px' }}>
+                Dr. {bookingDoc.firstName} {bookingDoc.lastName}
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <IconUser size={14} /> {bookingDoc.specialization || 'General'}
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <IconBuildingHospital size={14} /> {bookingDoc.department || 'General'}
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600, color: 'var(--color-teal)' }}>
+                  <IconCurrencyRupee size={14} /> Fee: {bookingDoc.consultationFee ? `₹${bookingDoc.consultationFee}` : 'Free'}
+                </span>
+              </div>
+            </div>
+
+            <form onSubmit={handleBookSubmit}>
+              {/* Date Picker */}
               <div className="form-group">
-                <label className="form-label">Date</label>
+                <label className="form-label">Appointment Date</label>
                 <input
                   className="form-input"
                   type="date"
@@ -299,11 +371,12 @@ export default function FindDoctorsPage() {
                   required
                 />
               </div>
+
+              {/* Time Picker (30-minute slots) */}
               <div className="form-group">
-                <label className="form-label">Time</label>
-                <input
-                  className="form-input"
-                  type="time"
+                <label className="form-label">Time Slot</label>
+                <select
+                  className="form-select"
                   value={bookingForm.appointmentTime}
                   onChange={(e) =>
                     setBookingForm({
@@ -312,8 +385,17 @@ export default function FindDoctorsPage() {
                     })
                   }
                   required
-                />
+                >
+                  <option value="">Select a time slot</option>
+                  {TIME_SLOTS.map((slot) => (
+                    <option key={slot.value} value={slot.value}>
+                      {slot.label}
+                    </option>
+                  ))}
+                </select>
               </div>
+
+              {/* Optional Remarks */}
               <div className="form-group">
                 <label className="form-label">
                   Remarks{' '}
@@ -323,7 +405,7 @@ export default function FindDoctorsPage() {
                 </label>
                 <textarea
                   className="form-textarea"
-                  placeholder="Any symptoms or notes..."
+                  placeholder="Describe your symptoms or reason for visit..."
                   value={bookingForm.remarks}
                   onChange={(e) =>
                     setBookingForm({ ...bookingForm, remarks: e.target.value })
@@ -348,7 +430,7 @@ export default function FindDoctorsPage() {
                 >
                   {bookingLoading ? (
                     <>
-                      <span className="spinner" /> Booking...
+                      <span className="spinner" /> Confirming...
                     </>
                   ) : (
                     'Confirm booking'

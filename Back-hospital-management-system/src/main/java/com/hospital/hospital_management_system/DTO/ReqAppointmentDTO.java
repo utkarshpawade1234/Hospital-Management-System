@@ -13,8 +13,7 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminAppointmentDTO {
-
+public class ReqAppointmentDTO {
     private Long appointmentId;
 
     private String patientName;

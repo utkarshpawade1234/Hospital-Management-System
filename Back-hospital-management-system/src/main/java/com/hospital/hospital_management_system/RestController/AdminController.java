@@ -169,7 +169,7 @@ public class AdminController {
     }
 
     @GetMapping("/appointments")
-    public ResponseEntity<Page<AppointmentDTO>> getAllAppointments(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReqAppointmentDTO>> getAllAppointments(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
         return ResponseEntity.ok(
                 adminService.getAllAppointments(page, size)
@@ -186,7 +186,7 @@ public class AdminController {
     }
 
     @GetMapping("/appointments/status/{status}")
-    public ResponseEntity<Page<AppointmentDTO>> getAppointmentsByStatus(@PathVariable AppointmentStatus status, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByStatus(@PathVariable AppointmentStatus status, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
         return ResponseEntity.ok(
                 adminService.getAppointmentsByStatus(
@@ -198,7 +198,7 @@ public class AdminController {
     }
 
     @GetMapping("/appointments/doctor/{doctorId}")
-    public ResponseEntity<Page<AppointmentDTO>> getAppointmentsByDoctor(@PathVariable Long doctorId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByDoctor(@PathVariable Long doctorId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
         return ResponseEntity.ok(
                 adminService.getAppointmentsByDoctor(
@@ -210,7 +210,7 @@ public class AdminController {
     }
 
     @GetMapping("/appointments/patient/{patientId}")
-    public ResponseEntity<Page<AppointmentDTO>> getAppointmentsByPatient(@PathVariable Long patientId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByPatient(@PathVariable Long patientId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
         return ResponseEntity.ok(
                 adminService.getAppointmentsByPatient(

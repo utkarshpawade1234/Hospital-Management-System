@@ -37,7 +37,7 @@ public class AppointmentServiceImplement implements AppointmentService {
                 || doctor.getAvailabilityStatus() == Doctor.AvailabilityStatus.ON_LEAVE) {
             throw new DoctorUnavailableException("Doctor is on leave");
         }
-        Optional<Appointment> appointment = appointmentRepo.getSpeciifcDoctorAppointmentByParticularInterval(
+        Optional<Appointment> appointment = appointmentRepo.getSpecificDoctorAppointmentByParticularInterval(
                 appointmentdto.getDoctorId(), appointmentdto.getAppointmentDate(), appointmentdto.getAppointmentTime(),
                 appointmentdto.getAppointmentTime().plusMinutes(30));
         if (appointment.isPresent())
@@ -89,7 +89,7 @@ public class AppointmentServiceImplement implements AppointmentService {
     @Override
     public ResponseDTO CancelAppointment(Long AppointmentId, String email) {
         appointmentRepo.delete(appointmentRepo.findById(AppointmentId).orElseThrow(()->new NoSuchAppointmentException("No such Appointment exist within our records")));
-        return new ResponseDTO(null,"Appointment is succesfully ca+ncelled");
+        return new ResponseDTO(null,"Appointment is successfully cancelled");
     }
 
 }

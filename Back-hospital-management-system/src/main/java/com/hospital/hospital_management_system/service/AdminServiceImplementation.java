@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import  com.hospital.hospital_management_system.service.CommonMethods.*;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class AdminServiceImplementation implements AdminService {
        private final DepartmentRepo departmentRepo;
        private final AppointmentRepo appointmentRepo;
        private final ModelMapper mapper;
+       private final CommonMethods commonMethods;
 
     @Override
     public Page<Patient> getAllPatients(int page, int size) {
@@ -44,9 +46,8 @@ public class AdminServiceImplementation implements AdminService {
             dto.setProfilePhoto(doctor.getUser().getProfilePhoto());
         }
 
-        // Map department name
         if (doctor.getDepartment() != null) {
-            dto.setDepartment(doctor.getDepartment().getDepartmentName());
+            dto.setDepartment(doctor.getDepartment());
         }
 
         return dto;
@@ -60,9 +61,9 @@ public class AdminServiceImplementation implements AdminService {
     }
 
     @Override
-    public Page<AppointmentDTO> getAllAppointments(int page, int size) {
+    public Page<ReqAppointmentDTO> getAllAppointments(int page, int size) {
        Page<Appointment> appointments=appointmentRepo.findAll(PageRequest.of(page, size));
-       return appointments.map(appointment -> mapper.map(appointment,AppointmentDTO.class));
+       return appointments.map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
@@ -153,6 +154,7 @@ public class AdminServiceImplementation implements AdminService {
     public DepartmentDTO getDepartmentById(Long departmentId) {
         Department dep=departmentRepo.findById(departmentId).orElseThrow(()->new NoSuchDepartmentException("No department found"));
         DepartmentDTO dto= mapper.map(dep, DepartmentDTO.class);
+        dto.setDepartmentId(dep.getDepartmentId());
         dto.setDoctorIds(
                 dep.getDoctors().stream().map(Doctor::getDoctorId).toList()
         );
@@ -257,23 +259,25 @@ public class AdminServiceImplementation implements AdminService {
 
 
     @Override
-    public Page<AppointmentDTO> getAppointmentsByStatus(AppointmentStatus status, int page, int size) {
-        return appointmentRepo.findByStatus(status,PageRequest.of(page,size)).map(appointment -> mapper.map(appointment,AppointmentDTO.class));
+    public Page<ReqAppointmentDTO> getAppointmentsByStatus(AppointmentStatus status, int page, int size) {
+        return appointmentRepo.findByStatus(status,PageRequest.of(page,size)).map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
-    public Page<AppointmentDTO> getAppointmentsByDoctor(Long doctorId, int page, int size) {
-        return appointmentRepo.findByDoctor_doctorId(doctorId,PageRequest.of(page,size)).map(appointment -> mapper.map(appointment,AppointmentDTO.class));
+    public Page<ReqAppointmentDTO> getAppointmentsByDoctor(Long doctorId, int page, int size) {
+        return appointmentRepo.findByDoctor_doctorId(doctorId,PageRequest.of(page,size)).map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
-    public Page<AppointmentDTO> getAppointmentsByPatient(Long patientId, int page, int size) {
-        return appointmentRepo.findByPatient_patientId(patientId,PageRequest.of(page,size)).map(appointment -> mapper.map(appointment,AppointmentDTO.class));
+    public Page<ReqAppointmentDTO> getAppointmentsByPatient(Long patientId, int page, int size) {
+        return appointmentRepo.findByPatient_patientId(patientId,PageRequest.of(page,size)).map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
     public Page<User> searchUser(String keyword, int page, int size) {
         return userRepo.findByFirstName(keyword,PageRequest.of(page,size));
     }
+
+
 }
 

@@ -11,7 +11,7 @@ public interface AdminService {
 
     Page<DoctorDTO> getAllDoctors(int page, int size);
 
-    Page<AppointmentDTO> getAllAppointments(int page, int size);
+    Page<ReqAppointmentDTO> getAllAppointments(int page, int size);
 
     Page<User> getAllUsers(int page, int size);
 
@@ -56,17 +56,17 @@ public interface AdminService {
             int page,
             int size);
 
-    Page<AppointmentDTO> getAppointmentsByStatus(
+    Page<ReqAppointmentDTO> getAppointmentsByStatus(
             AppointmentStatus status,
             int page,
             int size);
 
-    Page<AppointmentDTO> getAppointmentsByDoctor(
+    Page<ReqAppointmentDTO> getAppointmentsByDoctor(
             Long doctorId,
             int page,
             int size);
 
-    Page<AppointmentDTO> getAppointmentsByPatient(
+    Page<ReqAppointmentDTO> getAppointmentsByPatient(
             Long patientId,
             int page,
             int size);
