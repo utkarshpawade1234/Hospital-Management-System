@@ -1,6 +1,7 @@
 package com.hospital.hospital_management_system.service;
 
 import com.hospital.hospital_management_system.DTO.*;
+import com.hospital.hospital_management_system.model.Department;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public interface PatientService {
     List<DoctorDTO> fetchDoctorDetailsByFirstAndLastName(String firstName, String lastName);
 
     List<DoctorDTO> fetchDoctorDetailsBySpecialization(String specialization);
+
+    List<DoctorDTO> fetchDoctorDetailsByDepartment(String departmentName);
 
     ResponseDTO deletePatient(Long patientId);
 

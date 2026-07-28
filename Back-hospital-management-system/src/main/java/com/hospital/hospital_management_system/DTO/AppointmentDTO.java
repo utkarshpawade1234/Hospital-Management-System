@@ -1,33 +1,29 @@
 package com.hospital.hospital_management_system.DTO;
 
-import com.hospital.hospital_management_system.model.Doctor;
-import com.hospital.hospital_management_system.model.Patient;
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Setter
 @Getter
 public class AppointmentDTO {
 
-    @NotNull(message = "Please Enter the patient Details")
-
-    private Long patientId;
 
     @NotNull
-
     private Long doctorId;
 
-    @DateTimeFormat(pattern = "dd-mm-yyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate appointmentDate;
 
-    @DateTimeFormat(pattern = "hh-mm-ss")
+
+    @JsonFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime appointmentTime;
 
     private String remarks;

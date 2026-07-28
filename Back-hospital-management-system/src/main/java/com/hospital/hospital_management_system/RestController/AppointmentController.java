@@ -5,10 +5,12 @@ import com.hospital.hospital_management_system.DTO.ResponseDTO;
 import com.hospital.hospital_management_system.model.Appointment;
 import com.hospital.hospital_management_system.model.AppointmentStatus;
 import com.hospital.hospital_management_system.service.AppointmentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -21,8 +23,8 @@ public class AppointmentController {
 
 
     @PostMapping("/booking")
-    public ResponseEntity<ResponseDTO> appointmentBooking(@RequestBody AppointmentDTO appointmentdto){
-        return ResponseEntity.ok(appointmentService.bookAppointment(appointmentdto));
+    public ResponseEntity<ResponseDTO> appointmentBooking(@RequestBody @Valid AppointmentDTO appointmentdto, Principal principal){
+        return ResponseEntity.ok(appointmentService.bookAppointment(appointmentdto, principal.getName()));
 
     }
     @GetMapping("admin/appointments")
@@ -49,5 +51,10 @@ public class AppointmentController {
     @PostMapping("/bystatus")
     public ResponseEntity<List<Appointment>>  getAllAppointmentByStatus(@RequestParam AppointmentStatus status){
         return ResponseEntity.ok(appointmentService.getAllAppointmentByStatus(status));
+    }
+
+    @DeleteMapping("/{appointmentId}")
+    public ResponseEntity<ResponseDTO> cancelAppointment(@PathVariable Long appointmentId, Principal principal) {
+        return ResponseEntity.ok(appointmentService.CancelAppointment(appointmentId, principal.getName()));
     }
 }

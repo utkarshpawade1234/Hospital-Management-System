@@ -1,6 +1,4 @@
 package com.hospital.hospital_management_system.model;
-
-import com.hospital.hospital_management_system.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -55,9 +53,12 @@ public class Doctor {
     private User user;
 
 
+
+
     public enum AvailabilityStatus {
         AVAILABLE,
         NOT_AVAILABLE,
         ON_LEAVE
     }
+
 }

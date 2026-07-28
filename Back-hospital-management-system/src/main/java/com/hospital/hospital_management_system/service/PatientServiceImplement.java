@@ -1,14 +1,10 @@
 package com.hospital.hospital_management_system.service;
 
 import com.hospital.hospital_management_system.DTO.*;
+import com.hospital.hospital_management_system.Exceptions.NoSuchDepartmentException;
 import com.hospital.hospital_management_system.model.*;
-import com.hospital.hospital_management_system.repository.DoctorRepo;
-import com.hospital.hospital_management_system.repository.PasswordResetRepo;
-import com.hospital.hospital_management_system.repository.PatientRepo;
-import com.hospital.hospital_management_system.repository.UserRepo;
+import com.hospital.hospital_management_system.repository.*;
 import com.hospital.hospital_management_system.utils.JwtUtils;
-import jakarta.mail.MessagingException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -22,6 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import com.hospital.hospital_management_system.service.CommonMethods;
+
 
 @Service
 @Transactional
@@ -30,11 +28,12 @@ public class PatientServiceImplement implements PatientService{
 
 
     private final UserRepo userrepo;
-
+    private  final CommonMethods commonMethods;
     private final PatientRepo patientrepo;
     private final EmailService emailService;
     private final ModelMapper mapper;
     private final DoctorRepo doctorrepo;
+    private final DepartmentRepo departmentRepo;
     private final PasswordResetRepo resetRepo;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
@@ -160,7 +159,7 @@ public class PatientServiceImplement implements PatientService{
 
 
         return new ResponseDTO(
-                u.getUser_role(),
+               Role.PATIENT,
                 "Patient details added succesfully"
         );
     }
@@ -261,7 +260,7 @@ public class PatientServiceImplement implements PatientService{
         }
 
 
-        return doctors.stream().map(this::convertToDTO).toList();
+        return doctors.stream().map(commonMethods::convertToDTO).toList();
     }
 
     @Override
@@ -278,7 +277,15 @@ public class PatientServiceImplement implements PatientService{
         }
 
 
-        return doctors.stream().map(this::convertToDTO).toList();
+        return doctors.stream().map(commonMethods::convertToDTO).toList();
+    }
+
+    @Override
+    public List<DoctorDTO> fetchDoctorDetailsByDepartment(String departmentName) {
+        Department d=departmentRepo.findBydepartmentName(departmentName).orElseThrow(()->new NoSuchDepartmentException("No such Department Exist within the records"));
+        return d.getDoctors().stream()
+                .map(doctor -> mapper.map(doctor, DoctorDTO.class))
+                .toList();
     }
 
     @Override
@@ -303,60 +310,6 @@ public class PatientServiceImplement implements PatientService{
         );
     }
 
-
-
-    private DoctorDTO convertToDTO(Doctor doctor) {
-
-        DoctorDTO dto = new DoctorDTO();
-
-        dto.setDoctorId(doctor.getDoctorId());
-
-        // User Table Fields
-        dto.setFirstName(
-                doctor.getUser().getFirstName());
-
-        dto.setLastName(
-                doctor.getUser().getLastName());
-
-        dto.setEmail(
-                doctor.getUser().getEmail());
-
-        dto.setPhoneNumber(
-                doctor.getUser().getContactNumber());
-
-        dto.setProfilePhoto(
-                doctor.getUser().getProfilePhoto());
-
-        // Doctor Table Fields
-        dto.setSpecialization(
-                doctor.getSpecialization());
-
-        dto.setQualification(
-                doctor.getQualification());
-
-        dto.setYearsOfExperience(
-                doctor.getYearsOfExperience());
-
-        dto.setConsultationFee(
-                doctor.getConsultationFee());
-
-        if (doctor.getDepartment() != null) {
-            dto.setDepartment(doctor.getDepartment().toString());
-        } else {
-            dto.setDepartment("Not Assigned");
-        }
-
-        dto.setDescription(
-                doctor.getDescription());
-
-        dto.setRoomNumber(
-                doctor.getRoomNumber());
-
-        dto.setAvailabilityStatus(
-                doctor.getAvailabilityStatus());
-
-        return dto;
-    }
 
 
 }
