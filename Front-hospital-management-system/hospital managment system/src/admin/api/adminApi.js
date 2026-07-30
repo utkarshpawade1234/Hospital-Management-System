@@ -32,7 +32,8 @@ export const deleteDoctor = (id) =>
 
 // ─── Patients ───────────────────────────────────────────────
 export const getPatients = (page = 0, size = 10) =>
-  adminAxios.get('/patients', { params: { page, size } }).then((r) => r.data);
+  adminAxios.get('/patients', { params: { 
+    page, size } }).then((r) => r.data);
 
 export const searchPatients = (keyword, page = 0, size = 10) =>
   adminAxios.get('/patients/search', { params: { keyword, page, size } }).then((r) => r.data);
