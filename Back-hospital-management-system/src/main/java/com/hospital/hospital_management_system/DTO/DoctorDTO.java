@@ -10,6 +10,8 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 public class DoctorDTO {
 
+    private Long doctorId;
+
     private String firstName;
 
     private String lastName;
@@ -36,6 +38,7 @@ public class DoctorDTO {
     private Integer roomNumber;
 
     private Doctor.AvailabilityStatus availabilityStatus;
+
 
 
 }

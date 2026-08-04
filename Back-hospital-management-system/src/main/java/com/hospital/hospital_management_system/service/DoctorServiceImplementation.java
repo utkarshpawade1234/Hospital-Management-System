@@ -101,12 +101,10 @@ public class DoctorServiceImplementation implements  DoctorService {
     }
 
 
-    @Transactional
     @Override
+    @Transactional
     public ResponseDTO confirmAppointment(String email, Long appointmentId) {
-
-        Appointment appointment = appointmentRepo
-                .findByDoctorUserEmailAndAppointmentId(email, appointmentId)
+        Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId)
                 .orElseThrow(() ->
                         new NoSuchAppointmentException("No such Appointment Found"));
 
@@ -118,6 +116,7 @@ public class DoctorServiceImplementation implements  DoctorService {
 
 
     @Override
+    @Transactional
     public ResponseDTO completeAppointment(String email, Long appointmentId) {
         Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId).orElseThrow(()->new NoSuchAppointmentException("No such Appointment is found"));
         appointment.setStatus(AppointmentStatus.COMPLETED);
@@ -125,6 +124,7 @@ public class DoctorServiceImplementation implements  DoctorService {
     }
 
     @Override
+    @Transactional
     public ResponseDTO cancelAppointment(String email, Long appointmentId) {
 
         Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId).orElseThrow(()->new NoSuchAppointmentException("No such Appointment found"));

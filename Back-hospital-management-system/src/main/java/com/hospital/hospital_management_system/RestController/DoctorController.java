@@ -3,12 +3,16 @@ package com.hospital.hospital_management_system.RestController;
 import com.hospital.hospital_management_system.DTO.DoctorDTO;
 import com.hospital.hospital_management_system.DTO.ReqAppointmentDTO;
 import com.hospital.hospital_management_system.DTO.ResponseDTO;
+import com.hospital.hospital_management_system.DTO.MedicineMasterDTO;
 import com.hospital.hospital_management_system.model.Appointment;
 import com.hospital.hospital_management_system.model.Doctor;
 import com.hospital.hospital_management_system.service.DoctorService;
+import com.hospital.hospital_management_system.service.MedicineMasterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +25,7 @@ import java.util.List;
 public class DoctorController {
 
     private final DoctorService doctorService;
+    private final MedicineMasterService medicineMasterService;
 
     @GetMapping("/profile")
     public ResponseEntity<DoctorDTO> getMyProfile(Authentication authentication) {
@@ -112,5 +117,17 @@ public class DoctorController {
                 doctorService.cancelAppointment(email, appointmentId));
     }
 
+    @GetMapping("/medicines")
+    public ResponseEntity<Page<MedicineMasterDTO>> getAllMedicines(
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return ResponseEntity.ok(medicineMasterService.getAllMedicines(pageable));
+    }
+
+    @GetMapping("/medicines/search")
+    public ResponseEntity<Page<MedicineMasterDTO>> searchMedicine(
+            @RequestParam String keyword,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return ResponseEntity.ok(medicineMasterService.searchMedicine(keyword, pageable));
+    }
 }
 

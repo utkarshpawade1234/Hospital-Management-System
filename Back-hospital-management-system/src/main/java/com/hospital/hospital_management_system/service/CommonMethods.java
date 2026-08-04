@@ -1,14 +1,17 @@
 package com.hospital.hospital_management_system.service;
 
-import com.hospital.hospital_management_system.DTO.DoctorDTO;
-import com.hospital.hospital_management_system.DTO.ReqAppointmentDTO;
-import com.hospital.hospital_management_system.model.Appointment;
-import com.hospital.hospital_management_system.model.Doctor;
+import com.hospital.hospital_management_system.DTO.*;
+import com.hospital.hospital_management_system.model.*;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-@Service
-public class CommonMethods {
+import java.util.List;
 
+@Service
+@RequiredArgsConstructor
+public class CommonMethods {
+     private final ModelMapper mapper;
     public ReqAppointmentDTO convertToAppointmentDTO(Appointment appointment) {
         ReqAppointmentDTO dto = new ReqAppointmentDTO();
         dto.setAppointmentId(appointment.getAppointmentId());
@@ -16,7 +19,8 @@ public class CommonMethods {
         if (appointment.getPatient() != null) {
             dto.setPatientId(appointment.getPatient().getPatientId());
             if (appointment.getPatient().getUser() != null) {
-                String pFirst = appointment.getPatient().getUser().getFirstName() != null ? appointment.getPatient().getUser().getFirstName() : "";
+                String pFirst;
+                pFirst = appointment.getPatient().getUser().getFirstName() != null ? appointment.getPatient().getUser().getFirstName() : "";
                 String pLast = appointment.getPatient().getUser().getLastName() != null ? appointment.getPatient().getUser().getLastName() : "";
                 dto.setPatientName((pFirst + " " + pLast).trim());
             }
@@ -56,23 +60,103 @@ public class CommonMethods {
 
         DoctorDTO dto = new DoctorDTO();
 
-        dto.setFirstName(
-                doctor.getUser().getFirstName());
+        dto.setFirstName(doctor.getUser().getFirstName());
 
-        dto.setLastName(
-                doctor.getUser().getLastName());
+        dto.setLastName(doctor.getUser().getLastName());
 
-        dto.setEmail(
-                doctor.getUser().getEmail());
+        dto.setEmail(doctor.getUser().getEmail());
 
-        dto.setPhoneNumber(
-                doctor.getUser().getContactNumber());
+        dto.setPhoneNumber(doctor.getUser().getContactNumber());
 
-        dto.setProfilePhoto(
-                doctor.getUser().getProfilePhoto());
+        dto.setProfilePhoto(doctor.getUser().getProfilePhoto());
 
+        dto.setDepartment(doctor.getDepartment());
+
+        dto.setDescription(doctor.getDescription());
+
+        dto.setRoomNumber(doctor.getRoomNumber());
+
+        dto.setAvailabilityStatus(doctor.getAvailabilityStatus());
+
+        dto.setDoctorId(doctor.getDoctorId());
+
+        dto.setSpecialization(doctor.getSpecialization());
+
+        dto.setQualification(doctor.getQualification());
+
+        dto.setYearsOfExperience(doctor.getYearsOfExperience());
+
+        dto.setConsultationFee(doctor.getConsultationFee());
 
         return dto;
     }
 
+
+    public PrescriptionMedicineDTO convertToPrescriptionMedicineDTO(
+            PrescriptionMedicine medicine) {
+
+        PrescriptionMedicineDTO dto = new PrescriptionMedicineDTO();
+
+        dto.setPrescriptionMedicineId(medicine.getPrescriptionMedicineId());
+
+        dto.setMedicineId(medicine.getMedicine().getMedicineId());
+
+        dto.setMedicineName(medicine.getMedicine().getMedicineName());
+
+        dto.setDosage(medicine.getDosage());
+
+        dto.setFrequency(medicine.getFrequency());
+
+        dto.setDuration(medicine.getDuration());
+
+        dto.setInstructions(medicine.getInstructions());
+
+        dto.setQuantity(medicine.getQuantity());
+
+        return dto;
+    }
+    public PrescriptionDTO convertToPrescriptionDTO(Prescription prescription) {
+
+        PrescriptionDTO dto = mapper.map(prescription, PrescriptionDTO.class);
+
+        if (prescription.getAppointment() != null) {
+            Appointment appt = prescription.getAppointment();
+            dto.setAppointmentId(appt.getAppointmentId());
+            if (appt.getDoctor() != null && appt.getDoctor().getUser() != null) {
+                String dFirst = appt.getDoctor().getUser().getFirstName() != null ? appt.getDoctor().getUser().getFirstName() : "";
+                String dLast = appt.getDoctor().getUser().getLastName() != null ? appt.getDoctor().getUser().getLastName() : "";
+                dto.setDoctorName(("Dr. " + dFirst + " " + dLast).trim());
+            }
+            if (appt.getAppointmentDate() != null) {
+                dto.setAppointmentDate(appt.getAppointmentDate().toString());
+            }
+        }
+
+        if (prescription.getMedicines() != null) {
+
+            dto.setMedicines(
+                    prescription.getMedicines()
+                            .stream()
+                            .map(this::convertToPrescriptionMedicineDTO)
+                            .toList()
+            );
+        }
+
+        return dto;
+    }
+    public MedicineMasterDTO convertToMedicineMasterDTO(MedicineMaster medicine) {
+
+        return mapper.map(medicine, MedicineMasterDTO.class);
+    }
+    public List<MedicineMasterDTO> convertToMedicineMasterDTOList(
+            List<MedicineMaster> medicines) {
+
+        return medicines.stream()
+                .map(this::convertToMedicineMasterDTO)
+                .toList();
+    }
+
+
 }
+
+

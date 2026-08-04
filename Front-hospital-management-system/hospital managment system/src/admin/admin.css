@@ -1105,3 +1105,22 @@
   background: #d1d5db;
   border-radius: 3px;
 }
+
+/* ─── Logout Button ────────────────────────────────────────── */
+.admin-logout-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-logout-btn:hover {
+  color: var(--color-status-red);
+  background: rgba(255, 255, 255, 0.06);
+}

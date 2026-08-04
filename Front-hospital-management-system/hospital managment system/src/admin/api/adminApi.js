@@ -75,3 +75,25 @@ export const getAppointmentsByPatient = (patientId, page = 0, size = 10) =>
 
 export const updateAppointmentStatus = (id, status) =>
   adminAxios.patch(`/appointments/${id}/status`, null, { params: { status } }).then((r) => r.data);
+
+// ─── Medicines ──────────────────────────────────────────────
+export const getMedicines = (page = 0, size = 10) =>
+  adminAxios.get('/medicines', { params: { page, size } }).then((r) => r.data);
+
+export const searchMedicines = (keyword, page = 0, size = 10) =>
+  adminAxios.get('/medicines/search', { params: { keyword, page, size } }).then((r) => r.data);
+
+export const getMedicineById = (id) =>
+  adminAxios.get(`/medicines/${id}`).then((r) => r.data);
+
+export const addMedicine = (dto) =>
+  adminAxios.post('/medicines', dto).then((r) => r.data);
+
+export const updateMedicine = (id, dto) =>
+  adminAxios.put(`/medicines/${id}`, dto).then((r) => r.data);
+
+export const activateMedicine = (id) =>
+  adminAxios.put(`/medicines/${id}/activate`).then((r) => r.data);
+
+export const deactivateMedicine = (id) =>
+  adminAxios.put(`/medicines/${id}/deactivate`).then((r) => r.data);

@@ -13,12 +13,12 @@ import javax.naming.AuthenticationException;
 public class HospitalManagementGlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<String> handleException(
+    public ResponseEntity<ApiResponse> handleException(
             ResponseStatusException ex) {
 
         return ResponseEntity
                 .status(ex.getStatusCode())
-                .body(ex.getReason());
+                .body(new ApiResponse(ex.getReason()));
     }
 
 

@@ -153,17 +153,15 @@ export default function DepartmentFormModal({
                       />
                       <span>
                         Dr. {doc.firstName} {doc.lastName}
-                        {doc.specialization && (
-                          <span
-                            style={{
-                              color: 'var(--color-text-muted)',
-                              marginLeft: '6px',
-                              fontSize: '12px',
-                            }}
-                          >
-                            — {doc.specialization}
-                          </span>
-                        )}
+                        <span
+                          style={{
+                            color: 'var(--color-text-muted)',
+                            marginLeft: '6px',
+                            fontSize: '12px',
+                          }}
+                        >
+                          — {doc.department ? doc.department.departmentName : 'Unassigned'}
+                        </span>
                       </span>
                     </label>
                   ))
