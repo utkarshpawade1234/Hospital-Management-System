@@ -1,0 +1,140 @@
+warning: in the working copy of 'Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/HospitalManagementSystemApplication.java', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/config/SecurityConfig.java', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Back-hospital-management-system/src/main/resources/application.properties', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/App.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/vite.config.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/admin/api/adminApi.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/admin/components/AdminLayout.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/admin/pages/DoctorsPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/admin/pages/PatientsPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/api/patientAxios.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/components/AuthLayout.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/components/PatientLayout.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/CompleteProfilePage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/ForgotPasswordPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/LoginPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/MyProfilePage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/RegisterPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/ResetPasswordPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/patient.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/admin/pages/DoctorsPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/admin/pages/PatientsPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/CompleteProfilePage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/MyProfilePage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/pages/RegisterPage.jsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Front-hospital-management-system/hospital managment system/src/patient/patient.css', LF will be replaced by CRLF the next time Git touches it
+Back-hospital-management-system.zip
+Back-hospital-management-system/pom.xml
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/AppointmentDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/CreateOrderRequestDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/CreateOrderResponseDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/DashBoardDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/DepartmentDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/DepartmentUpdateDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/DoctorDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/DoctorRevenueDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/DoctorSearchDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/ForgotPassDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/PaymentAnalyticsDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/PaymentResponseDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/ReqAppointmentDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/ResponseDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/RevenueDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/UpdatePatientDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/DTO/VerifyPaymentDTO.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/FileUploadException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/HospitalManagementGlobalExceptionHandler.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/NoSuchAppointmentException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/NoSuchDepartmentException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/NoSuchDoctorException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/PaymentAlreadyDoneException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/PaymentGatewayException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/PaymentNotFoundException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/PaymentVerificationException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/Exceptions/UserNotFoundException.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/HospitalManagementSystemApplication.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/RestController/AdminController.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/RestController/AppointmentController.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/RestController/DoctorController.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/RestController/PatientController.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/config/RazorpayConfig.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/config/SecurityConfig.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/filter/JwtFilter.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/Appointment.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/AppointmentType.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/Department.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/Doctor.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/OrderStatus.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/Payment.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/PaymentMethod.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/PaymentStatus.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/Prescription.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/RefundStatus.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/model/TransactionType.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/repository/AppointmentRepo.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/repository/DepartmentRepo.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/repository/DoctorRepo.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/repository/PasswordResetRepo.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/repository/PatientRepo.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/repository/PaymentRepository.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/repository/UserRepo.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/AdminService.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/AdminServiceImplementation.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/AppointmentService.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/AppointmentServiceImplement.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/CommonMethods.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/DoctorService.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/DoctorServiceImplementation.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/EmailService.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/PatientService.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/PatientServiceImplement.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/PaymentService.java
+Back-hospital-management-system/src/main/java/com/hospital/hospital_management_system/service/PaymentServiceImplementation.java
+Back-hospital-management-system/src/main/resources/application.properties
+Front-hospital-management-system/hospital managment system/package-lock.json
+Front-hospital-management-system/hospital managment system/package.json
+Front-hospital-management-system/hospital managment system/src/App.css
+Front-hospital-management-system/hospital managment system/src/App.jsx
+Front-hospital-management-system/hospital managment system/src/admin/admin.css
+Front-hospital-management-system/hospital managment system/src/admin/api/adminApi.js
+Front-hospital-management-system/hospital managment system/src/admin/api/adminAxios.js
+Front-hospital-management-system/hospital managment system/src/admin/components/AdminLayout.jsx
+Front-hospital-management-system/hospital managment system/src/admin/components/ConfirmModal.jsx
+Front-hospital-management-system/hospital managment system/src/admin/components/DepartmentFormModal.jsx
+Front-hospital-management-system/hospital managment system/src/admin/components/DetailDrawer.jsx
+Front-hospital-management-system/hospital managment system/src/admin/components/PaginatedTable.jsx
+Front-hospital-management-system/hospital managment system/src/admin/components/SearchBar.jsx
+Front-hospital-management-system/hospital managment system/src/admin/components/StatCard.jsx
+Front-hospital-management-system/hospital managment system/src/admin/components/StatusPill.jsx
+Front-hospital-management-system/hospital managment system/src/admin/pages/AdminDashboard.jsx
+Front-hospital-management-system/hospital managment system/src/admin/pages/AppointmentsPage.jsx
+Front-hospital-management-system/hospital managment system/src/admin/pages/DepartmentsPage.jsx
+Front-hospital-management-system/hospital managment system/src/admin/pages/DoctorsPage.jsx
+Front-hospital-management-system/hospital managment system/src/admin/pages/PatientsPage.jsx
+Front-hospital-management-system/hospital managment system/src/admin/pages/UsersPage.jsx
+Front-hospital-management-system/hospital managment system/src/components/DoctorSearch.jsx
+Front-hospital-management-system/hospital managment system/src/components/PatientAppointments.jsx
+Front-hospital-management-system/hospital managment system/src/components/PatientProfile.jsx
+Front-hospital-management-system/hospital managment system/src/context/ToastContext.jsx
+Front-hospital-management-system/hospital managment system/src/index.css
+Front-hospital-management-system/hospital managment system/src/main.jsx
+Front-hospital-management-system/hospital managment system/src/pages/Dashboard.jsx
+Front-hospital-management-system/hospital managment system/src/pages/ForgotPassword.jsx
+Front-hospital-management-system/hospital managment system/src/pages/Login.jsx
+Front-hospital-management-system/hospital managment system/src/pages/Register.jsx
+Front-hospital-management-system/hospital managment system/src/pages/ResetPassword.jsx
+Front-hospital-management-system/hospital managment system/src/patient/api/patientApi.js
+Front-hospital-management-system/hospital managment system/src/patient/api/patientAxios.js
+Front-hospital-management-system/hospital managment system/src/patient/components/AuthLayout.jsx
+Front-hospital-management-system/hospital managment system/src/patient/components/ConfirmModal.jsx
+Front-hospital-management-system/hospital managment system/src/patient/components/PatientLayout.jsx
+Front-hospital-management-system/hospital managment system/src/patient/pages/CompleteProfilePage.jsx
+Front-hospital-management-system/hospital managment system/src/patient/pages/FindDoctorsPage.jsx
+Front-hospital-management-system/hospital managment system/src/patient/pages/ForgotPasswordPage.jsx
+Front-hospital-management-system/hospital managment system/src/patient/pages/LoginPage.jsx
+Front-hospital-management-system/hospital managment system/src/patient/pages/MyAppointmentsPage.jsx
+Front-hospital-management-system/hospital managment system/src/patient/pages/MyProfilePage.jsx
+Front-hospital-management-system/hospital managment system/src/patient/pages/RegisterPage.jsx
+Front-hospital-management-system/hospital managment system/src/patient/pages/ResetPasswordPage.jsx
+Front-hospital-management-system/hospital managment system/src/patient/patient.css
+Front-hospital-management-system/hospital managment system/vite.config.js

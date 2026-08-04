@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   IconLayoutDashboard,
   IconUsers,
@@ -11,6 +11,8 @@ import {
   IconMenu2,
   IconX,
   IconActivity,
+  IconPill,
+  IconLogout,
 } from '@tabler/icons-react';
 import { Toaster } from 'react-hot-toast';
 import '../admin.css';
@@ -22,10 +24,17 @@ const navItems = [
   { to: '/admin/patients', icon: IconHeartbeat, label: 'Patients' },
   { to: '/admin/departments', icon: IconBuildingHospital, label: 'Departments' },
   { to: '/admin/appointments', icon: IconCalendarEvent, label: 'Appointments' },
+  { to: '/admin/medicines', icon: IconPill, label: 'Medicines' },
 ];
 
 export default function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
+  };
 
   const userEmail = localStorage.getItem('userEmail') || 'admin@hms.com';
   const userRole = localStorage.getItem('userRole') || 'ADMIN';
@@ -75,6 +84,15 @@ export default function AdminLayout() {
             </div>
           </div>
 
+          {/* Logout Button */}
+          <button
+            className="admin-logout-btn"
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <IconLogout size={18} />
+          </button>
+
           {/* Hamburger (mobile) */}
           <button
             className="admin-hamburger"
@@ -102,6 +120,17 @@ export default function AdminLayout() {
             {item.label}
           </NavLink>
         ))}
+        <button
+          className="admin-nav-link"
+          onClick={() => {
+            setMobileOpen(false);
+            handleLogout();
+          }}
+          style={{ border: 'none', background: 'none', textAlign: 'left' }}
+        >
+          <IconLogout size={16} />
+          Logout
+        </button>
       </div>
 
       {/* ─── Content Area ───────────────────────────────────── */}

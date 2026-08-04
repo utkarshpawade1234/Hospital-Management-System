@@ -20,6 +20,14 @@ import DoctorsPage from './admin/pages/DoctorsPage';
 import PatientsPage from './admin/pages/PatientsPage';
 import DepartmentsPage from './admin/pages/DepartmentsPage';
 import AppointmentsPage from './admin/pages/AppointmentsPage';
+import MedicinesPage from './admin/pages/MedicinesPage';
+
+// Doctor panel
+import DoctorLayout from './doctor/components/DoctorLayout';
+import DoctorDashboard from './doctor/pages/DoctorDashboard';
+import DoctorAppointments from './doctor/pages/DoctorAppointments';
+import DoctorProfile from './doctor/pages/DoctorProfile';
+import DoctorMedicines from './doctor/pages/DoctorMedicines';
 
 function App() {
   return (
@@ -28,6 +36,7 @@ function App() {
         {/* Auth routes (centered card, no navbar) */}
         <Route element={<AuthLayout />}>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
@@ -50,6 +59,15 @@ function App() {
           <Route path="patients" element={<PatientsPage />} />
           <Route path="departments" element={<DepartmentsPage />} />
           <Route path="appointments" element={<AppointmentsPage />} />
+          <Route path="medicines" element={<MedicinesPage />} />
+        </Route>
+
+        {/* Doctor panel routes */}
+        <Route path="/doctor" element={<DoctorLayout />}>
+          <Route path="dashboard" element={<DoctorDashboard />} />
+          <Route path="appointments" element={<DoctorAppointments />} />
+          <Route path="profile" element={<DoctorProfile />} />
+          <Route path="medicines" element={<DoctorMedicines />} />
         </Route>
       </Routes>
     </Router>

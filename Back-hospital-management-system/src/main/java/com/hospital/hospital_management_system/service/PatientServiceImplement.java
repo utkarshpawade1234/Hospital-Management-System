@@ -282,10 +282,17 @@ public class PatientServiceImplement implements PatientService{
 
     @Override
     public List<DoctorDTO> fetchDoctorDetailsByDepartment(String departmentName) {
-        Department d=departmentRepo.findBydepartmentName(departmentName).orElseThrow(()->new NoSuchDepartmentException("No such Department Exist within the records"));
-        return d.getDoctors().stream()
-                .map(doctor -> mapper.map(doctor, DoctorDTO.class))
+        Department d = departmentRepo.findBydepartmentNameIgnoreCase(departmentName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No such Department Exist within the records"));
+        List<DoctorDTO> list = d.getDoctors().stream()
+                .map(commonMethods::convertToDTO)
                 .toList();
+        if (list.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No doctors found in this department");
+        }
+        return list;
     }
 
     @Override

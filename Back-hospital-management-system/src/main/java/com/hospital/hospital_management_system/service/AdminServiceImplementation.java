@@ -141,19 +141,19 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     public DoctorDTO getDoctorById(Long doctorId) {
-        Doctor doctor= doctorRepo.findById(doctorId).orElseThrow(()->new NoSuchDoctorException("No doctor found"));
+        Doctor doctor = doctorRepo.findById(doctorId).orElseThrow(() -> new NoSuchDoctorException("No doctor found"));
         return convertToDoctorDTO(doctor);
     }
 
     @Override
     public List<Department> getAllDepartments() {
-        return  departmentRepo.findAll();
+        return departmentRepo.findAll();
     }
 
     @Override
     public DepartmentDTO getDepartmentById(Long departmentId) {
-        Department dep=departmentRepo.findById(departmentId).orElseThrow(()->new NoSuchDepartmentException("No department found"));
-        DepartmentDTO dto= mapper.map(dep, DepartmentDTO.class);
+        Department dep = departmentRepo.findById(departmentId).orElseThrow(() -> new NoSuchDepartmentException("No department found"));
+        DepartmentDTO dto = mapper.map(dep, DepartmentDTO.class);
         dto.setDepartmentId(dep.getDepartmentId());
         dto.setDoctorIds(
                 dep.getDoctors().stream().map(Doctor::getDoctorId).toList()
@@ -164,92 +164,90 @@ public class AdminServiceImplementation implements AdminService {
     @Override
     @Transactional
     public ResponseDTO addDepartment(DepartmentDTO departmentDTO) {
-        Department dep=new Department();
+        Department dep = new Department();
         dep.setDepartmentName(departmentDTO.getDepartmentName());
         dep.setDescription(departmentDTO.getDescription());
         departmentRepo.save(dep);
 
-        List<Doctor> doctors=doctorRepo.findAllById(departmentDTO.getDoctorIds());
+        List<Doctor> doctors = doctorRepo.findAllById(departmentDTO.getDoctorIds());
 
-        for(Doctor doc:doctors){
-           doc.setDepartment(dep);
+        for (Doctor doc : doctors) {
+            doc.setDepartment(dep);
+            doctorRepo.save(doc);
         }
-        doctorRepo.saveAll(doctors);
 
-        return  new ResponseDTO(Role.ADMIN,"Successfully added department");
+        return new ResponseDTO(Role.ADMIN, "Successfully added department");
     }
 
     @Override
     @Transactional
     public ResponseDTO updateDepartment(Long departmentId, DepartmentUpdateDTO departmentUpdateDTO) {
-        Department department=departmentRepo.findById(departmentId).orElseThrow(()->new NoSuchDepartmentException("No department found"));
+        Department department = departmentRepo.findById(departmentId).orElseThrow(() -> new NoSuchDepartmentException("No department found"));
 
-        if(departmentUpdateDTO.getDepartmentName()!=null)
+        if (departmentUpdateDTO.getDepartmentName() != null)
             department.setDepartmentName(departmentUpdateDTO.getDepartmentName());
 
-        if(departmentUpdateDTO.getDescription()!=null){
+        if (departmentUpdateDTO.getDescription() != null) {
             department.setDescription(departmentUpdateDTO.getDescription());
         }
 
-        List<Long> addDocIds=departmentUpdateDTO.getAddDoctorIds();
-        List<Long> deleteDocIds=departmentUpdateDTO.getRemoveDoctorIds();
+        List<Long> addDocIds = departmentUpdateDTO.getAddDoctorIds();
+        List<Long> deleteDocIds = departmentUpdateDTO.getRemoveDoctorIds();
 
-        if (addDocIds!=null) {
-            for(Long addDocs:addDocIds){
-                Doctor doc=doctorRepo.findById(addDocs).
-                        orElseThrow(()->new DoctorNotFoundException("No Doctor Found"));
+        if (addDocIds != null) {
+            for (Long addDocs : addDocIds) {
+                Doctor doc = doctorRepo.findById(addDocs).
+                        orElseThrow(() -> new DoctorNotFoundException("No Doctor Found"));
 
                 doc.setDepartment(department);
-
+                doctorRepo.save(doc);
             }
         }
 
-        if (deleteDocIds!=null) {
-            for(Long delDocs:deleteDocIds){
-                Doctor doc=doctorRepo.findById(delDocs).
-                        orElseThrow(()->new DoctorNotFoundException("No Doctor Found"));
+        if (deleteDocIds != null) {
+            for (Long delDocs : deleteDocIds) {
+                Doctor doc = doctorRepo.findById(delDocs).
+                        orElseThrow(() -> new DoctorNotFoundException("No Doctor Found"));
 
                 doc.setDepartment(null);
+                doctorRepo.save(doc);
             }
         }
 
-        return new ResponseDTO(Role.ADMIN,"Department Updated Successfully");
+        return new ResponseDTO(Role.ADMIN, "Department Updated Successfully");
     }
-
 
     @Override
     public User getUserById(Long userId) {
-        return userRepo.findById(userId).orElseThrow(()->new UserNotFoundException("No User found"));
+        return userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("No User found"));
     }
 
     @Override
     public Appointment getAppointmentById(Long appointmentId) {
-        return appointmentRepo.findById(appointmentId).orElseThrow(()->new NoSuchAppointmentException("No Appointment Found"));
+        return appointmentRepo.findById(appointmentId).orElseThrow(() -> new NoSuchAppointmentException("No Appointment Found"));
     }
 
     @Override
     @Transactional
     public ResponseDTO updateAppointmentStatus(Long appointmentId, AppointmentStatus status) {
-        Appointment appointment=appointmentRepo.findById(appointmentId).orElseThrow(()->new NoSuchAppointmentException("No Appointment found"));
-        if(status!=null){
+        Appointment appointment = appointmentRepo.findById(appointmentId).orElseThrow(() -> new NoSuchAppointmentException("No Appointment found"));
+        if (status != null) {
             appointment.setStatus(status);
         }
-        return new ResponseDTO(Role.ADMIN,"Appointment Status is Updated Successfully");
+        return new ResponseDTO(Role.ADMIN, "Appointment Status is Updated Successfully");
     }
 
     @Override
     public Page<DoctorDTO> getDoctorsByDepartment(Long departmentId, int page, int size) {
-        if(!departmentRepo.existsById(departmentId))
+        if (!departmentRepo.existsById(departmentId))
             throw new NoSuchDepartmentException("No department found");
 
-        return doctorRepo.findByDepartment_DepartmentId(departmentId, PageRequest.of(page,size)).map(this::convertToDoctorDTO);
-
+        return doctorRepo.findByDepartment_DepartmentId(departmentId, PageRequest.of(page, size)).map(this::convertToDoctorDTO);
     }
-
 
     @Override
     public Page<DoctorDTO> searchDoctor(String keyword, int page, int size) {
-         return doctorRepo.findByUser_FirstNameContainingIgnoreCase(keyword,PageRequest.of(page,size)).map(this::convertToDoctorDTO);
+        return doctorRepo.findByUser_FirstNameContainingIgnoreCase(keyword, PageRequest.of(page, size)).map(this::convertToDoctorDTO);
     }
 
     @Override
@@ -275,9 +273,6 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     public Page<User> searchUser(String keyword, int page, int size) {
-        return userRepo.findByFirstName(keyword,PageRequest.of(page,size));
+        return userRepo.searchUsers(keyword, PageRequest.of(page, size));
     }
-
-
 }
-

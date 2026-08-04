@@ -55,6 +55,7 @@ public class AppointmentController {
 
     @DeleteMapping("/{appointmentId}")
     public ResponseEntity<ResponseDTO> cancelAppointment(@PathVariable Long appointmentId, Principal principal) {
+        System.out.println("RECEIVED_CANCEL_APPOINTMENT_ID: " + appointmentId);
         return ResponseEntity.ok(appointmentService.CancelAppointment(appointmentId, principal.getName()));
     }
 }

@@ -96,9 +96,13 @@ export default function FindDoctorsPage() {
         );
       }
       setDoctors(Array.isArray(results) ? results : []);
-    } catch {
-      toast.error('Search failed. Please try again.');
-      setDoctors([]);
+    } catch (err) {
+      if (err.response?.status === 404) {
+        setDoctors([]);
+      } else {
+        toast.error('Search failed. Please try again.');
+        setDoctors([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -255,7 +259,7 @@ export default function FindDoctorsPage() {
                   <div>
                     <div className="doctor-detail-label">Department</div>
                     <div className="doctor-detail-value">
-                      {doc.department || '—'}
+                      {doc.department?.departmentName || '—'}
                     </div>
                   </div>
                   <div>
@@ -286,21 +290,20 @@ export default function FindDoctorsPage() {
                   <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
                     Room {doc.roomNumber || '—'}
                   </span>
-                  <button
-                    className="btn btn-outline-teal btn-sm"
-                    onClick={() => {
-                      if (!isAvailable) {
-                        toast.error("This doctor isn't taking appointments right now");
-                        return;
-                      }
-                      setBookingDoc(doc);
-                    }}
-                    disabled={!isAvailable}
-                    title={!isAvailable ? "This doctor isn't taking appointments right now" : "Book appointment"}
-                  >
-                    <IconCalendarEvent size={14} />
-                    Book appointment
-                  </button>
+                  {isAvailable ? (
+                    <button
+                      className="btn btn-outline-teal btn-sm"
+                      onClick={() => setBookingDoc(doc)}
+                      title="Book appointment"
+                    >
+                      <IconCalendarEvent size={14} />
+                      Book appointment
+                    </button>
+                  ) : (
+                    <span className={`pill ${status.cls}`} style={{ fontSize: '11px', padding: '4px 8px', fontWeight: 600 }}>
+                      {status.label}
+                    </span>
+                  )}
                 </div>
               </div>
             );
@@ -345,7 +348,7 @@ export default function FindDoctorsPage() {
                   <IconUser size={14} /> {bookingDoc.specialization || 'General'}
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <IconBuildingHospital size={14} /> {bookingDoc.department || 'General'}
+                  <IconBuildingHospital size={14} /> {bookingDoc.department?.departmentName || 'General'}
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600, color: 'var(--color-teal)' }}>
                   <IconCurrencyRupee size={14} /> Fee: {bookingDoc.consultationFee ? `₹${bookingDoc.consultationFee}` : 'Free'}

@@ -27,10 +27,10 @@ public class Appointment {
     )
     private Patient patient;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(
             name = "doctor_id",
-            nullable = false
+            nullable = true
     )
     private Doctor doctor;
 

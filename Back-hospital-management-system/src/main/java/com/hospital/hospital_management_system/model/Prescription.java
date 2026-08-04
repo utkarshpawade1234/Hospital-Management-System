@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -39,7 +40,8 @@ public class Prescription {
 
     @OneToMany(
             mappedBy = "prescription",
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
-    private List<Medicine>  medicinesList;
+    private List<PrescriptionMedicine> medicines;
 }

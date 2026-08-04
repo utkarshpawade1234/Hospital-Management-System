@@ -114,7 +114,7 @@ export default function DoctorsPage() {
             </div>
           </div>
         </td>
-        <td>{doc.department || '—'}</td>
+        <td>{doc.department?.departmentName || '—'}</td>
         <td>{doc.yearsOfExperience ? `${doc.yearsOfExperience} yrs` : '—'}</td>
         <td>{doc.consultationFee ? `₹${doc.consultationFee}` : '—'}</td>
         <td>
@@ -217,7 +217,7 @@ export default function DoctorsPage() {
             </div>
             <DrawerField label="Email" value={drawerData.email} />
             <DrawerField label="Phone" value={drawerData.phoneNumber} />
-            <DrawerField label="Department" value={drawerData.department} />
+            <DrawerField label="Department" value={drawerData.department?.departmentName || '—'} />
             <DrawerField label="Qualification" value={drawerData.qualification} />
             <DrawerField
               label="Experience"

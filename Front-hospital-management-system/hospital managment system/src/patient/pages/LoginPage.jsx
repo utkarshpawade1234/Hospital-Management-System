@@ -39,7 +39,7 @@ export default function LoginPage() {
         return;
       }
       if (res.role === 'DOCTOR') {
-        setTimeout(() => navigate('/dashboard'), 300);
+        setTimeout(() => navigate('/doctor/dashboard'), 300);
         return;
       }
 
