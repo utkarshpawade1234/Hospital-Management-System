@@ -30,10 +30,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtFilter jwtFilter;
 
-    /**
-     * CDAC Presentation Tip: Explain SecurityFilterChain as the gatekeeper of the application.
-     * It intercepts all incoming HTTP requests and applies security policies.
-     */
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
        http
@@ -45,11 +42,14 @@ public class SecurityConfig {
              
              // 3. Define Endpoint Access Control Rules
              .authorizeHttpRequests(auth -> auth
+                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(
-                            "/patient/login",          // Publicly accessible for user login
-                            "/patient/register",       // Publicly accessible for new users
-                            "/patient/forgot-password", // Publicly accessible to request a password reset link
-                            "/patient/reset-password",  // Publicly accessible to update password with a token
+                            "/uploads/**",             // Publicly accessible uploaded photos
+                            "/auth/**",                // Auth endpoints (login, register, forgot/reset password)
+                            "/patient/login",          // Backwards compatibility
+                            "/patient/register",
+                            "/patient/forgot-password",
+                            "/patient/reset-password",
                             "/swagger-ui/**",          // Swagger UI static files for API testing
                             "/v3/api-docs/**",         // OpenAPI documentation schema endpoint
                             "/swagger-ui.html"
@@ -69,9 +69,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -20,24 +20,28 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [dashData, apptsData] = await Promise.all([
-        getDashboard(),
-        getAppointments(0, 5),
-      ]);
-      setStats(dashData);
-      setRecentAppts(apptsData.content || []);
-    } catch (err) {
-      console.error('Dashboard fetch error:', err);
-    } finally {
-      setLoading(false);
+    let ignore = false;
+    async function load() {
+      try {
+        const [dashData, apptsData] = await Promise.all([
+          getDashboard(),
+          getAppointments(0, 5),
+        ]);
+        if (!ignore) {
+          setStats(dashData);
+          setRecentAppts(apptsData.content || []);
+        }
+      } catch (err) {
+        console.error('Dashboard fetch error:', err);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
     }
-  };
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const statCards = stats
     ? [
@@ -227,10 +231,13 @@ export default function AdminDashboard() {
                       ? `${appt.patient.user.firstName || ''} ${appt.patient.user.lastName || ''}`
                       : '—');
                   const doctorName =
-                    appt.doctorName ||
-                    (appt.doctor?.user
-                      ? `Dr. ${appt.doctor.user.firstName || ''} ${appt.doctor.user.lastName || ''}`
-                      : `Doctor #${appt.doctorId || '—'}`);
+                    (appt.doctorName && appt.doctorName.trim() !== 'Dr.' && appt.doctorName.trim() !== '')
+                      ? appt.doctorName
+                      : appt.doctor?.user
+                      ? `Dr. ${appt.doctor.user.firstName || ''} ${appt.doctor.user.lastName || ''}`.trim()
+                      : appt.doctorId
+                      ? `Doctor #${appt.doctorId}`
+                      : 'Unassigned Doctor';
                   const date = appt.appointmentDate || '—';
                   const time =
                     appt.appointmentTime || appt.startTime || '—';

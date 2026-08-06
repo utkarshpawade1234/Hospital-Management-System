@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   IconCalendarEvent,
   IconClock,
   IconNotes,
   IconTrash,
   IconStethoscope,
+  IconCreditCard,
+  IconCheck,
 } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import { getMyAppointments, cancelAppointment } from '../api/patientApi';
@@ -20,17 +23,13 @@ const STATUS_MAP = {
 export default function MyAppointmentsPage() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Cancellation modal state
   const [cancelTarget, setCancelTarget] = useState(null);
   const [cancelling, setCancelling] = useState(false);
 
-  useEffect(() => {
-    fetchAppointments();
-  }, []);
-
-  const fetchAppointments = async () => {
-    setLoading(true);
+  const fetchAppointments = useCallback(async () => {
     const patientId = localStorage.getItem('patientId');
     if (!patientId) {
       setLoading(false);
@@ -53,7 +52,20 @@ export default function MyAppointmentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+    async function load() {
+      if (!ignore) {
+        await fetchAppointments();
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, [fetchAppointments]);
 
   const handleConfirmCancel = async () => {
     if (!cancelTarget) return;
@@ -171,6 +183,57 @@ export default function MyAppointmentsPage() {
                     >
                       <IconTrash size={14} />
                       Cancel
+                    </button>
+                  )}
+
+                  {/* Payment Action / Status */}
+                  {appt.paymentStatus === 'SUCCESS' ? (
+                    <span
+                      style={{
+                        background: '#E6F4EA',
+                        color: '#137333',
+                        padding: '4px 10px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      <IconCheck size={14} />
+                      Payment Successful
+                    </span>
+                  ) : statusKey !== 'CANCELLED' && (
+                    <button
+                      className="btn btn-sm"
+                      style={{
+                        background: '#1D9E75',
+                        color: '#fff',
+                        border: 'none',
+                        padding: '4px 12px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                      onClick={() =>
+                        navigate('/pay', {
+                          state: {
+                            appointmentId:   appt.appointmentId,
+                            doctorName:      doctorName,
+                            appointmentDate: appt.appointmentDate,
+                            startTime:       appt.startTime,
+                          },
+                        })
+                      }
+                      title="Complete payment"
+                    >
+                      <IconCreditCard size={14} />
+                      Pay Now
                     </button>
                   )}
                 </div>

@@ -20,7 +20,6 @@ export default function AppointmentsPage() {
   const size = 10;
 
   const fetchData = useCallback(async () => {
-    setLoading(true);
     try {
       const res =
         activeFilter === 'ALL'
@@ -37,7 +36,16 @@ export default function AppointmentsPage() {
   }, [page, activeFilter]);
 
   useEffect(() => {
-    fetchData();
+    let ignore = false;
+    async function load() {
+      if (!ignore) {
+        await fetchData();
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
   }, [fetchData]);
 
   const handleFilterChange = (status) => {
@@ -74,10 +82,13 @@ export default function AppointmentsPage() {
         : '—');
 
     const doctorName =
-      appt.doctorName ||
-      (appt.doctor?.user
-        ? `Dr. ${appt.doctor.user.firstName || ''} ${appt.doctor.user.lastName || ''}`
-        : `Doctor #${appt.doctorId || '—'}`);
+      (appt.doctorName && appt.doctorName.trim() !== 'Dr.' && appt.doctorName.trim() !== '')
+        ? appt.doctorName
+        : appt.doctor?.user
+        ? `Dr. ${appt.doctor.user.firstName || ''} ${appt.doctor.user.lastName || ''}`.trim()
+        : appt.doctorId
+        ? `Doctor #${appt.doctorId}`
+        : 'Unassigned Doctor';
 
     const date = appt.appointmentDate || '—';
     const time = appt.appointmentTime || appt.startTime || '—';

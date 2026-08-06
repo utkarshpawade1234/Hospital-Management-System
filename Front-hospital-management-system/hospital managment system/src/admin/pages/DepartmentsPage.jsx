@@ -43,7 +43,6 @@ export default function DepartmentsPage() {
   const drillSize = 10;
 
   const fetchDepartments = async () => {
-    setLoading(true);
     try {
       const res = await getDepartments();
       setDepartments(Array.isArray(res) ? res : []);
@@ -55,13 +54,21 @@ export default function DepartmentsPage() {
   };
 
   useEffect(() => {
-    fetchDepartments();
+    let ignore = false;
+    async function load() {
+      if (!ignore) {
+        await fetchDepartments();
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   // Drill-down fetch
   const fetchDrillDoctors = useCallback(async () => {
     if (!drillDept) return;
-    setDrillLoading(true);
     try {
       const res = await getDepartmentDoctors(
         drillDept.departmentId,
@@ -79,7 +86,16 @@ export default function DepartmentsPage() {
   }, [drillDept, drillPage]);
 
   useEffect(() => {
-    if (drillDept) fetchDrillDoctors();
+    let ignore = false;
+    async function load() {
+      if (drillDept && !ignore) {
+        await fetchDrillDoctors();
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
   }, [fetchDrillDoctors, drillDept]);
 
   const handleAdd = () => {

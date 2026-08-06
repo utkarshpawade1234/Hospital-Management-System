@@ -1,7 +1,9 @@
 package com.hospital.hospital_management_system.service;
 
 import com.hospital.hospital_management_system.DTO.*;
-import com.hospital.hospital_management_system.Exceptions.NoSuchDepartmentException;
+
+import com.hospital.hospital_management_system.Exceptions.PatientNotFoundException;
+import com.hospital.hospital_management_system.Exceptions.UserNotFoundException;
 import com.hospital.hospital_management_system.model.*;
 import com.hospital.hospital_management_system.repository.*;
 import com.hospital.hospital_management_system.utils.JwtUtils;
@@ -18,17 +20,15 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import com.hospital.hospital_management_system.service.CommonMethods;
-
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PatientServiceImplement implements PatientService{
+public class PatientServiceImplement implements PatientService {
 
 
     private final UserRepo userrepo;
-    private  final CommonMethods commonMethods;
+    private final CommonMethods commonMethods;
     private final PatientRepo patientrepo;
     private final EmailService emailService;
     private final ModelMapper mapper;
@@ -37,116 +37,13 @@ public class PatientServiceImplement implements PatientService{
     private final PasswordResetRepo resetRepo;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    @Override
-    public ResponseDTO registerUser(RegistrationDTO dto) {
 
-        if((userrepo.findByEmail(dto.getEmail())).isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Email already exists");
-        }
-        User user = new User();
-        user.setUser_role(Role.PATIENT);
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setEmail(dto.getEmail());
-
-        user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
-        user.setContactNumber(dto.getPhoneNumber());
-        user.setDob(dto.getDob());
-        user.setAddress(dto.getAddress());
-        user.setProfilePhoto(dto.getProfilephoto());
-
-
-        User savedUser = userrepo.save(user);
-
-        return new ResponseDTO(
-                savedUser.getUser_role(),
-                "User Created Successfully"
-        );
-    }
-
-    @Override
-    public LoginResponseDTO login(LoginDTO dto) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(),dto.getPassword()));
-        User u=userrepo.findByEmail(dto.getEmail()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found"));
-        String token=jwtUtils.generateJwtToken(u.getEmail());
-
-        return new LoginResponseDTO(token,u.getUser_role(),"Login Successfull");
-    }
-
-
-    @Override
-    public ResponseDTO forgotPassword( ForgotPassDTO dto)  {
-
-        User u = userrepo.findByEmail(dto.getEmail()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "do you exist or not ?"));
-
-        String token =
-                UUID.randomUUID().toString();
-        PasswordResetToken resetToken =
-                new PasswordResetToken();
-
-        resetToken.setToken(token);
-
-        resetToken.setExpiryTime(
-
-                LocalDateTime.now()
-
-                        .plusMinutes(15));
-
-        resetToken.setUsed(false);
-
-        resetToken.setUser(u);
-
-        resetRepo.save(resetToken);
-
-        String resetLink =
-                "http://localhost:5173/reset-password?token=" + token;
-
-
-
-        // Send Email
-        try {
-            emailService.sendPasswordResetEmail(dto.getEmail(), u.getFirstName() + " " + u.getLastName(), resetLink);
-        } catch (Exception e) {
-            System.err.println("Failed to send email via SMTP, continuing in local dev mode. Exception: " + e.getMessage());
-        }
-
-        return new ResponseDTO(
-                u.getUser_role(),
-                "Password Change Link generated successfully (Please check your terminal logs for the link if email delivery fails).");
-    }
-
-    @Override
-    public ResponseDTO resetPassword(ResetPasswordDTO dto) {
-        PasswordResetToken resetToken = resetRepo.findByToken(dto.getToken())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid password reset token"));
-
-        if (resetToken.isUsed()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token has already been used");
-        }
-
-        if (resetToken.getExpiryTime().isBefore(LocalDateTime.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token has expired");
-        }
-
-        User user = resetToken.getUser();
-        user.setPassword(new BCryptPasswordEncoder().encode(dto.getNewPassword()));
-        userrepo.save(user);
-
-        resetToken.setUsed(true);
-        resetRepo.save(resetToken);
-
-        return new ResponseDTO(
-                user.getUser_role(),
-                "Password changed successfully"
-        );
-    }
 
     @Override
     public ResponseDTO registerPatientDetails(PatientDTO dto) {
 
-        User u=userrepo.findByEmail(dto.getEmail()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found"));
+        User u = userrepo.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (patientrepo.findByUser(u).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Patient details are already registered for this user");
@@ -159,8 +56,8 @@ public class PatientServiceImplement implements PatientService{
 
 
         return new ResponseDTO(
-               Role.PATIENT,
-                "Patient details added succesfully"
+                Role.PATIENT,
+                "Patient details added successfully"
         );
     }
 
@@ -172,47 +69,46 @@ public class PatientServiceImplement implements PatientService{
         Patient patient = patientrepo.findByUserEmail(dto.getEmail()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient profile not found"));
 
         // User Table Updates
-        if(dto.getFirstName() != null)
+        if (dto.getFirstName() != null)
             user.setFirstName(dto.getFirstName());
 
-        if(dto.getLastName() != null)
+        if (dto.getLastName() != null)
             user.setLastName(dto.getLastName());
 
-        if(dto.getDob() != null)
+        if (dto.getDob() != null)
             user.setDob(dto.getDob());
 
-        if(dto.getAddress() != null)
+        if (dto.getAddress() != null)
             user.setAddress(dto.getAddress());
 
-        if(dto.getPassword() != null)
+        if (dto.getPassword() != null)
             user.setPassword(dto.getPassword());
 
-        if(dto.getProfilephoto() != null)
+        if (dto.getProfilephoto() != null)
             user.setProfilePhoto(dto.getProfilephoto());
 
-        if(dto.getPhoneNumber() != null)
+        if (dto.getPhoneNumber() != null)
             user.setContactNumber(dto.getPhoneNumber());
 
 
         // Patient Table Updates
-        if(dto.getDescription() != null)
+        if (dto.getDescription() != null)
             patient.setDescription(dto.getDescription());
 
-        if(dto.getBloodGroup() != null)
+        if (dto.getBloodGroup() != null)
             patient.setBloodGroup(dto.getBloodGroup());
 
-        if(dto.getEmergencyContactName() != null)
+        if (dto.getEmergencyContactName() != null)
             patient.setEmergencyContactName(
                     dto.getEmergencyContactName());
 
-        if(dto.getEmergencyContactNumber() != null)
+        if (dto.getEmergencyContactNumber() != null)
             patient.setEmergencyContactNumber(
                     dto.getEmergencyContactNumber());
 
-        if(dto.getEmergencyContactRelation() != null)
+        if (dto.getEmergencyContactRelation() != null)
             patient.setEmergencyContactRelation(
                     dto.getEmergencyContactRelation());
-
 
 
         return new ResponseDTO(
@@ -226,10 +122,7 @@ public class PatientServiceImplement implements PatientService{
     public PatientProfileDTO getMyProfile(String email) {
 
         User user = userrepo.findByEmail(email)
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         PatientProfileDTO dto = mapper.map(user, PatientProfileDTO.class);
         dto.setPhoneNumber(user.getContactNumber());
@@ -250,52 +143,30 @@ public class PatientServiceImplement implements PatientService{
 
     @Override
     public List<DoctorDTO> fetchDoctorDetailsByFirstAndLastName(String firstName, String lastName) {
-
-        List<Doctor> doctors = doctorrepo.findByUserFirstNameStartingWithIgnoreCaseOrUserLastNameStartingWithIgnoreCase(firstName,lastName);
-
-        if(doctors.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "No doctors found");
-        }
-
-
+        List<Doctor> doctors = doctorrepo.findByUserFirstNameStartingWithIgnoreCaseOrUserLastNameStartingWithIgnoreCase(firstName, lastName);
         return doctors.stream().map(commonMethods::convertToDTO).toList();
     }
 
     @Override
     public List<DoctorDTO> fetchDoctorDetailsBySpecialization(String specialization) {
-        List<Doctor> doctors =
-                doctorrepo
-                        .findBySpecializationStartingWithIgnoreCase(
-                                specialization);
-
-        if(doctors.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "No doctors found");
+        if (specialization == null || specialization.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
         }
-
-
+        List<Doctor> doctors = doctorrepo.findBySpecializationStartingWithIgnoreCase(specialization);
         return doctors.stream().map(commonMethods::convertToDTO).toList();
     }
 
     @Override
     public List<DoctorDTO> fetchDoctorDetailsByDepartment(String departmentName) {
-        Department d=departmentRepo.findBydepartmentName(departmentName).orElseThrow(()->new NoSuchDepartmentException("No such Department Exist within the records"));
-        return d.getDoctors().stream()
-                .map(doctor -> mapper.map(doctor, DoctorDTO.class))
-                .toList();
+        java.util.Optional<Department> dept = departmentRepo.findBydepartmentNameIgnoreCase(departmentName);
+        return dept.map(department -> department.getDoctors().stream().map(commonMethods::convertToDTO).toList()).orElse(java.util.Collections.emptyList());
     }
 
     @Override
     public ResponseDTO deletePatient(Long patientId) {
 
         Patient patient = patientrepo.findById(patientId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Patient not found"));
+                .orElseThrow(() -> new PatientNotFoundException("No such Patient Found"));
 
         Long userId = patient.getUser().getUser_id();
 
@@ -309,7 +180,6 @@ public class PatientServiceImplement implements PatientService{
                 "Patient Deleted Successfully"
         );
     }
-
 
 
 }

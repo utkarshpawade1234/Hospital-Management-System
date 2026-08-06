@@ -174,7 +174,7 @@ body {
 
 .form-input::placeholder { color: var(--color-text-muted); }
 
-.form-textarea { resize: vertical; min-height: 80px; }
+.form-textarea { resize: none; min-height: 80px; }
 
 .form-error {
   font-size: 12px;

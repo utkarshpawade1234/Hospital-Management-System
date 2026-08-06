@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { IconEye, IconTrash } from '@tabler/icons-react';
+import { IconEye, IconPencil, IconTrash } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import PaginatedTable from '../components/PaginatedTable';
 import SearchBar from '../components/SearchBar';
 import StatusPill from '../components/StatusPill';
 import ConfirmModal from '../components/ConfirmModal';
 import DetailDrawer, { DrawerField } from '../components/DetailDrawer';
+import DoctorFormModal from '../components/DoctorFormModal';
 import {
   getDoctors,
   searchDoctors,
   getDoctorById,
+  updateDoctor,
   deleteDoctor,
 } from '../api/adminApi';
 
@@ -27,12 +29,15 @@ export default function DoctorsPage() {
   const [drawerData, setDrawerData] = useState(null);
   const [drawerLoading, setDrawerLoading] = useState(false);
 
+  // Edit Modal
+  const [editModal, setEditModal] = useState({ open: false, doc: null });
+  const [saving, setSaving] = useState(false);
+
   // Delete
   const [deleteModal, setDeleteModal] = useState({ open: false, doc: null });
   const [deleting, setDeleting] = useState(false);
 
   const fetchData = useCallback(async () => {
-    setLoading(true);
     try {
       const res = keyword
         ? await searchDoctors(keyword, page, size)
@@ -48,7 +53,16 @@ export default function DoctorsPage() {
   }, [page, keyword]);
 
   useEffect(() => {
-    fetchData();
+    let ignore = false;
+    async function load() {
+      if (!ignore) {
+        await fetchData();
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
   }, [fetchData]);
 
   const handleSearch = useCallback((val) => {
@@ -67,6 +81,20 @@ export default function DoctorsPage() {
       setDrawerOpen(false);
     } finally {
       setDrawerLoading(false);
+    }
+  };
+
+  const handleEditSubmit = async (payload) => {
+    setSaving(true);
+    try {
+      await updateDoctor(payload);
+      toast.success('Doctor details updated successfully');
+      setEditModal({ open: false, doc: null });
+      fetchData();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to update doctor details');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -91,7 +119,7 @@ export default function DoctorsPage() {
     { header: 'Experience' },
     { header: 'Fee' },
     { header: 'Status' },
-    { header: 'Actions', width: '100px' },
+    { header: 'Actions', width: '120px' },
   ];
 
   const renderRow = (doc, i) => {
@@ -114,7 +142,7 @@ export default function DoctorsPage() {
             </div>
           </div>
         </td>
-        <td>{doc.department || '—'}</td>
+        <td>{doc.department?.departmentName || '—'}</td>
         <td>{doc.yearsOfExperience ? `${doc.yearsOfExperience} yrs` : '—'}</td>
         <td>{doc.consultationFee ? `₹${doc.consultationFee}` : '—'}</td>
         <td>
@@ -128,6 +156,13 @@ export default function DoctorsPage() {
               onClick={() => handleView(doc.doctorId)}
             >
               <IconEye size={16} />
+            </button>
+            <button
+              className="admin-action-btn"
+              title="Edit doctor"
+              onClick={() => setEditModal({ open: true, doc })}
+            >
+              <IconPencil size={16} />
             </button>
             <button
               className="admin-action-btn danger"
@@ -217,7 +252,7 @@ export default function DoctorsPage() {
             </div>
             <DrawerField label="Email" value={drawerData.email} />
             <DrawerField label="Phone" value={drawerData.phoneNumber} />
-            <DrawerField label="Department" value={drawerData.department} />
+            <DrawerField label="Department" value={drawerData.department?.departmentName || '—'} />
             <DrawerField label="Qualification" value={drawerData.qualification} />
             <DrawerField
               label="Experience"
@@ -247,6 +282,15 @@ export default function DoctorsPage() {
           </>
         )}
       </DetailDrawer>
+
+      {/* Edit Doctor Modal */}
+      <DoctorFormModal
+        open={editModal.open}
+        initialData={editModal.doc}
+        onClose={() => setEditModal({ open: false, doc: null })}
+        onSubmit={handleEditSubmit}
+        loading={saving}
+      />
 
       {/* Delete Modal */}
       <ConfirmModal

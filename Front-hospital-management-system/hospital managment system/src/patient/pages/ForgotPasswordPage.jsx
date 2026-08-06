@@ -24,11 +24,12 @@ export default function ForgotPasswordPage() {
     setError('');
     try {
       await forgotPassword(email);
-    } catch {
-      // Always show success — don't leak account existence
+      setSent(true);
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Email not found';
+      setError(msg);
     } finally {
       setLoading(false);
-      setSent(true);
     }
   };
 

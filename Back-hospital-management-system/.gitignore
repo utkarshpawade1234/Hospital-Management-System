@@ -1,34 +1,102 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# ==========================
+# IntelliJ IDEA
+# ==========================
+.idea/
 *.iml
-*.ipr
+out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# ==========================
+# Maven
+# ==========================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
 
-### VS Code ###
+# ==========================
+# Logs
+# ==========================
+*.log
+logs/
+
+# ==========================
+# OS Files
+# ==========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================
+# Java
+# ==========================
+*.class
+*.jar
+*.war
+*.ear
+
+# ==========================
+# Environment Variables
+# ==========================
+.env
+.env.*
+
+# ==========================
+# Application Secrets
+# ==========================
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# If application.properties contains passwords/API keys,
+# uncomment the line below and commit only an example file.
+# src/main/resources/application.properties
+
+# ==========================
+# Uploaded Files
+# ==========================
+uploads/
+src/main/resources/uploads/
+
+# ==========================
+# H2 Database
+# ==========================
+*.mv.db
+*.trace.db
+
+# ==========================
+# Temporary Files
+# ==========================
+*.tmp
+*.bak
+*.swp
+*.orig
+
+# ==========================
+# VS Code
+# ==========================
 .vscode/
-/.metadata/
+
+# ==========================
+# Eclipse
+# ==========================
+.project
+.classpath
+.settings/
+
+# ==========================
+# NetBeans
+# ==========================
+nbproject/private/
+build/
+dist/
+
+# ==========================
+# Generated Reports
+# ==========================
+surefire-reports/
+failsafe-reports/

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getDoctors } from '../api/adminApi';
 
 export default function DepartmentFormModal({
@@ -16,22 +16,7 @@ export default function DepartmentFormModal({
 
   const isEdit = !!initialData;
 
-  useEffect(() => {
-    if (open) {
-      if (initialData) {
-        setName(initialData.departmentName || '');
-        setDescription(initialData.description || '');
-        setSelectedDoctorIds(initialData.doctorIds || []);
-      } else {
-        setName('');
-        setDescription('');
-        setSelectedDoctorIds([]);
-      }
-      fetchDoctors();
-    }
-  }, [open, initialData]);
-
-  const fetchDoctors = async () => {
+  const fetchDoctors = useCallback(async () => {
     setLoadingDoctors(true);
     try {
       // Fetch a large page of doctors for the multi-select
@@ -42,7 +27,38 @@ export default function DepartmentFormModal({
     } finally {
       setLoadingDoctors(false);
     }
-  };
+  }, []);
+
+  const modalKey = open ? (initialData?.departmentName || 'new') : null;
+  const [prevModalKey, setPrevModalKey] = useState(modalKey);
+
+  if (modalKey !== prevModalKey) {
+    setPrevModalKey(modalKey);
+    if (open) {
+      if (initialData) {
+        setName(initialData.departmentName || '');
+        setDescription(initialData.description || '');
+        setSelectedDoctorIds(initialData.doctorIds || []);
+      } else {
+        setName('');
+        setDescription('');
+        setSelectedDoctorIds([]);
+      }
+    }
+  }
+
+  useEffect(() => {
+    let ignore = false;
+    async function load() {
+      if (open && !ignore) {
+        await fetchDoctors();
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, [open, fetchDoctors]);
 
   const toggleDoctor = (id) => {
     setSelectedDoctorIds((prev) =>
@@ -153,17 +169,15 @@ export default function DepartmentFormModal({
                       />
                       <span>
                         Dr. {doc.firstName} {doc.lastName}
-                        {doc.specialization && (
-                          <span
-                            style={{
-                              color: 'var(--color-text-muted)',
-                              marginLeft: '6px',
-                              fontSize: '12px',
-                            }}
-                          >
-                            — {doc.specialization}
-                          </span>
-                        )}
+                        <span
+                          style={{
+                            color: 'var(--color-text-muted)',
+                            marginLeft: '6px',
+                            fontSize: '12px',
+                          }}
+                        >
+                          — {doc.department ? doc.department.departmentName : 'Unassigned'}
+                        </span>
                       </span>
                     </label>
                   ))

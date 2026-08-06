@@ -1,10 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { IconEye } from '@tabler/icons-react';
+import { IconEye, IconPencil, IconTrash } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import PaginatedTable from '../components/PaginatedTable';
 import SearchBar from '../components/SearchBar';
 import DetailDrawer, { DrawerField } from '../components/DetailDrawer';
-import { getPatients, searchPatients, getPatientById } from '../api/adminApi';
+import ConfirmModal from '../components/ConfirmModal';
+import PatientFormModal from '../components/PatientFormModal';
+import {
+  getPatients,
+  searchPatients,
+  getPatientById,
+  updatePatient,
+  deletePatient,
+} from '../api/adminApi';
 
 function calcAge(dob) {
   if (!dob) return '—';
@@ -30,8 +38,15 @@ export default function PatientsPage() {
   const [drawerData, setDrawerData] = useState(null);
   const [drawerLoading, setDrawerLoading] = useState(false);
 
+  // Edit Modal
+  const [editModal, setEditModal] = useState({ open: false, patient: null });
+  const [saving, setSaving] = useState(false);
+
+  // Delete Modal
+  const [deleteModal, setDeleteModal] = useState({ open: false, patient: null });
+  const [deleting, setDeleting] = useState(false);
+
   const fetchData = useCallback(async () => {
-    setLoading(true);
     try {
       const res = keyword
         ? await searchPatients(keyword, page, size)
@@ -47,7 +62,16 @@ export default function PatientsPage() {
   }, [page, keyword]);
 
   useEffect(() => {
-    fetchData();
+    let ignore = false;
+    async function load() {
+      if (!ignore) {
+        await fetchData();
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
   }, [fetchData]);
 
   const handleSearch = useCallback((val) => {
@@ -69,17 +93,45 @@ export default function PatientsPage() {
     }
   };
 
+  const handleEditSubmit = async (payload) => {
+    setSaving(true);
+    try {
+      await updatePatient(payload);
+      toast.success('Patient details updated successfully');
+      setEditModal({ open: false, patient: null });
+      fetchData();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to update patient details');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteModal.patient) return;
+    setDeleting(true);
+    try {
+      await deletePatient(deleteModal.patient.patientId);
+      toast.success('Patient record deleted successfully');
+      setDeleteModal({ open: false, patient: null });
+      fetchData();
+    } catch {
+      toast.error('Failed to delete patient record');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const columns = [
     { header: 'Name' },
     { header: 'Age' },
     { header: 'Email' },
     { header: 'Contact' },
     { header: 'Blood group' },
-    { header: 'Actions', width: '80px' },
+    { header: 'Actions', width: '120px' },
   ];
 
   const renderRow = (patient, i) => {
-    // Patient entity has nested user object
     const user = patient.user || {};
     const name = `${user.firstName || ''} ${user.lastName || ''}`.trim() || '—';
     const initials = `${(user.firstName || '?')[0]}${(user.lastName || '')[0] || ''}`.toUpperCase();
@@ -113,6 +165,20 @@ export default function PatientsPage() {
             >
               <IconEye size={16} />
             </button>
+            <button
+              className="admin-action-btn"
+              title="Edit patient"
+              onClick={() => setEditModal({ open: true, patient })}
+            >
+              <IconPencil size={16} />
+            </button>
+            <button
+              className="admin-action-btn danger"
+              title="Delete patient"
+              onClick={() => setDeleteModal({ open: true, patient })}
+            >
+              <IconTrash size={16} />
+            </button>
           </div>
         </td>
       </tr>
@@ -124,7 +190,7 @@ export default function PatientsPage() {
       <div className="admin-page-header">
         <h1 className="admin-page-title">Patients</h1>
         <p className="admin-page-subtitle">
-          View all patients registered in the system
+          View and manage all patients registered in the system
         </p>
       </div>
 
@@ -216,6 +282,25 @@ export default function PatientsPage() {
           </>
         )}
       </DetailDrawer>
+
+      {/* Edit Patient Modal */}
+      <PatientFormModal
+        open={editModal.open}
+        initialData={editModal.patient}
+        onClose={() => setEditModal({ open: false, patient: null })}
+        onSubmit={handleEditSubmit}
+        loading={saving}
+      />
+
+      {/* Delete Patient Modal */}
+      <ConfirmModal
+        open={deleteModal.open}
+        title="Delete patient record"
+        message={`Are you sure you want to delete patient record for "${deleteModal.patient?.user?.firstName || ''} ${deleteModal.patient?.user?.lastName || ''}"? This action cannot be undone.`}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteModal({ open: false, patient: null })}
+        loading={deleting}
+      />
     </div>
   );
 }
