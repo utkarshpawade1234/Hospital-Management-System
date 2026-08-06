@@ -40,4 +40,5 @@ public class DoctorDTO {
     private Doctor.AvailabilityStatus availabilityStatus;
 
 
+
 }
