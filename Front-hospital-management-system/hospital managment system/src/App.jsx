@@ -7,20 +7,24 @@ import LoginPage from './patient/pages/LoginPage';
 import RegisterPage from './patient/pages/RegisterPage';
 import ForgotPasswordPage from './patient/pages/ForgotPasswordPage';
 import ResetPasswordPage from './patient/pages/ResetPasswordPage';
+import DashboardPage from './patient/pages/DashboardPage';
 import CompleteProfilePage from './patient/pages/CompleteProfilePage';
 import FindDoctorsPage from './patient/pages/FindDoctorsPage';
 import MyProfilePage from './patient/pages/MyProfilePage';
 import MyAppointmentsPage from './patient/pages/MyAppointmentsPage';
+import PatientPrescriptions from './patient/pages/PatientPrescriptions';
+import PaymentPage from './patient/pages/PaymentPage';
+import PatientPaymentsPage from './patient/pages/PatientPaymentsPage';
 
 // Admin panel
 import AdminLayout from './admin/components/AdminLayout';
 import AdminDashboard from './admin/pages/AdminDashboard';
-import UsersPage from './admin/pages/UsersPage';
 import DoctorsPage from './admin/pages/DoctorsPage';
 import PatientsPage from './admin/pages/PatientsPage';
 import DepartmentsPage from './admin/pages/DepartmentsPage';
 import AppointmentsPage from './admin/pages/AppointmentsPage';
 import MedicinesPage from './admin/pages/MedicinesPage';
+import AdminPaymentsPage from './admin/pages/AdminPaymentsPage';
 
 // Doctor panel
 import DoctorLayout from './doctor/components/DoctorLayout';
@@ -44,22 +48,27 @@ function App() {
 
         {/* Patient routes (top navbar) */}
         <Route element={<PatientLayout />}>
-          <Route path="/dashboard" element={<FindDoctorsPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/complete-profile" element={<CompleteProfilePage />} />
           <Route path="/find-doctors" element={<FindDoctorsPage />} />
+          <Route path="/doctors" element={<FindDoctorsPage />} />
           <Route path="/my-appointments" element={<MyAppointmentsPage />} />
           <Route path="/my-profile" element={<MyProfilePage />} />
+          <Route path="/profile" element={<MyProfilePage />} />
+          <Route path="/prescriptions" element={<PatientPrescriptions />} />
+          <Route path="/pay" element={<PaymentPage />} />
+          <Route path="/my-payments" element={<PatientPaymentsPage />} />
         </Route>
 
         {/* Admin panel routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<UsersPage />} />
           <Route path="doctors" element={<DoctorsPage />} />
           <Route path="patients" element={<PatientsPage />} />
           <Route path="departments" element={<DepartmentsPage />} />
           <Route path="appointments" element={<AppointmentsPage />} />
           <Route path="medicines" element={<MedicinesPage />} />
+          <Route path="payments" element={<AdminPaymentsPage />} />
         </Route>
 
         {/* Doctor panel routes */}

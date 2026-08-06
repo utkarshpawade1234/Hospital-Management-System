@@ -2,7 +2,10 @@ package com.hospital.hospital_management_system.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,51 +18,46 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class Appointment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "appointment_id")
-    private Long appointmentId;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "appointment_id")
+        private Long appointmentId;
 
-    @ManyToOne
-    @JoinColumn(
-            name = "patient_id",
-            nullable = false
-    )
-    private Patient patient;
+        @ManyToOne
+        @JoinColumn(name = "patient_id", nullable = false)
+        private Patient patient;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(
-            name = "doctor_id",
-            nullable = true
-    )
-    private Doctor doctor;
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "doctor_id", nullable = false)
+        private Doctor doctor;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "appointment_date",
-            nullable = false)
-    private LocalDate appointmentDate;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @Column(name = "appointment_date", nullable = false)
+        private LocalDate appointmentDate;
 
-    @JsonFormat(pattern = "HH:mm:ss")
-    @Column(name = "appointment_start_time",nullable = false)
-    private LocalTime startTime;
+        @JsonFormat(pattern = "HH:mm:ss")
+        @Column(name = "appointment_start_time", nullable = false)
+        private LocalTime startTime;
 
-    @JsonFormat(pattern = "HH:mm:ss")
-    @Column(name="appointment_end_time",nullable = false)
-    private LocalTime endTime;
+        @JsonFormat(pattern = "HH:mm:ss")
+        @Column(name = "appointment_end_time", nullable = false)
+        private LocalTime endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+        @ManyToOne
+        @JoinColumn(name = "department_id", nullable = false)
+        private Department department;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AppointmentType appointmentType;
+        @Enumerated(EnumType.STRING)
+        @Column(nullable = false)
+        private AppointmentType appointmentType;
 
+        @Enumerated(EnumType.STRING)
+        @Column(nullable = false)
+        private AppointmentStatus status;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AppointmentStatus status;
+        @Column(length = 500)
+        private String remarks;
 
-    @Column(length = 500)
-    private String remarks;
+        @Transient
+        private PaymentStatus paymentStatus;
 }

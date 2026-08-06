@@ -13,13 +13,13 @@ public interface AdminService {
 
     Page<ReqAppointmentDTO> getAllAppointments(int page, int size);
 
-    Page<User> getAllUsers(int page, int size);
-
     ResponseDTO deleteDoctor(long doctorId);
 
-    ResponseDTO deleteUser(Long userId);
-
     ResponseDTO deleteDepartment(Long departmentId);
+
+    ResponseDTO deletePatient(Long patientId);
+
+    ResponseDTO deleteAppointment(Long appointmentId);
 
     DashBoardDTO getDashBoardDetails();
 
@@ -35,44 +35,23 @@ public interface AdminService {
 
     ResponseDTO updateDepartment(Long departmentId, DepartmentUpdateDTO departmentUpdateDTO);
 
-
-    User getUserById(Long userId);
-
     Appointment getAppointmentById(Long appointmentId);
 
-    ResponseDTO updateAppointmentStatus(
-            Long appointmentId,
-            AppointmentStatus status);
+    ResponseDTO updateAppointmentStatus(Long appointmentId, AppointmentStatus status);
 
-    public Page<DoctorDTO> getDoctorsByDepartment(Long departmentId, int page, int size);
+     Page<DoctorDTO> getDoctorsByDepartment(Long departmentId, int page, int size);
 
-    Page<DoctorDTO> searchDoctor(
-            String keyword,
-            int page,
-            int size);
+    Page<DoctorDTO> searchDoctor(String keyword, int page, int size);
 
-    Page<Patient> searchPatient(
-            String keyword,
-            int page,
-            int size);
+    Page<PatientDTO> searchPatient(String keyword, int page, int size);
 
-    Page<ReqAppointmentDTO> getAppointmentsByStatus(
-            AppointmentStatus status,
-            int page,
-            int size);
+    Page<ReqAppointmentDTO> getAppointmentsByStatus(AppointmentStatus status, int page, int size);
 
-    Page<ReqAppointmentDTO> getAppointmentsByDoctor(
-            Long doctorId,
-            int page,
-            int size);
+    Page<ReqAppointmentDTO> getAppointmentsByDoctor(Long doctorId, int page, int size);
 
-    Page<ReqAppointmentDTO> getAppointmentsByPatient(
-            Long patientId,
-            int page,
-            int size);
+    Page<ReqAppointmentDTO> getAppointmentsByPatient(Long patientId, int page, int size);
 
-    Page<User> searchUser(
-            String keyword,
-            int page,
-            int size);
+    ResponseDTO updateDoctorDetails(DoctorDTO doctorates);
+
+    ResponseDTO updatePatientDetails(UpdatePatientDTO patientdetails);
 }

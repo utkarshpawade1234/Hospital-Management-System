@@ -1,6 +1,7 @@
 package com.hospital.hospital_management_system.service;
 
 import com.hospital.hospital_management_system.DTO.*;
+import com.hospital.hospital_management_system.Exceptions.PaymentVerificationException;
 import com.hospital.hospital_management_system.model.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -11,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CommonMethods {
-     private final ModelMapper mapper;
+    private final ModelMapper mapper;
     public ReqAppointmentDTO convertToAppointmentDTO(Appointment appointment) {
         ReqAppointmentDTO dto = new ReqAppointmentDTO();
         dto.setAppointmentId(appointment.getAppointmentId());
@@ -115,6 +116,7 @@ public class CommonMethods {
 
         return dto;
     }
+
     public PrescriptionDTO convertToPrescriptionDTO(Prescription prescription) {
 
         PrescriptionDTO dto = mapper.map(prescription, PrescriptionDTO.class);
@@ -144,10 +146,12 @@ public class CommonMethods {
 
         return dto;
     }
+
     public MedicineMasterDTO convertToMedicineMasterDTO(MedicineMaster medicine) {
 
         return mapper.map(medicine, MedicineMasterDTO.class);
     }
+
     public List<MedicineMasterDTO> convertToMedicineMasterDTOList(
             List<MedicineMaster> medicines) {
 
@@ -156,7 +160,27 @@ public class CommonMethods {
                 .toList();
     }
 
+    public PaymentStatus getPaymentStatus(com.razorpay.Payment razorpayPayment) {
 
+        String status = razorpayPayment.get("status").toString();
+
+        return switch (status) {
+            case "captured" -> PaymentStatus.SUCCESS;
+            case "failed" -> PaymentStatus.FAILED;
+            case "created" -> PaymentStatus.PENDING;
+            default -> throw new PaymentVerificationException("Unknown Razorpay Payment Status : " + status);
+        };
+    }
+
+    public OrderStatus getOrderStatus(PaymentStatus paymentStatus) {
+
+        return switch (paymentStatus) {
+            case SUCCESS -> OrderStatus.PAID;
+            case FAILED -> OrderStatus.CANCELLED;
+            case PENDING -> OrderStatus.CREATED;
+            default -> throw new PaymentVerificationException("Unknown Payment Status: " + paymentStatus);
+        };
+    }
 }
 
 

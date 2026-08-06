@@ -1,135 +1,39 @@
-import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import {
-  IconLayoutDashboard,
-  IconStethoscope,
-  IconCalendarEvent,
-  IconUser,
-  IconBell,
-  IconLogout,
-  IconMenu2,
-  IconX,
-  IconActivity,
-} from '@tabler/icons-react';
+import { useState, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import TopNavbar from '../../components/TopNavbar';
+import CompleteProfileModal from './CompleteProfileModal';
 import '../patient.css';
 
-const navItems = [
-  { to: '/dashboard', icon: IconLayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/find-doctors', icon: IconStethoscope, label: 'Find Doctors' },
-  { to: '/my-appointments', icon: IconCalendarEvent, label: 'My Appointments' },
-  { to: '/my-profile', icon: IconUser, label: 'My Profile' },
-];
-
 export default function PatientLayout() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const navigate = useNavigate();
+  const [showCompleteModal, setShowCompleteModal] = useState(false);
 
-  const userEmail = localStorage.getItem('userEmail') || 'patient@hms.com';
-  const userRole = localStorage.getItem('userRole') || 'PATIENT';
-  const initials = userEmail.charAt(0).toUpperCase();
+  useEffect(() => {
+    const isFirstTime = localStorage.getItem('firstTimeLogin') === 'true';
+    const hasPatientId = !!localStorage.getItem('patientId');
+    if (isFirstTime && !hasPatientId) {
+      setShowCompleteModal(true);
+    }
+  }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('patientId');
-    navigate('/');
+  const handleCloseModal = () => {
+    localStorage.removeItem('firstTimeLogin');
+    setShowCompleteModal(false);
   };
 
   return (
     <div className="patient-root">
-      {/* ─── Top Navbar ─────────────────────────────────── */}
-      <header className="patient-navbar">
-        <div className="patient-navbar-logo">
-          <IconActivity size={22} />
-          HMS
-        </div>
-
-        {/* Desktop nav */}
-        <nav className="patient-nav-links">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                `patient-nav-link${isActive ? ' active' : ''}`
-              }
-            >
-              <item.icon size={16} />
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-
-        {/* Right side */}
-        <div className="patient-nav-right">
-          <button className="patient-notification-btn" title="Notifications">
-            <IconBell size={20} />
-            <span className="patient-notification-badge" />
-          </button>
-
-          <div className="patient-user-info">
-            <div className="patient-avatar">{initials}</div>
-            <div className="patient-user-meta">
-              <span className="patient-user-name">
-                {userEmail.split('@')[0]}
-              </span>
-              <span className="patient-user-role">{userRole}</span>
-            </div>
-          </div>
-
-          <button
-            className="patient-logout-btn"
-            onClick={handleLogout}
-            title="Logout"
-          >
-            <IconLogout size={18} />
-          </button>
-
-          <button
-            className="patient-hamburger"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <IconX size={20} /> : <IconMenu2 size={20} />}
-          </button>
-        </div>
-      </header>
-
-      {/* ─── Mobile Menu ────────────────────────────────── */}
-      <div className={`patient-mobile-menu${mobileOpen ? ' open' : ''}`}>
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.end}
-            className={({ isActive }) =>
-              `patient-nav-link${isActive ? ' active' : ''}`
-            }
-            onClick={() => setMobileOpen(false)}
-          >
-            <item.icon size={16} />
-            {item.label}
-          </NavLink>
-        ))}
-        <button
-          className="patient-nav-link"
-          onClick={handleLogout}
-          style={{ border: 'none', background: 'none', textAlign: 'left' }}
-        >
-          <IconLogout size={16} />
-          Logout
-        </button>
-      </div>
-
-      {/* ─── Content ────────────────────────────────────── */}
+      <TopNavbar role="PATIENT" />
       <main className="patient-content">
         <Outlet />
       </main>
 
-      {/* ─── Toasts ─────────────────────────────────────── */}
+      <CompleteProfileModal
+        open={showCompleteModal}
+        onClose={handleCloseModal}
+        onSuccess={handleCloseModal}
+      />
+
       <Toaster
         position="top-right"
         toastOptions={{

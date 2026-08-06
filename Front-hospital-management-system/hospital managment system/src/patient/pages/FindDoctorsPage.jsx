@@ -124,10 +124,21 @@ export default function FindDoctorsPage() {
         remarks: bookingForm.remarks,
       });
 
+      // Snapshot values before clearing state
+      const appointmentId   = res.appointmentId;
+      const doctorName      = `Dr. ${bookingDoc.firstName} ${bookingDoc.lastName}`;
+      const appointmentDate = bookingForm.appointmentDate;
+      const startTime       = bookingForm.appointmentTime;
+
       toast.success(res.message || 'Appointment booked successfully!');
       setBookingDoc(null);
       setBookingForm({ appointmentDate: '', appointmentTime: '', remarks: '' });
-      navigate('/my-appointments');
+
+      // Navigate to payment page with appointment details
+      navigate('/pay', {
+        state: { appointmentId, doctorName, appointmentDate, startTime },
+      });
+
     } catch (err) {
       const errMsg = err.response?.data?.message || err.message || '';
       

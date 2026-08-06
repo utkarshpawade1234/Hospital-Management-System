@@ -9,7 +9,6 @@ export default function PatientPrescriptions() {
   const [expandedCardId, setExpandedCardId] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
     api.get("/patient/prescriptions")
       .then((res) => {
         setPrescriptions(res.data || []);

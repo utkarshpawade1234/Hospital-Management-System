@@ -2,20 +2,20 @@ import patientAxios from './patientAxios';
 
 // ─── Auth (public — no token needed) ────────────────────
 export const register = (data) =>
-  patientAxios.post('/patient/register', data).then((r) => r.data);
+  patientAxios.post('/auth/register', data).then((r) => r.data);
 
 export const login = (data) =>
-  patientAxios.post('/patient/login', data).then((r) => r.data);
+  patientAxios.post('/auth/login', data).then((r) => r.data);
 
 export const forgotPassword = (email) =>
-  patientAxios.post('/patient/forgot-password', { email }).then((r) => r.data);
+  patientAxios.post('/auth/forgot-password', { email }).then((r) => r.data);
 
 export const resetPassword = (data) =>
-  patientAxios.post('/patient/reset-password', data).then((r) => r.data);
+  patientAxios.post('/auth/reset-password', data).then((r) => r.data);
 
 // ─── Profile ────────────────────────────────────────────
-export const getProfile = (email) =>
-  patientAxios.get(`/patient/profile/${email}`).then((r) => r.data);
+export const getProfile = () =>
+  patientAxios.get('/patient/profile/myProfile').then((r) => r.data);
 
 export const registerPatientDetails = (data) =>
   patientAxios.post('/patient/patient', data).then((r) => r.data);

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconActivity } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import { register } from '../api/patientApi';
+import PhotoUpload from '../components/PhotoUpload';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -48,7 +49,8 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const { confirmPassword, ...payload } = form;
+      const payload = { ...form };
+      delete payload.confirmPassword;
       const res = await register(payload);
       toast.success(res.message || 'Registration successful!');
       setTimeout(() => navigate('/'), 500);
@@ -181,14 +183,14 @@ export default function RegisterPage() {
           />
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Profile photo URL <span style={{ color: 'var(--color-text-muted)', fontWeight: 400 }}>(optional)</span></label>
-          <input
-            className="form-input"
-            type="url"
-            placeholder="https://example.com/photo.jpg"
+        <div className="form-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '16px 0' }}>
+          <label className="form-label" style={{ marginBottom: '8px' }}>Profile photo <span style={{ color: 'var(--color-text-muted)', fontWeight: 400 }}>(optional)</span></label>
+          <PhotoUpload
             value={form.profilephoto}
-            onChange={set('profilephoto')}
+            onChange={(url) => setForm({ ...form, profilephoto: url })}
+            isEditing={true}
+            initials={`${(form.firstName || '?')[0]}${(form.lastName || '')[0] || ''}`.toUpperCase()}
+            size={76}
           />
         </div>
 

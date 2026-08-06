@@ -10,13 +10,14 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class HospitalManagementSystemApplication {
 
-	public static void main(String[] args) {
+	 static void main(String[] args) {
 		SpringApplication.run(HospitalManagementSystemApplication.class, args);
 	}
 
 	@Bean
 	ModelMapper modelMapper(){
 		ModelMapper mapper=new ModelMapper();
+        mapper.getConfiguration().setSkipNullEnabled(true);
 		//configuration
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT).setPropertyCondition(Conditions.isNotNull());
 		return mapper;

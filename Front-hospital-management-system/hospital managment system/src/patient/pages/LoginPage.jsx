@@ -45,15 +45,18 @@ export default function LoginPage() {
 
       // Patient — check profile
       try {
-        const profile = await getProfile(form.email);
-        if (profile.patientId) {
-          localStorage.setItem('patientId', profile.patientId);
+        const profile = await getProfile();
+        if (profile && (profile.patientId || profile.bloodGroup)) {
+          if (profile.patientId) localStorage.setItem('patientId', profile.patientId);
+          localStorage.removeItem('firstTimeLogin');
           setTimeout(() => navigate('/dashboard'), 300);
         } else {
-          setTimeout(() => navigate('/complete-profile'), 300);
+          localStorage.setItem('firstTimeLogin', 'true');
+          setTimeout(() => navigate('/dashboard'), 300);
         }
       } catch {
-        setTimeout(() => navigate('/complete-profile'), 300);
+        localStorage.setItem('firstTimeLogin', 'true');
+        setTimeout(() => navigate('/dashboard'), 300);
       }
     } catch (err) {
       toast.error(

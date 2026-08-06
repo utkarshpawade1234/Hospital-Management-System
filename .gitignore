@@ -1,58 +1,64 @@
-# =========================
-# IDE Files
-# =========================
-.idea/
-.vscode/
-*.iml
+# Files that should be committed are not listed here: source code, README files,
+# package-lock.json, pom.xml, Maven wrapper files, and configuration examples.
 
-# =========================
-# Java / Spring Boot
-# =========================
+# Dependencies and build output
+**/node_modules/
 **/target/
+**/build/
+**/dist/
+**/dist-ssr/
+**/.vite/
 *.class
 *.jar
 *.war
-git checkout utkarsh-dev
 
-# Work on backend
-
-git add .
-
-git commit -m "Completed Department Module"
-
-git push
-# Maven
-**/.settings/
-**/.classpath
-**/.project
-
-# =========================
-# Node / React / Vite
-# =========================
-**/node_modules/
-**/dist/
-**/.vite/
-
-# =========================
-# Logs
-# =========================
-*.log
-logs/
-
-# =========================
-# Environment Variables
-# =========================
+# Local environment and secrets
 .env
 .env.*
+!.env.example
+**/src/main/resources/application.properties
+!**/src/main/resources/application-example.properties
+!**/src/main/resources/application.properties.example
+*.pem
+*.key
+*.p12
+*.pfx
 
-# =========================
-# Operating System
-# =========================
-Thumbs.db
+# Runtime-generated files
+/uploads/
+logs/
+**/logs/
+*.log
+hs_err_pid*.log
+
+# IDE and editor settings
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache/
+
+# Maven and Java tooling
+**/.mvn/wrapper/maven-wrapper.jar
+**/.apt_generated/
+
+# Test coverage and caches
+coverage/
+.nyc_output/
+.eslintcache
+*.tsbuildinfo
+
+# Operating-system and temporary files
 .DS_Store
-
-# =========================
-# Temporary Files
-# =========================
+Thumbs.db
 *.tmp
+*.temp
 *.swp
+*.swo
+*~
