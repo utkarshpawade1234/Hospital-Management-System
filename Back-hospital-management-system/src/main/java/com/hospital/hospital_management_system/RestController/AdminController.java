@@ -163,4 +163,16 @@ public class AdminController {
     public ResponseEntity<ResponseDTO> updateDoctor(@Valid @RequestBody DoctorDTO doctorDTO) {
         return ResponseEntity.ok(adminService.updateDoctorDetails(doctorDTO));
     }
+
+    @PostMapping("/doctor/register")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> createDoctor(@Valid @RequestBody DoctorCreateDTO doctorCreateDTO) {
+        return ResponseEntity.ok(adminService.CreateDoctor(doctorCreateDTO));
+    }
+
+    @GetMapping("/departments/names")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<String>> getDepartmentNames() {
+        return ResponseEntity.ok(adminService.getAllDepartmentNames());
+    }
 }

@@ -16,6 +16,9 @@ export const searchDoctors = (keyword, page = 0, size = 10) =>
 export const getDoctorById = (id) =>
   adminAxios.get(`/doctors/${id}`).then((r) => r.data);
 
+export const createDoctor = (dto) =>
+  adminAxios.post('/doctor/register', dto).then((r) => r.data);
+
 export const updateDoctor = (dto) =>
   adminAxios.put('/doctor', dto).then((r) => r.data);
 
@@ -41,6 +44,9 @@ export const deletePatient = (id) =>
 // ─── Departments ────────────────────────────────────────────
 export const getDepartments = () =>
   adminAxios.get('/departments').then((r) => r.data);
+
+export const getDepartmentNames = () =>
+  adminAxios.get('/departments/names').then((r) => r.data);
 
 export const getDepartmentById = (id) =>
   adminAxios.get(`/departments/${id}`).then((r) => r.data);

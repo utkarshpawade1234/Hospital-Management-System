@@ -57,7 +57,7 @@ public class AuthServiceImplementation implements AuthService {
     }
 
     @Override
-    public LoginResponseDTO login(LoginDTO dto) {
+    public LoginResponseDTO login(LoginRequestDTO dto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
         User u = userRepo.findByEmail(dto.getEmail()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
         String token = jwtUtils.generateJwtToken(u.getEmail());
@@ -66,9 +66,8 @@ public class AuthServiceImplementation implements AuthService {
     }
 
     @Override
-    public ResponseDTO forgotPassword(ForgotPassDTO dto) {
-        User u = userRepo.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("Email not found"));
+    public ResponseDTO forgotPassword(ForgotPasswordDTO dto) {
+        User u = userRepo.findByEmail(dto.getEmail()).orElseThrow(() -> new UserNotFoundException("Email not found"));
 
         String token = UUID.randomUUID().toString();
         PasswordResetToken resetToken = new PasswordResetToken();

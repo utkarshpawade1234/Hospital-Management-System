@@ -12,6 +12,7 @@ import {
 import toast from 'react-hot-toast';
 import { getMyAppointments, cancelAppointment } from '../api/patientApi';
 import ConfirmModal from '../components/ConfirmModal';
+import { getSessionItem } from '../../utils/sessionStorage';
 
 const STATUS_MAP = {
   CONFIRMED: { cls: 'pill-green', label: 'Confirmed' },
@@ -30,7 +31,7 @@ export default function MyAppointmentsPage() {
   const [cancelling, setCancelling] = useState(false);
 
   const fetchAppointments = useCallback(async () => {
-    const patientId = localStorage.getItem('patientId');
+    const patientId = getSessionItem('patientId');
     if (!patientId) {
       setLoading(false);
       return;
@@ -39,11 +40,11 @@ export default function MyAppointmentsPage() {
     try {
       const data = await getMyAppointments(patientId);
       const list = Array.isArray(data) ? data : [];
-      // Sort soonest first (ascending by date + time)
+      // Sort newest first (descending by date + time)
       list.sort((a, b) => {
         const strA = `${a.appointmentDate || ''}T${a.startTime || '00:00:00'}`;
         const strB = `${b.appointmentDate || ''}T${b.startTime || '00:00:00'}`;
-        return new Date(strA) - new Date(strB);
+        return new Date(strB) - new Date(strA);
       });
       setAppointments(list);
     } catch {
@@ -130,6 +131,7 @@ export default function MyAppointmentsPage() {
               : '?';
 
             const statusKey = appt.status ? appt.status.toUpperCase() : 'PENDING';
+            const payStatusKey = appt.paymentStatus ? appt.paymentStatus.toUpperCase() : 'PENDING';
             const status = STATUS_MAP[statusKey] || {
               cls: 'pill-blue',
               label: appt.status || 'Pending',
@@ -187,11 +189,11 @@ export default function MyAppointmentsPage() {
                   )}
 
                   {/* Payment Action / Status */}
-                  {appt.paymentStatus === 'SUCCESS' ? (
+                  {payStatusKey === 'REFUNDED' ? (
                     <span
                       style={{
-                        background: '#E6F4EA',
-                        color: '#137333',
+                        background: '#F0F2F5',
+                        color: '#6B7690',
                         padding: '4px 10px',
                         borderRadius: '6px',
                         fontSize: '12px',
@@ -201,41 +203,96 @@ export default function MyAppointmentsPage() {
                         gap: '4px',
                       }}
                     >
-                      <IconCheck size={14} />
-                      Payment Successful
+                      <IconClock size={14} />
+                      Refunded
                     </span>
-                  ) : statusKey !== 'CANCELLED' && (
-                    <button
-                      className="btn btn-sm"
-                      style={{
-                        background: '#1D9E75',
-                        color: '#fff',
-                        border: 'none',
-                        padding: '4px 12px',
-                        borderRadius: '6px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                      }}
-                      onClick={() =>
-                        navigate('/pay', {
-                          state: {
-                            appointmentId:   appt.appointmentId,
-                            doctorName:      doctorName,
-                            appointmentDate: appt.appointmentDate,
-                            startTime:       appt.startTime,
-                          },
-                        })
-                      }
-                      title="Complete payment"
-                    >
-                      <IconCreditCard size={14} />
-                      Pay Now
-                    </button>
-                  )}
+                  ) : payStatusKey === 'SUCCESS' ? (
+                    statusKey === 'CANCELLED' ? (
+                      <span
+                        style={{
+                          background: '#FEF6E0',
+                          color: '#B45309',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        <IconClock size={14} />
+                        Refunding
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          background: '#E6F4EA',
+                          color: '#137333',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        <IconCheck size={14} />
+                        Payment Successful
+                      </span>
+                    )
+                  ) : statusKey !== 'CANCELLED' ? (
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                      <span
+                        style={{
+                          background: '#FEF6E0',
+                          color: '#B45309',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        <IconClock size={14} />
+                        Payment Pending
+                      </span>
+                      <button
+                        className="btn btn-sm"
+                        style={{
+                          background: '#1D9E75',
+                          color: '#fff',
+                          border: 'none',
+                          padding: '4px 12px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          boxShadow: '0 2px 4px rgba(29, 158, 117, 0.25)',
+                        }}
+                        onClick={() =>
+                          navigate('/pay', {
+                            state: {
+                              appointmentId:   appt.appointmentId,
+                              doctorName:      doctorName,
+                              appointmentDate: appt.appointmentDate,
+                              startTime:       appt.startTime,
+                            },
+                          })
+                        }
+                        title="Click to complete payment"
+                      >
+                        <IconCreditCard size={14} />
+                        Pay Now
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             );

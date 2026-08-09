@@ -1,0 +1,351 @@
+/* Payment Detail Modal Styling */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(11, 31, 63, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.payment-detail-modal {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 540px;
+  box-shadow: 0 20px 40px rgba(11, 31, 63, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #ECEEF3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #F4F6FA;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-title .header-icon {
+  color: #1D9E75;
+}
+
+.header-title h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0B1F3F;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #6B7690;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+}
+
+.close-btn:hover {
+  background-color: #E5E8EF;
+  color: #0B1F3F;
+}
+
+.modal-body {
+  padding: 20px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #6B7690;
+  gap: 12px;
+}
+
+.modal-state-box.error {
+  color: #791F1F;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #E5E8EF;
+  border-top-color: #1D9E75;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.payment-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-item.full-width {
+  grid-column: span 2;
+}
+
+.detail-item.highlight-item {
+  background-color: #F4F6FA;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #E5E8EF;
+}
+
+.detail-item .label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8C96AD;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-item .value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #0B1F3F;
+  word-break: break-all;
+}
+
+.detail-item .large-amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1D9E75;
+}
+
+.font-mono {
+  font-family: monospace;
+  font-size: 12px;
+  background-color: #F4F6FA;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #ECEEF3;
+}
+
+/* ── Status Pills (Established System Tokens) ── */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.status-pill.green {
+  background-color: #E1F5EE;
+  color: #085041;
+}
+
+.status-pill.green::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #1D9E75;
+}
+
+.status-pill.amber {
+  background-color: #FEF6E0;
+  color: #633806;
+}
+
+.status-pill.red {
+  background-color: #FCEBEB;
+  color: #791F1F;
+}
+
+.status-pill.gray {
+  background-color: #F0F2F5;
+  color: #6B7690;
+}
+
+.modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #ECEEF3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  background-color: #F4F6FA;
+}
+
+.secondary-btn {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E8EF;
+  color: #0B1F3F;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.secondary-btn:hover {
+  background-color: #F4F6FA;
+}
+
+/* Outline Style Refund Button */
+.refund-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #FFFFFF;
+  color: #791F1F;
+  border: 1px solid #791F1F;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.refund-btn:hover {
+  background-color: #FCEBEB;
+}
+
+.refund-btn:disabled {
+  background-color: #E5E8EF;
+  border-color: #E5E8EF;
+  color: #8C96AD;
+  cursor: not-allowed;
+}
+
+/* Confirm Dialog Overlay */
+.confirm-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(11, 31, 63, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 2010;
+}
+
+.confirm-dialog {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(11, 31, 63, 0.2);
+}
+
+.confirm-icon {
+  margin: 0 auto 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-icon.warning {
+  background-color: #FEF6E0;
+  color: #633806;
+}
+
+.confirm-dialog h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #0B1F3F;
+}
+
+.confirm-dialog p {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: #6B7690;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.cancel-btn {
+  background-color: #F4F6FA;
+  border: 1px solid #E5E8EF;
+  color: #6B7690;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Solid Version of Red for Confirm Refund */
+.danger-btn {
+  background-color: #791F1F;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.danger-btn:hover {
+  opacity: 0.9;
+}

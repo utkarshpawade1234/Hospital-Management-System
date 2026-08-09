@@ -11,7 +11,6 @@ import lombok.*;
 @ToString
 public class Doctor {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "doctorid")

@@ -60,7 +60,7 @@ export default function ResetPasswordPage() {
     <div className="auth-card">
       <div className="auth-logo">
         <IconActivity size={26} />
-        HMS
+        Medicare
       </div>
       <h1 className="auth-title">Reset password</h1>
       <p className="auth-subtitle">Enter your new password below</p>

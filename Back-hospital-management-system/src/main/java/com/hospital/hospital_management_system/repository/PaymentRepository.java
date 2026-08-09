@@ -18,7 +18,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     Page<Payment> findByPatient(Patient patient, Pageable pageable);
 
+    Page<Payment> findByPatientAndPaymentStatus(Patient patient, PaymentStatus paymentStatus, Pageable pageable);
+
     Page<Payment> findByAppointment(Appointment appointment, Pageable pageable);
+
+    Page<Payment> findByAppointmentOrderByPaymentIdDesc(Appointment appointment, Pageable pageable);
 
     Page<Payment> findByDoctorDoctorId(Long doctorId, Pageable pageable);
 
@@ -69,7 +73,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Object[]> getMonthlyRevenue(Integer year);
 
 
-    Optional<Payment> findByAppointmentAndPaymentStatus(Appointment appointment, PaymentStatus paymentStatus);
+    Optional<Payment> findFirstByAppointmentAndPaymentStatusOrderByPaymentIdDesc(Appointment appointment, PaymentStatus paymentStatus);
 
     Optional<Payment> findTopByAppointmentOrderByPaymentIdDesc(Appointment appointment);
 

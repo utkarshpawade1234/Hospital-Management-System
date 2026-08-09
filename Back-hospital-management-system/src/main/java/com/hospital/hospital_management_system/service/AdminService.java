@@ -54,4 +54,9 @@ public interface AdminService {
     ResponseDTO updateDoctorDetails(DoctorDTO doctorates);
 
     ResponseDTO updatePatientDetails(UpdatePatientDTO patientdetails);
+
+    ResponseDTO CreateDoctor(DoctorCreateDTO doctorCreateDTO);
+
+    List<String> getAllDepartmentNames();
+
 }

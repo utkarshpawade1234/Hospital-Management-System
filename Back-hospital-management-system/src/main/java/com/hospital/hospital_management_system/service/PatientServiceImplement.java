@@ -154,7 +154,7 @@ public class PatientServiceImplement implements PatientService {
 
     @Override
     public List<DoctorDTO> fetchDoctorDetailsByDepartment(String departmentName) {
-        java.util.Optional<Department> dept = departmentRepo.findBydepartmentNameIgnoreCase(departmentName);
+        java.util.Optional<Department> dept = departmentRepo.findByDepartmentNameIgnoreCase(departmentName);
         return dept.map(department -> department.getDoctors().stream().map(commonMethods::convertToDTO).toList()).orElse(java.util.Collections.emptyList());
     }
 
@@ -176,6 +176,7 @@ public class PatientServiceImplement implements PatientService {
                 "Patient Deleted Successfully"
         );
     }
+
 
 
 }

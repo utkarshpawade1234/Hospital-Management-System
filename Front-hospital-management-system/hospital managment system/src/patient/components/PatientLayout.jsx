@@ -1,23 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import TopNavbar from '../../components/TopNavbar';
 import CompleteProfileModal from './CompleteProfileModal';
+import { getSessionItem, removeSessionItem } from '../../utils/sessionStorage';
 import '../patient.css';
 
 export default function PatientLayout() {
-  const [showCompleteModal, setShowCompleteModal] = useState(false);
-
-  useEffect(() => {
-    const isFirstTime = localStorage.getItem('firstTimeLogin') === 'true';
-    const hasPatientId = !!localStorage.getItem('patientId');
-    if (isFirstTime && !hasPatientId) {
-      setShowCompleteModal(true);
-    }
-  }, []);
+  const [showCompleteModal, setShowCompleteModal] = useState(() => {
+    const isFirstTime = getSessionItem('firstTimeLogin') === 'true';
+    const hasPatientId = !!getSessionItem('patientId');
+    return isFirstTime && !hasPatientId;
+  });
 
   const handleCloseModal = () => {
-    localStorage.removeItem('firstTimeLogin');
+    removeSessionItem('firstTimeLogin');
     setShowCompleteModal(false);
   };
 

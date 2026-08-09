@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
     <div className="auth-card">
       <div className="auth-logo">
         <IconActivity size={26} />
-        HMS
+        Medicare
       </div>
       <h1 className="auth-title">Forgot password</h1>
       <p className="auth-subtitle">

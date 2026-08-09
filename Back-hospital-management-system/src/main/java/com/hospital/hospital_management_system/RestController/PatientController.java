@@ -36,14 +36,14 @@ public class PatientController {
     }
 
     @PostMapping("/DoctorByFirstAndLastName")
-    @PreAuthorize("hasAnyRole('PATIENT','ADMIN')")
+    @PreAuthorize("hasAnyRole('PATIENT','ADMIN','DOCTOR')")
     public List<DoctorDTO> getDoctorByFirstAndLastName(@RequestBody @Valid DoctorSearchDTO name) {
 
         return patientservice.fetchDoctorDetailsByFirstAndLastName(name.getFirstName(), name.getLastName());
     }
 
     @PostMapping("/DoctorBySpecialization")
-    @PreAuthorize("hasAnyRole('PATIENT','ADMIN')")
+    @PreAuthorize("hasAnyRole('PATIENT','ADMIN','DOCTOR')")
     public List<DoctorDTO> getDoctorBySpecialization(@RequestBody DoctorSearchDTO specialization) {
         String spec = specialization.getSpecialization();
         if (spec == null || spec.trim().isEmpty()) {
@@ -62,7 +62,7 @@ public class PatientController {
     }
 
     @PostMapping("/DoctorByDepartment")
-    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("hasAnyRole('PATIENT','ADMIN','DOCTOR')")
     public List<DoctorDTO> getDoctorsByDepartment(@RequestBody @Valid DoctorSearchDTO depSearch) {
         return patientservice.fetchDoctorDetailsByDepartment(depSearch.getDepartmentName());
     }

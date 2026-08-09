@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommonMethods {
     private final ModelMapper mapper;
+
     public ReqAppointmentDTO convertToAppointmentDTO(Appointment appointment) {
         ReqAppointmentDTO dto = new ReqAppointmentDTO();
         dto.setAppointmentId(appointment.getAppointmentId());
@@ -52,6 +53,9 @@ public class CommonMethods {
             dto.setStatus(appointment.getStatus().name());
         }
 
+        if (appointment.getPaymentStatus() != null) {
+            dto.setPaymentStatus(appointment.getPaymentStatus().name());
+        }
 
         dto.setRemarks(appointment.getRemarks());
         return dto;
@@ -71,7 +75,10 @@ public class CommonMethods {
 
         dto.setProfilePhoto(doctor.getUser().getProfilePhoto());
 
-        dto.setDepartment(doctor.getDepartment());
+        if (doctor.getDepartment() != null) {
+            dto.setDepartmentId(doctor.getDepartment().getDepartmentId());
+            dto.setDepartmentName(doctor.getDepartment().getDepartmentName());
+        }
 
         dto.setDescription(doctor.getDescription());
 
@@ -89,12 +96,13 @@ public class CommonMethods {
 
         dto.setConsultationFee(doctor.getConsultationFee());
 
+        dto.setLicenseNumber(doctor.getLicenseNumber());
+
         return dto;
     }
 
 
-    public PrescriptionMedicineDTO convertToPrescriptionMedicineDTO(
-            PrescriptionMedicine medicine) {
+    public PrescriptionMedicineDTO convertToPrescriptionMedicineDTO(PrescriptionMedicine medicine) {
 
         PrescriptionMedicineDTO dto = new PrescriptionMedicineDTO();
 
@@ -130,18 +138,13 @@ public class CommonMethods {
                 dto.setDoctorName(("Dr. " + dFirst + " " + dLast).trim());
             }
             if (appt.getAppointmentDate() != null) {
-                dto.setAppointmentDate(appt.getAppointmentDate().toString());
+                dto.setAppointmentDate(appt.getAppointmentDate());
             }
         }
 
         if (prescription.getMedicines() != null) {
 
-            dto.setMedicines(
-                    prescription.getMedicines()
-                            .stream()
-                            .map(this::convertToPrescriptionMedicineDTO)
-                            .toList()
-            );
+            dto.setMedicines(prescription.getMedicines().stream().map(this::convertToPrescriptionMedicineDTO).toList());
         }
 
         return dto;
@@ -152,12 +155,9 @@ public class CommonMethods {
         return mapper.map(medicine, MedicineMasterDTO.class);
     }
 
-    public List<MedicineMasterDTO> convertToMedicineMasterDTOList(
-            List<MedicineMaster> medicines) {
+    public List<MedicineMasterDTO> convertToMedicineMasterDTOList(List<MedicineMaster> medicines) {
 
-        return medicines.stream()
-                .map(this::convertToMedicineMasterDTO)
-                .toList();
+        return medicines.stream().map(this::convertToMedicineMasterDTO).toList();
     }
 
     public PaymentStatus getPaymentStatus(com.razorpay.Payment razorpayPayment) {

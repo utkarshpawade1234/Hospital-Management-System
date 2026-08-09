@@ -29,9 +29,9 @@ export const searchDoctorsByName = (firstName, lastName) =>
     .post('/patient/DoctorByFirstAndLastName', { firstName, lastName })
     .then((r) => r.data);
 
-export const searchDoctorsBySpecialization = (specializatin) =>
+export const searchDoctorsBySpecialization = (specialization) =>
   patientAxios
-    .post('/patient/DoctorBySpecialization', { specializatin })
+    .post('/patient/DoctorBySpecialization', { specialization })
     .then((r) => r.data);
 
 export const searchDoctorsByDepartment = (departmentName) =>

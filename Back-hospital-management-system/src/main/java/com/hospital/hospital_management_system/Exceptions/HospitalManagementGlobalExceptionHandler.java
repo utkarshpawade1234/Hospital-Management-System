@@ -46,6 +46,16 @@ public class HospitalManagementGlobalExceptionHandler {
         return new ApiResponse(ex.getMessage());
     }
 
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex) {
+        String msg = ex.getMostSpecificCause() != null ? ex.getMostSpecificCause().getMessage() : ex.getMessage();
+        if (msg != null && msg.toLowerCase().contains("duplicate")) {
+            return new ApiResponse("Record already exists with this email, phone number, or license number.");
+        }
+        return new ApiResponse("Database error: " + msg);
+    }
+
     @ExceptionHandler({
             PaymentGatewayException.class,
             PaymentAlreadyDoneException.class,

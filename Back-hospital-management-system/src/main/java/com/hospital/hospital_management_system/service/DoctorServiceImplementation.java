@@ -8,6 +8,7 @@ import com.hospital.hospital_management_system.Exceptions.DoctorNotFoundExceptio
 import com.hospital.hospital_management_system.model.*;
 import com.hospital.hospital_management_system.repository.AppointmentRepo;
 import com.hospital.hospital_management_system.repository.DoctorRepo;
+import com.hospital.hospital_management_system.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -15,24 +16,44 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Sort;
+
+import com.hospital.hospital_management_system.repository.PaymentRepository;
+
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class DoctorServiceImplementation implements  DoctorService {
-
+public class DoctorServiceImplementation implements DoctorService {
 
     private final DoctorRepo doctorRepo;
 
     private final AppointmentRepo appointmentRepo;
 
+    private final PaymentRepository paymentRepository;
+
     private final ModelMapper mapper;
 
     private final CommonMethods commonMethods;
 
+    private final UserRepo userRepo;
+
+    private void setAppointmentPaymentStatus(Appointment appt) {
+        Optional<Payment> successPayment = paymentRepository.findFirstByAppointmentAndPaymentStatusOrderByPaymentIdDesc(appt, PaymentStatus.SUCCESS);
+        if (successPayment.isPresent()) {
+            appt.setPaymentStatus(PaymentStatus.SUCCESS);
+        } else {
+            Optional<Payment> latestPayment = paymentRepository.findTopByAppointmentOrderByPaymentIdDesc(appt);
+            appt.setPaymentStatus(latestPayment.map(Payment::getPaymentStatus).orElse(PaymentStatus.PENDING));
+        }
+    }
+
     @Override
     public DoctorDTO getMyProfile(String email) {
 
-        Doctor doctor = doctorRepo.findByUserEmail(email).orElseThrow(() -> new DoctorNotFoundException("No doctor Found"));
+        Doctor doctor = doctorRepo.findByUserEmail(email)
+                .orElseThrow(() -> new DoctorNotFoundException("No doctor Found"));
 
         DoctorDTO dto = mapper.map(doctor, DoctorDTO.class);
 
@@ -50,15 +71,19 @@ public class DoctorServiceImplementation implements  DoctorService {
     @Override
     public Page<ReqAppointmentDTO> getUpcomingAppointments(String email, int page, int size) {
 
-        return appointmentRepo.findByDoctorUserEmail(email, PageRequest.of(page, size)).map(commonMethods::convertToAppointmentDTO);
-
+        Page<Appointment> appts = appointmentRepo.findByDoctorUserEmail(email, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentId")));
+        for (Appointment appt : appts.getContent()) {
+            setAppointmentPaymentStatus(appt);
+        }
+        return appts.map(commonMethods::convertToAppointmentDTO);
 
     }
 
     @Override
     @Transactional
     public ResponseDTO changeStatus(String email, Doctor.AvailabilityStatus availabilityStatus) {
-        Doctor doctor = doctorRepo.findByUserEmail(email).orElseThrow(() -> new DoctorNotFoundException("No such doctor is found"));
+        Doctor doctor = doctorRepo.findByUserEmail(email)
+                .orElseThrow(() -> new DoctorNotFoundException("No such doctor is found"));
         doctor.setAvailabilityStatus(availabilityStatus);
         return new ResponseDTO(Role.DOCTOR, "Status Updated");
     }
@@ -66,7 +91,8 @@ public class DoctorServiceImplementation implements  DoctorService {
     @Override
     @Transactional
     public ResponseDTO updateMyProfile(String email, DoctorDTO doctorDTO) {
-        Doctor doctor = doctorRepo.findByUserEmail(email).orElseThrow(() -> new DoctorNotFoundException("No doctor Found"));
+        Doctor doctor = doctorRepo.findByUserEmail(email)
+                .orElseThrow(() -> new DoctorNotFoundException("No doctor Found"));
 
         if (doctorDTO.getAvailabilityStatus() != null)
             doctor.setAvailabilityStatus(doctorDTO.getAvailabilityStatus());
@@ -87,6 +113,7 @@ public class DoctorServiceImplementation implements  DoctorService {
             doctor.getUser().setProfilePhoto(doctorDTO.getProfilePhoto());
         }
 
+        doctorRepo.save(doctor);
 
         return new ResponseDTO(Role.DOCTOR, "Successfully updated");
 
@@ -94,30 +121,28 @@ public class DoctorServiceImplementation implements  DoctorService {
 
     @Override
     public ReqAppointmentDTO getAppointmentById(String email, Long appointmentId) {
-        Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId).orElseThrow(() -> new AppointmentNotFoundException("No such Appointment is found"));
+        Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("No such Appointment is found"));
         return commonMethods.convertToAppointmentDTO(appointment);
 
     }
-
 
     @Override
     @Transactional
     public ResponseDTO confirmAppointment(String email, Long appointmentId) {
         Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId)
-                .orElseThrow(() ->
-                        new AppointmentNotFoundException("No such Appointment Found"));
+                .orElseThrow(() -> new AppointmentNotFoundException("No such Appointment Found"));
 
         appointment.setStatus(AppointmentStatus.CONFIRMED);
 
         return new ResponseDTO(Role.DOCTOR, "Appointment confirmed successfully");
     }
 
-
-
     @Override
     @Transactional
     public ResponseDTO completeAppointment(String email, Long appointmentId) {
-        Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId).orElseThrow(() -> new AppointmentNotFoundException("No such Appointment is found"));
+        Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("No such Appointment is found"));
         appointment.setStatus(AppointmentStatus.COMPLETED);
         return new ResponseDTO(Role.DOCTOR, "Successfully completed");
     }
@@ -126,12 +151,10 @@ public class DoctorServiceImplementation implements  DoctorService {
     @Transactional
     public ResponseDTO cancelAppointment(String email, Long appointmentId) {
 
-        Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId).orElseThrow(() -> new AppointmentNotFoundException("No such Appointment found"));
+        Appointment appointment = appointmentRepo.findByDoctorUserEmailAndAppointmentId(email, appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("No such Appointment found"));
         appointment.setStatus(AppointmentStatus.CANCELLED);
-        return new ResponseDTO(Role.DOCTOR,"Successfully cancelled");
+        return new ResponseDTO(Role.DOCTOR, "Successfully cancelled");
     }
-
-
-
 
 }

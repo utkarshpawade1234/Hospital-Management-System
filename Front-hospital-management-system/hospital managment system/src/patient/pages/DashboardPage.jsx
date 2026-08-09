@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { IconStethoscope, IconUser, IconCalendarEvent } from '@tabler/icons-react';
+import { getSessionItem } from '../../utils/sessionStorage';
 
 export default function DashboardPage() {
-  const userEmail = localStorage.getItem('userEmail') || '';
+  const userEmail = getSessionItem('userEmail') || '';
   const firstName = userEmail ? userEmail.split('@')[0] : 'Patient';
 
   return (

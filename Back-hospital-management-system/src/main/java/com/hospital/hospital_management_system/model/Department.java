@@ -9,7 +9,8 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Entity(name = "department")
+@Entity
+@Table(name = "department")
 @Setter
 @Getter
 @NoArgsConstructor

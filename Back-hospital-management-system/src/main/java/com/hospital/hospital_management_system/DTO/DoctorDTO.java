@@ -1,10 +1,8 @@
 package com.hospital.hospital_management_system.DTO;
 
-import com.hospital.hospital_management_system.model.Department;
 import com.hospital.hospital_management_system.model.Doctor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
@@ -18,7 +16,6 @@ public class DoctorDTO {
 
     private String email;
 
-    @Length(max = 10)
     private String phoneNumber;
 
     private String profilePhoto;
@@ -31,7 +28,9 @@ public class DoctorDTO {
 
     private Double consultationFee;
 
-    private Department department;
+    private Long departmentId;
+
+    private String departmentName;
 
     private String description;
 
@@ -39,5 +38,5 @@ public class DoctorDTO {
 
     private Doctor.AvailabilityStatus availabilityStatus;
 
-
+    private String licenseNumber;
 }

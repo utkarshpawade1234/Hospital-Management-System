@@ -14,36 +14,47 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface AppointmentRepo extends JpaRepository<Appointment,Long> {
-    @Query("SELECT a from Appointment a where a.doctor.doctorId= :doctorId AND a.appointmentDate=:appointmentDate AND a.startTime<:startTime AND a.endTime>:endTime")
-    Optional<Appointment> getSpecificDoctorAppointmentByParticularInterval(@Param("doctorId") Long doctorId, @Param("appointmentDate") LocalDate appointmentDate, @Param("startTime")LocalTime startTime, @Param("endTime") LocalTime endTime);
+public interface AppointmentRepo extends JpaRepository<Appointment, Long> {
+        @Query("SELECT a from Appointment a where a.doctor.doctorId= :doctorId AND a.appointmentDate=:appointmentDate AND a.startTime<:startTime AND a.endTime>:endTime")
+        Optional<Appointment> getSpecificDoctorAppointmentByParticularInterval(@Param("doctorId") Long doctorId,
+                        @Param("appointmentDate") LocalDate appointmentDate, @Param("startTime") LocalTime startTime,
+                        @Param("endTime") LocalTime endTime);
 
+        List<Appointment> findByPatientPatientId(Long patientId);
 
-    List<Appointment> findByPatientPatientId(Long patientId);
-    List<Appointment> findByDoctorDoctorId(Long doctorId);
+        List<Appointment> findByDoctorDoctorId(Long doctorId);
 
-    @Query("""
-    SELECT a
-    FROM Appointment a
-    WHERE LOWER(a.doctor.user.firstName) LIKE LOWER(CONCAT('%', :firstname, '%'))
-       OR LOWER(a.doctor.user.lastName) LIKE LOWER(CONCAT('%', :lastname, '%'))
-       OR LOWER(a.patient.user.firstName) LIKE LOWER(CONCAT('%', :firstname, '%'))
-       OR LOWER(a.patient.user.lastName) LIKE LOWER(CONCAT('%', :lastname, '%'))
-""")
-    List<Appointment> searchAppointmentsByDoctorOrPatientName(@Param("firstname") String firstname,@Param("lastname") String lastname);
-    void delete(@NonNull Appointment appointment);
+        List<Appointment> findByPatientPatientIdOrderByAppointmentDateDescAppointmentIdDesc(Long patientId);
 
-    Long countByStatus(AppointmentStatus appointmentStatus);
-    List<Appointment> findByStatus(AppointmentStatus appointmentStatus);
+        List<Appointment> findByDoctorDoctorIdOrderByAppointmentDateDescAppointmentIdDesc(Long doctorId);
 
-    Page<Appointment> findByStatus(AppointmentStatus appointmentStatus, Pageable pageable);
+        List<Appointment> findAllByOrderByAppointmentDateDescAppointmentIdDesc();
 
-    Page<Appointment> findByDoctor_doctorId(Long doctorId, Pageable pageable);
+        @Query("""
+                            SELECT a
+                            FROM Appointment a
+                            WHERE LOWER(a.doctor.user.firstName) LIKE LOWER(CONCAT('%', :firstname, '%'))
+                               OR LOWER(a.doctor.user.lastName) LIKE LOWER(CONCAT('%', :lastname, '%'))
+                               OR LOWER(a.patient.user.firstName) LIKE LOWER(CONCAT('%', :firstname, '%'))
+                               OR LOWER(a.patient.user.lastName) LIKE LOWER(CONCAT('%', :lastname, '%'))
+                        """)
+        List<Appointment> searchAppointmentsByDoctorOrPatientName(@Param("firstname") String firstname,
+                        @Param("lastname") String lastname);
 
-    Page<Appointment> findByPatient_patientId(Long patientId,Pageable page);
+        void delete(@NonNull Appointment appointment);
 
-    Page<Appointment> findByDoctorUserEmail(String email, Pageable pageable);
+        Long countByStatus(AppointmentStatus appointmentStatus);
 
-    Optional<Appointment> findByDoctorUserEmailAndAppointmentId(String email,Long appointmentId);
+        List<Appointment> findByStatus(AppointmentStatus appointmentStatus);
+
+        Page<Appointment> findByStatus(AppointmentStatus appointmentStatus, Pageable pageable);
+
+        Page<Appointment> findByDoctor_doctorId(Long doctorId, Pageable pageable);
+
+        Page<Appointment> findByPatient_patientId(Long patientId, Pageable page);
+
+        Page<Appointment> findByDoctorUserEmail(String email, Pageable pageable);
+
+        Optional<Appointment> findByDoctorUserEmailAndAppointmentId(String email, Long appointmentId);
 
 }

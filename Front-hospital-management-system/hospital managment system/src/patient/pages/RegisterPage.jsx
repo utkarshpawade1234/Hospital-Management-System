@@ -76,7 +76,7 @@ export default function RegisterPage() {
     <div className="auth-card">
       <div className="auth-logo">
         <IconActivity size={26} />
-        HMS
+        Medicare
       </div>
       <h1 className="auth-title">Create an account</h1>
       <p className="auth-subtitle">Fill in your details to get started</p>

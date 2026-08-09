@@ -1,0 +1,273 @@
+/* Payment Page Styles */
+.payment-page-root {
+  min-height: calc(100vh - 52px);
+  background-color: #F4F6FA;
+  padding: 40px 20px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.payment-container {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.back-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #6B7690;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+  transition: color 0.15s ease;
+}
+
+.back-link-btn:hover {
+  color: #0B1F3F;
+}
+
+.payment-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E8EF;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 4px 16px rgba(11, 31, 63, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.payment-card-header h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0B1F3F;
+}
+
+.payment-card-header .subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #6B7690;
+}
+
+/* Appointment Summary Card bg #F7F9FC */
+.appointment-summary-card {
+  background-color: #F7F9FC;
+  border: 1px solid #ECEEF3;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary-row {
+  display: flex;
+  align-items: flex-center;
+  gap: 12px;
+}
+
+.summary-icon {
+  color: #1D9E75;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.summary-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summary-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8C96AD;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0B1F3F;
+}
+
+/* Amount Payable */
+.amount-payable-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-top: 1px dashed #E5E8EF;
+  border-bottom: 1px dashed #E5E8EF;
+}
+
+.payable-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6B7690;
+}
+
+.payable-amount {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1D9E75;
+}
+
+/* Buttons */
+.pay-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  background-color: #1D9E75;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+  box-shadow: 0 4px 12px rgba(29, 158, 117, 0.25);
+}
+
+.pay-now-btn:hover {
+  background-color: #168360;
+}
+
+.navy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background-color: #0B1F3F;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+}
+
+.navy-btn:hover {
+  background-color: #162E58;
+}
+
+.primary-teal-btn {
+  background-color: #1D9E75;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.security-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #8C96AD;
+  text-align: center;
+}
+
+/* State Screens */
+.loading-card,
+.processing-card {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+}
+
+.payment-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #E5E8EF;
+  border-top-color: #1D9E75;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.payment-spinner.large {
+  width: 44px;
+  height: 44px;
+  border-width: 4px;
+}
+
+.card-header-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.success-icon {
+  background-color: #E6F7F0;
+  color: #1D9E75;
+}
+
+.failure-icon,
+.error-icon {
+  background-color: #FDF2F2;
+  color: #D32F2F;
+}
+
+.success-card,
+.failure-card,
+.error-card {
+  text-align: center;
+}
+
+.success-card h2,
+.failure-card h2,
+.error-card h2 {
+  margin: 8px 0 4px;
+  color: #0B1F3F;
+}
+
+.success-sub {
+  color: #6B7690;
+  font-size: 14px;
+
+}
+
+.verify-summary-block {
+  background-color: #F7F9FC;
+  border: 1px solid #ECEEF3;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.v-row {
+  display: flex;
+  justify-content: space-between;
+  color: #6B7690;
+}

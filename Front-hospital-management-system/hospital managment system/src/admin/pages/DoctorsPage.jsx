@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { IconEye, IconPencil, IconTrash } from '@tabler/icons-react';
+import { IconEye, IconPencil, IconTrash, IconPlus } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import PaginatedTable from '../components/PaginatedTable';
 import SearchBar from '../components/SearchBar';
@@ -11,6 +11,7 @@ import {
   getDoctors,
   searchDoctors,
   getDoctorById,
+  createDoctor,
   updateDoctor,
   deleteDoctor,
 } from '../api/adminApi';
@@ -29,11 +30,11 @@ export default function DoctorsPage() {
   const [drawerData, setDrawerData] = useState(null);
   const [drawerLoading, setDrawerLoading] = useState(false);
 
-  // Edit Modal
-  const [editModal, setEditModal] = useState({ open: false, doc: null });
+  // Form Modal (Create or Edit)
+  const [formModal, setFormModal] = useState({ open: false, doc: null });
   const [saving, setSaving] = useState(false);
 
-  // Delete
+  // Delete Modal
   const [deleteModal, setDeleteModal] = useState({ open: false, doc: null });
   const [deleting, setDeleting] = useState(false);
 
@@ -84,15 +85,26 @@ export default function DoctorsPage() {
     }
   };
 
-  const handleEditSubmit = async (payload) => {
+  const handleFormSubmit = async (payload) => {
     setSaving(true);
     try {
-      await updateDoctor(payload);
-      toast.success('Doctor details updated successfully');
-      setEditModal({ open: false, doc: null });
+      if (formModal.doc) {
+        // Edit Mode
+        await updateDoctor(payload);
+        toast.success('Doctor details updated successfully');
+      } else {
+        // Create Mode
+        await createDoctor(payload);
+        toast.success('Doctor created successfully');
+      }
+      setFormModal({ open: false, doc: null });
       fetchData();
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Failed to update doctor details');
+      const errorMsg =
+        err?.response?.data?.message ||
+        err?.response?.data?.detail ||
+        (formModal.doc ? 'Failed to update doctor details' : 'Failed to create doctor');
+      toast.error(errorMsg);
     } finally {
       setSaving(false);
     }
@@ -142,7 +154,7 @@ export default function DoctorsPage() {
             </div>
           </div>
         </td>
-        <td>{doc.department?.departmentName || '—'}</td>
+        <td>{doc.departmentName || doc.department?.departmentName || '—'}</td>
         <td>{doc.yearsOfExperience ? `${doc.yearsOfExperience} yrs` : '—'}</td>
         <td>{doc.consultationFee ? `₹${doc.consultationFee}` : '—'}</td>
         <td>
@@ -160,7 +172,7 @@ export default function DoctorsPage() {
             <button
               className="admin-action-btn"
               title="Edit doctor"
-              onClick={() => setEditModal({ open: true, doc })}
+              onClick={() => setFormModal({ open: true, doc })}
             >
               <IconPencil size={16} />
             </button>
@@ -179,11 +191,20 @@ export default function DoctorsPage() {
 
   return (
     <div className="admin-page">
-      <div className="admin-page-header">
-        <h1 className="admin-page-title">Doctors</h1>
-        <p className="admin-page-subtitle">
-          Manage all doctors and their availability
-        </p>
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 className="admin-page-title">Doctors</h1>
+          <p className="admin-page-subtitle">
+            Manage all doctors, register new doctors, and set availability
+          </p>
+        </div>
+        <button
+          className="admin-btn admin-btn-primary"
+          onClick={() => setFormModal({ open: true, doc: null })}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontWeight: 600 }}
+        >
+          <IconPlus size={18} /> Add Doctor
+        </button>
       </div>
 
       <PaginatedTable
@@ -252,7 +273,7 @@ export default function DoctorsPage() {
             </div>
             <DrawerField label="Email" value={drawerData.email} />
             <DrawerField label="Phone" value={drawerData.phoneNumber} />
-            <DrawerField label="Department" value={drawerData.department?.departmentName || '—'} />
+            <DrawerField label="Department" value={drawerData.departmentName || drawerData.department?.departmentName || '—'} />
             <DrawerField label="Qualification" value={drawerData.qualification} />
             <DrawerField
               label="Experience"
@@ -275,6 +296,10 @@ export default function DoctorsPage() {
               value={drawerData.roomNumber || '—'}
             />
             <DrawerField
+              label="License number"
+              value={drawerData.licenseNumber || '—'}
+            />
+            <DrawerField
               label="Availability"
               value={<StatusPill status={drawerData.availabilityStatus} />}
             />
@@ -283,12 +308,12 @@ export default function DoctorsPage() {
         )}
       </DetailDrawer>
 
-      {/* Edit Doctor Modal */}
+      {/* Doctor Create / Edit Form Modal */}
       <DoctorFormModal
-        open={editModal.open}
-        initialData={editModal.doc}
-        onClose={() => setEditModal({ open: false, doc: null })}
-        onSubmit={handleEditSubmit}
+        open={formModal.open}
+        initialData={formModal.doc}
+        onClose={() => setFormModal({ open: false, doc: null })}
+        onSubmit={handleFormSubmit}
         loading={saving}
       />
 

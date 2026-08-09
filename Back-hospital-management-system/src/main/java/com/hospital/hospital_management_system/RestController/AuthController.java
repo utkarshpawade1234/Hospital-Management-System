@@ -23,12 +23,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody @Valid LoginDTO login) {
+    public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody @Valid LoginRequestDTO login) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(login));
 
     }
     @PostMapping("/forgot-password")
-    public ResponseEntity<ResponseDTO> forgotPassowrd(@RequestBody @Valid ForgotPassDTO fto) {
+    public ResponseEntity<ResponseDTO> forgotPassword(@RequestBody @Valid ForgotPasswordDTO fto) {
         ResponseDTO forg = authService.forgotPassword(fto);
 
         return ResponseEntity.ok(forg);

@@ -57,29 +57,40 @@ public class AppointmentServiceImplement implements AppointmentService {
 
     }
 
+    private void setAppointmentPaymentStatus(Appointment appt) {
+        Optional<Payment> successPayment = paymentRepository.findFirstByAppointmentAndPaymentStatusOrderByPaymentIdDesc(appt, PaymentStatus.SUCCESS);
+        if (successPayment.isPresent()) {
+            appt.setPaymentStatus(PaymentStatus.SUCCESS);
+        } else {
+            Optional<Payment> latestPayment = paymentRepository.findTopByAppointmentOrderByPaymentIdDesc(appt);
+            appt.setPaymentStatus(latestPayment.map(Payment::getPaymentStatus).orElse(PaymentStatus.PENDING));
+        }
+    }
+
+
     @Override
     public List<Appointment> getAllAppointmentsByPatientId(Long patientId) {
-        List<Appointment> appointments = appointmentRepo.findByPatientPatientId(patientId);
+        List<Appointment> appointments = appointmentRepo.findByPatientPatientIdOrderByAppointmentDateDescAppointmentIdDesc(patientId);
         for (Appointment appt : appointments) {
-            paymentRepository.findByAppointmentAndPaymentStatus(appt, PaymentStatus.SUCCESS).ifPresent(p -> appt.setPaymentStatus(p.getPaymentStatus()));
+            setAppointmentPaymentStatus(appt);
         }
         return appointments;
     }
 
     @Override
     public List<Appointment> getAppointmentsByDoctorId(Long doctorId) {
-        List<Appointment> appointments = appointmentRepo.findByDoctorDoctorId(doctorId);
+        List<Appointment> appointments = appointmentRepo.findByDoctorDoctorIdOrderByAppointmentDateDescAppointmentIdDesc(doctorId);
         for (Appointment appt : appointments) {
-            paymentRepository.findByAppointmentAndPaymentStatus(appt, PaymentStatus.SUCCESS).ifPresent(p -> appt.setPaymentStatus(p.getPaymentStatus()));
+            setAppointmentPaymentStatus(appt);
         }
         return appointments;
     }
 
     @Override
     public List<Appointment> getAllAppointments() {
-        List<Appointment> appointments = appointmentRepo.findAll();
+        List<Appointment> appointments = appointmentRepo.findAllByOrderByAppointmentDateDescAppointmentIdDesc();
         for (Appointment appt : appointments) {
-            paymentRepository.findByAppointmentAndPaymentStatus(appt, PaymentStatus.SUCCESS).ifPresent(p -> appt.setPaymentStatus(p.getPaymentStatus()));
+            setAppointmentPaymentStatus(appt);
         }
         return appointments;
     }

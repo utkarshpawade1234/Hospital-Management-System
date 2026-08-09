@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconActivity } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import { login, getProfile } from '../api/patientApi';
+import { setSessionItem, removeSessionItem } from '../../utils/sessionStorage';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -29,9 +30,9 @@ export default function LoginPage() {
       const res = await login(form);
       toast.success(res.message || 'Login successful!');
 
-      localStorage.setItem('token', res.jwtToken);
-      localStorage.setItem('userEmail', form.email);
-      localStorage.setItem('userRole', res.role);
+      setSessionItem('token', res.jwtToken);
+      setSessionItem('userEmail', form.email);
+      setSessionItem('userRole', res.role);
 
       // Route by role
       if (res.role === 'ADMIN') {
@@ -47,15 +48,15 @@ export default function LoginPage() {
       try {
         const profile = await getProfile();
         if (profile && (profile.patientId || profile.bloodGroup)) {
-          if (profile.patientId) localStorage.setItem('patientId', profile.patientId);
-          localStorage.removeItem('firstTimeLogin');
+          if (profile.patientId) setSessionItem('patientId', profile.patientId);
+          removeSessionItem('firstTimeLogin');
           setTimeout(() => navigate('/dashboard'), 300);
         } else {
-          localStorage.setItem('firstTimeLogin', 'true');
+          setSessionItem('firstTimeLogin', 'true');
           setTimeout(() => navigate('/dashboard'), 300);
         }
       } catch {
-        localStorage.setItem('firstTimeLogin', 'true');
+        setSessionItem('firstTimeLogin', 'true');
         setTimeout(() => navigate('/dashboard'), 300);
       }
     } catch (err) {
@@ -76,7 +77,7 @@ export default function LoginPage() {
     <div className="auth-card">
       <div className="auth-logo">
         <IconActivity size={26} />
-        HMS
+        Medicare
       </div>
       <h1 className="auth-title">Welcome back</h1>
       <p className="auth-subtitle">Sign in to your account to continue</p>

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { IconEdit, IconX } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import { getProfile, updatePatientDetails } from '../api/patientApi';
+import { getSessionItem } from '../../utils/sessionStorage';
 import PhotoUpload from '../components/PhotoUpload';
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -13,7 +14,7 @@ export default function MyProfilePage() {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
 
-  const email = localStorage.getItem('userEmail');
+  const email = getSessionItem('userEmail');
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -49,8 +50,8 @@ export default function MyProfilePage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Build partial update — only send changed fields + email
-      const payload = { email };
+      const userEmail = email || profile.email;
+      const payload = { email: userEmail };
       const fields = [
         'firstName',
         'lastName',
@@ -66,8 +67,16 @@ export default function MyProfilePage() {
         'emergencyContactRelation',
       ];
       fields.forEach((f) => {
-        if (form[f] !== profile[f] && form[f] !== undefined) {
-          payload[f] = form[f];
+        const val = form[f];
+        if (val !== profile[f] && val !== undefined) {
+          if (typeof val === 'string') {
+            const trimmed = val.trim();
+            if (trimmed) {
+              payload[f] = trimmed;
+            }
+          } else if (val !== null) {
+            payload[f] = val;
+          }
         }
       });
 

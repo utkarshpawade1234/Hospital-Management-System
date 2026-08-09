@@ -30,6 +30,7 @@ public class ReqAppointmentDTO {
 
     private String appointmentType;
     private String status;
+    private String paymentStatus;
 
     private String remarks;
 }

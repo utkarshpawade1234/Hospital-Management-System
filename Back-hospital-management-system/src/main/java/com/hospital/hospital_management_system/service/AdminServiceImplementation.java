@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,16 +28,13 @@ public class AdminServiceImplementation implements AdminService {
     private final PrescriptionRepo prescriptionRepo;
     private final ModelMapper mapper;
     private final CommonMethods commonMethods;
-    private final DoctorService doctorService;
+    private final PasswordEncoder passwordEncoder;
     private final PatientService patientService;
 
     @Override
     public Page<Patient> getAllPatients(int page, int size) {
-        return patientRepo.findAll(
-                PageRequest.of(page, size));
+        return patientRepo.findAll(PageRequest.of(page, size));
     }
-
-
 
     @Override
     public Page<DoctorDTO> getAllDoctors(int page, int size) {
@@ -46,7 +45,7 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     public Page<ReqAppointmentDTO> getAllAppointments(int page, int size) {
-        Page<Appointment> appointments = appointmentRepo.findAll(PageRequest.of(page, size));
+        Page<Appointment> appointments = appointmentRepo.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")));
         return appointments.map(commonMethods::convertToAppointmentDTO);
     }
 
@@ -88,22 +87,13 @@ public class AdminServiceImplementation implements AdminService {
         Long userCount = userRepo.count();
         Long appointmentCount = appointmentRepo.count();
 
-        // appointment dashboard
         Long pendingAppointment = appointmentRepo.countByStatus(AppointmentStatus.PENDING);
         Long confirmedAppointment = appointmentRepo.countByStatus(AppointmentStatus.CONFIRMED);
         Long completedAppointment = appointmentRepo.countByStatus(AppointmentStatus.COMPLETED);
         Long cancelledAppointment = appointmentRepo.countByStatus(AppointmentStatus.CANCELLED);
 
-        return new DashBoardDTO(
-                patientCount,
-                doctorCount,
-                departmentCount,
-                userCount,
-                appointmentCount,
-                pendingAppointment,
-                confirmedAppointment,
-                completedAppointment,
-                cancelledAppointment);
+        return new DashBoardDTO(patientCount, doctorCount, departmentCount, userCount, appointmentCount,
+                pendingAppointment, confirmedAppointment, completedAppointment, cancelledAppointment);
     }
 
     @Override
@@ -128,8 +118,7 @@ public class AdminServiceImplementation implements AdminService {
                 .orElseThrow(() -> new DepartmentNotFoundException("No department found"));
         DepartmentDTO dto = mapper.map(dep, DepartmentDTO.class);
         dto.setDepartmentId(dep.getDepartmentId());
-        dto.setDoctorIds(
-                dep.getDoctors().stream().map(Doctor::getDoctorId).toList());
+        dto.setDoctorIds(dep.getDoctors().stream().map(Doctor::getDoctorId).toList());
         return dto;
     }
 
@@ -224,31 +213,65 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     public Page<PatientDTO> searchPatient(String keyword, int page, int size) {
-        return patientRepo.findByUser_FirstNameContainingIgnoreCase(keyword, PageRequest.of(page, size)).map(patient -> mapper.map(patient,PatientDTO.class));
+        return patientRepo.findByUser_FirstNameContainingIgnoreCase(keyword, PageRequest.of(page, size))
+                .map(patient -> mapper.map(patient, PatientDTO.class));
     }
 
     @Override
     public Page<ReqAppointmentDTO> getAppointmentsByStatus(AppointmentStatus status, int page, int size) {
-        return appointmentRepo.findByStatus(status, PageRequest.of(page, size))
+        return appointmentRepo.findByStatus(status, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
                 .map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
     public Page<ReqAppointmentDTO> getAppointmentsByDoctor(Long doctorId, int page, int size) {
-        return appointmentRepo.findByDoctor_doctorId(doctorId, PageRequest.of(page, size))
+        return appointmentRepo.findByDoctor_doctorId(doctorId, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
                 .map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
     public Page<ReqAppointmentDTO> getAppointmentsByPatient(Long patientId, int page, int size) {
-        return appointmentRepo.findByPatient_patientId(patientId, PageRequest.of(page, size))
+        return appointmentRepo.findByPatient_patientId(patientId, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
                 .map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
     @Transactional
     public ResponseDTO updateDoctorDetails(DoctorDTO doctorates) {
-        return doctorService.updateMyProfile(doctorates.getEmail(),doctorates);
+        Doctor doctor = doctorRepo.findByUserEmail(doctorates.getEmail())
+                .orElseThrow(
+                        () -> new DoctorNotFoundException("Doctor not found with email: " + doctorates.getEmail()));
+        mapper.map(doctorates, doctor);
+        User user = doctor.getUser();
+
+        if (doctorates.getFirstName() != null)
+            user.setFirstName(doctorates.getFirstName());
+
+        if (doctorates.getLastName() != null)
+            user.setLastName(doctorates.getLastName());
+
+        if (doctorates.getPhoneNumber() != null)
+            user.setContactNumber(doctorates.getPhoneNumber());
+
+        if (doctorates.getProfilePhoto() != null)
+            user.setProfilePhoto(doctorates.getProfilePhoto());
+
+        if (doctorates.getDepartmentName() != null && !doctorates.getDepartmentName().isBlank()) {
+            Department department = departmentRepo.findByDepartmentNameIgnoreCase(doctorates.getDepartmentName().trim())
+                    .orElseGet(() -> {
+                        Department newDept = new Department();
+                        newDept.setDepartmentName(doctorates.getDepartmentName().trim());
+                        return departmentRepo.save(newDept);
+                    });
+            doctor.setDepartment(department);
+        }
+
+        if (doctorates.getLicenseNumber() != null && !doctorates.getLicenseNumber().isBlank()) {
+            doctor.setLicenseNumber(doctorates.getLicenseNumber().trim());
+        }
+
+        doctorRepo.save(doctor);
+        return new ResponseDTO(Role.ADMIN, "Updated Doctor Details Successfully");
     }
 
     @Override
@@ -259,8 +282,59 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     @Transactional
+    public ResponseDTO CreateDoctor(DoctorCreateDTO dto) {
+        if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        if (doctorRepo.findByUserEmail(dto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Doctor already exists with this email");
+        }
+
+        User user = mapper.map(dto, User.class);
+        user.setContactNumber(dto.getPhoneNumber());
+        user.setDob(dto.getDateOfBirth());
+        user.setPassword(passwordEncoder.encode("1234"));
+        user.setUser_role(Role.DOCTOR);
+        userRepo.save(user);
+
+        Doctor doctor = mapper.map(dto, Doctor.class);
+        doctor.setUser(user);
+        doctor.setAvailabilityStatus(Doctor.AvailabilityStatus.AVAILABLE);
+
+        if (dto.getLicenseNumber() != null && !dto.getLicenseNumber().isBlank()) {
+            doctor.setLicenseNumber(dto.getLicenseNumber().trim());
+        } else {
+            doctor.setLicenseNumber("DOC-LIC-" + System.currentTimeMillis());
+        }
+
+        Department department = null;
+        if (dto.getDepartmentName() != null && !dto.getDepartmentName().isBlank()) {
+            department = departmentRepo.findByDepartmentNameIgnoreCase(dto.getDepartmentName().trim())
+                    .orElseGet(() -> {
+                        Department newDept = new Department();
+                        newDept.setDepartmentName(dto.getDepartmentName().trim());
+                        return departmentRepo.save(newDept);
+                    });
+        } else if (dto.getDepartmentId() != null) {
+            department = departmentRepo.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new DepartmentNotFoundException("Department not found with ID: " + dto.getDepartmentId()));
+        }
+
+        doctor.setDepartment(department);
+        doctorRepo.save(doctor);
+        return new ResponseDTO(Role.ADMIN, "Doctor created successfully");
+    }
+
+    @Override
+    public List<String> getAllDepartmentNames() {
+        return departmentRepo.findAllDepartmentNames();
+    }
+
+    @Override
+    @Transactional
     public ResponseDTO deletePatient(Long patientId) {
-        Patient patient = patientRepo.findById(patientId).orElseThrow(() -> new PatientNotFoundException("No Patient found"));
+        Patient patient = patientRepo.findById(patientId)
+                .orElseThrow(() -> new PatientNotFoundException("No Patient found"));
 
         User user = patient.getUser();
         patientRepo.delete(patient);
@@ -273,11 +347,11 @@ public class AdminServiceImplementation implements AdminService {
     @Override
     @Transactional
     public ResponseDTO deleteAppointment(Long appointmentId) {
-        Appointment appointment = appointmentRepo.findById(appointmentId).orElseThrow(() -> new AppointmentNotFoundException("No appointment found"));
+        Appointment appointment = appointmentRepo.findById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("No appointment found"));
         prescriptionRepo.findByAppointmentAppointmentId(appointmentId).ifPresent(prescriptionRepo::delete);
         appointmentRepo.delete(appointment);
         return new ResponseDTO(Role.ADMIN, "Appointment deleted successfully");
     }
-
 
 }

@@ -7,16 +7,19 @@ import com.hospital.hospital_management_system.model.*;
 import com.hospital.hospital_management_system.repository.AppointmentRepo;
 import com.hospital.hospital_management_system.repository.PatientRepo;
 import com.hospital.hospital_management_system.repository.PaymentRepository;
+import com.hospital.hospital_management_system.repository.UserRepo;
 import com.razorpay.Order;
 import com.razorpay.RazorpayException;
 import com.razorpay.Refund;
 import com.razorpay.Utils;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +39,7 @@ public class PaymentServiceImplementation implements PaymentService {
     private final AppointmentRepo appointmentRepo;
     private final PatientRepo patientRepo;
     private final PaymentRepository paymentRepository;
-    private final com.hospital.hospital_management_system.repository.UserRepo userRepo;
+    private final UserRepo userRepo;
     private final CommonMethods commonMethods;
     @Value("${hospital.service.fee}")
     private BigDecimal hospitalServiceFee;
@@ -62,12 +65,12 @@ public class PaymentServiceImplementation implements PaymentService {
             throw new IllegalArgumentException("Doctor associated with this appointment not found");
         }
 
-        paymentRepository.findByAppointmentAndPaymentStatus(appointment, PaymentStatus.SUCCESS)
+        paymentRepository.findFirstByAppointmentAndPaymentStatusOrderByPaymentIdDesc(appointment, PaymentStatus.SUCCESS)
                 .ifPresent(payment -> {
                     throw new PaymentAlreadyDoneException("Payment is already done");
                 });
 
-        Optional<Payment> existingPending = paymentRepository.findByAppointmentAndPaymentStatus(appointment, PaymentStatus.PENDING);
+        Optional<Payment> existingPending = paymentRepository.findFirstByAppointmentAndPaymentStatusOrderByPaymentIdDesc(appointment, PaymentStatus.PENDING);
         if (existingPending.isPresent()) {
             Payment pendingPayment = existingPending.get();
             CreateOrderResponseDTO responseDTO = mapper.map(pendingPayment, CreateOrderResponseDTO.class);
@@ -152,8 +155,13 @@ public class PaymentServiceImplementation implements PaymentService {
 
         payment.setOrderStatus(commonMethods.getOrderStatus(paymentStatus));
 
-        if (paymentStatus == PaymentStatus.SUCCESS)
+        if (paymentStatus == PaymentStatus.SUCCESS) {
             payment.setPaidAt(LocalDateTime.now());
+            if (payment.getAppointment() != null) {
+                payment.getAppointment().setPaymentStatus(PaymentStatus.SUCCESS);
+                appointmentRepo.save(payment.getAppointment());
+            }
+        }
 
         String method = razorpayPayment.get("method").toString();
 
@@ -193,8 +201,9 @@ public class PaymentServiceImplementation implements PaymentService {
 
     @Override
     public Page<PaymentResponseDTO> getMyPaymentHistory(String email, int page, int size) {
-        Patient patient = patientRepo.findByUserEmail(email).get();
-        Page<Payment> payments = paymentRepository.findByPatient(patient, PageRequest.of(page, size));
+        Patient patient = patientRepo.findByUserEmail(email)
+                .orElseThrow(() -> new PatientNotFoundException("Patient record not found for user: " + email));
+        Page<Payment> payments = paymentRepository.findByPatient(patient, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt", "paymentId")));
         return payments.map(payment -> {
             PaymentResponseDTO dto = mapper.map(payment, PaymentResponseDTO.class);
             if (payment.getAppointment() != null) {
@@ -211,7 +220,7 @@ public class PaymentServiceImplementation implements PaymentService {
     public Page<PaymentResponseDTO> getPaymentsByAppointment(Long appointmentId, int page, int size) {
         Appointment appointment = appointmentRepo.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException("No such Appointment"));
-        return paymentRepository.findByAppointment(appointment, PageRequest.of(page, size))
+        return paymentRepository.findByAppointmentOrderByPaymentIdDesc(appointment, PageRequest.of(page, size))
                 .map(payment -> {
                     PaymentResponseDTO dto = mapper.map(payment, PaymentResponseDTO.class);
                     if (payment.getAppointment() != null) {
@@ -225,7 +234,7 @@ public class PaymentServiceImplementation implements PaymentService {
 
     @Override
     public Page<PaymentResponseDTO> getAllPayments(int page, int size) {
-        return paymentRepository.findAll(PageRequest.of(page, size))
+        return paymentRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "paymentId")))
                 .map(payment -> {
                     PaymentResponseDTO dto = mapper.map(payment, PaymentResponseDTO.class);
                     if (payment.getAppointment() != null) {
@@ -282,5 +291,7 @@ public class PaymentServiceImplementation implements PaymentService {
 
         return new ResponseDTO("Refund processed successfully");
     }
+
+
 
 }

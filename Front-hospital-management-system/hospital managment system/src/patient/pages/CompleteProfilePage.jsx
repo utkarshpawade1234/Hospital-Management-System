@@ -9,6 +9,7 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import { registerPatientDetails, getProfile } from '../api/patientApi';
+import { getSessionItem, setSessionItem } from '../../utils/sessionStorage';
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
@@ -45,14 +46,14 @@ export default function CompleteProfilePage() {
     setLoading(true);
 
     try {
-      const email = localStorage.getItem('userEmail');
+      const email = getSessionItem('userEmail');
       const res = await registerPatientDetails({ ...form, email });
       toast.success(res.message || 'Profile completed!');
 
       try {
         const profile = await getProfile(email);
         if (profile.patientId) {
-          localStorage.setItem('patientId', profile.patientId);
+          setSessionItem('patientId', profile.patientId);
         }
       } catch {
         // Ignore secondary profile fetch error

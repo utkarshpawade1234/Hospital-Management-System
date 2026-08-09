@@ -1,0 +1,239 @@
+/* Shared Top Navbar Styles */
+.shared-top-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 52px;
+  background-color: #0B1F3F;
+  color: #FFFFFF;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  box-shadow: 0 2px 8px rgba(11, 31, 63, 0.15);
+}
+
+.shared-nav-container {
+  max-width: 1400px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo Left */
+.shared-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  color: #FFFFFF;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.shared-nav-logo .logo-icon {
+  color: #1D9E75;
+}
+
+/* Nav Links Center/Left */
+.shared-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.shared-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.shared-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #9FB3D4;
+  text-decoration: none;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.shared-nav-link:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.shared-nav-link.active {
+  color: #FFFFFF;
+  background-color: #1D9E75;
+  font-weight: 600;
+}
+
+/* Right side user menu */
+.shared-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-dropdown-wrap {
+  position: relative;
+}
+
+.account-trigger-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+}
+
+.account-trigger-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.avatar-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #1D9E75;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.user-role-tag {
+  font-size: 10px;
+  font-weight: 500;
+  color: #8C96AD;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chevron-icon {
+  color: #9FB3D4;
+  transition: transform 0.2s ease;
+}
+
+.chevron-icon.open {
+  transform: rotate(180deg);
+}
+
+/* Shared Dropdown Menu (exactly two items) */
+.account-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 160px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E8EF;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(11, 31, 63, 0.12);
+  padding: 4px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0B1F3F;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #F4F6FA;
+}
+
+.dropdown-item.logout-item {
+  color: #D32F2F;
+}
+
+.dropdown-item.logout-item:hover {
+  background-color: #FDF2F2;
+}
+
+/* Mobile Controls */
+.mobile-hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.shared-mobile-menu {
+  display: none;
+  flex-direction: column;
+  background-color: #0B1F3F;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 16px 16px;
+  gap: 6px;
+}
+
+@media (max-width: 900px) {
+  .shared-nav-links,
+  .user-meta,
+  .chevron-icon {
+    display: none;
+  }
+
+  .mobile-hamburger-btn {
+    display: block;
+  }
+
+  .shared-mobile-menu {
+    display: flex;
+  }
+
+  .shared-mobile-menu .shared-nav-link {
+    width: 100%;
+    padding: 10px 14px;
+  }
+
+  .mobile-logout {
+    color: #FF6B6B;
+    padding: 10px 14px;
+  }
+}

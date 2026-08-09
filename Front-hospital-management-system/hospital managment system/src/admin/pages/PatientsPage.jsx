@@ -133,9 +133,14 @@ export default function PatientsPage() {
 
   const renderRow = (patient, i) => {
     const user = patient.user || {};
-    const name = `${user.firstName || ''} ${user.lastName || ''}`.trim() || '—';
-    const initials = `${(user.firstName || '?')[0]}${(user.lastName || '')[0] || ''}`.toUpperCase();
-    const age = calcAge(user.dob);
+    const firstName = user.firstName || patient.firstName || '';
+    const lastName = user.lastName || patient.lastName || '';
+    const name = `${firstName} ${lastName}`.trim() || '—';
+    const initials = `${(firstName || '?')[0]}${(lastName || '')[0] || ''}`.toUpperCase();
+    const dob = user.dob || patient.dob;
+    const age = calcAge(dob);
+    const email = user.email || patient.email || '—';
+    const contact = user.contactNumber || patient.phoneNumber || patient.emergencyContactNumber || '—';
 
     return (
       <tr key={patient.patientId || i}>
@@ -153,8 +158,8 @@ export default function PatientsPage() {
           </div>
         </td>
         <td>{age}</td>
-        <td>{user.email || '—'}</td>
-        <td>{user.contactNumber || '—'}</td>
+        <td>{email}</td>
+        <td>{contact}</td>
         <td>{patient.bloodGroup || '—'}</td>
         <td>
           <div className="admin-actions">
