@@ -34,6 +34,9 @@ public class AuthServiceImplementation implements AuthService {
     private final PasswordResetRepo passwordResetRepo;
     private final EmailService emailService;
 
+    @org.springframework.beans.factory.annotation.Value("${frontend.url:http://localhost:5173}")
+    private String frontendUrl;
+
 
     @PostConstruct
     public void generateRandomPassword(){
@@ -89,7 +92,8 @@ public class AuthServiceImplementation implements AuthService {
 
         passwordResetRepo.save(resetToken);
 
-        String resetLink = "http://localhost:5173/reset-password?token=" + token;
+        String baseUrl = (frontendUrl != null && !frontendUrl.isEmpty()) ? frontendUrl.replaceAll("/+$", "") : "http://localhost:5173";
+        String resetLink = baseUrl + "/reset-password?token=" + token;
 
         emailService.sendPasswordResetEmail(dto.getEmail(), u.getFirstName() + " " + u.getLastName(), resetLink);
 

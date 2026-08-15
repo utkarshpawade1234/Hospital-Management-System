@@ -11,7 +11,7 @@ services:
       - DB_URL=jdbc:mysql://hospital-db.ct64m60g4evg.ap-south-1.rds.amazonaws.com:3306/hospital_management_system
       - DB_USERNAME=hospital_admin
       - DB_PASSWORD=Utkarshpawade
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
+      - FRONTEND_URL=${FRONTEND_URL:-http://13.233.68.7}
       - MAIL_USERNAME=medicarenotify2003@gmail.com
       - MAIL_PASSWORD=qqdvesqiuoamihbn
       - RAZORPAY_KEY_ID=rzp_test_TLxh0pCseBQt01
