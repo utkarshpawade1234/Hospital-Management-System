@@ -16,9 +16,11 @@
 </p>
 
 <p align="center">
-  <a href="https://medicare-hospital.duckdns.org"><b>🚀 Launch Live Application</b></a>
+  <a href="https://medicare-hospital.duckdns.org" target="_blank" rel="noopener noreferrer"><b>🚀 Launch Live Application</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
-  <a href="utkarshhsmreport.pdf"><b>📄 PDF System Report</b></a>
+  <a href="USER_CREDENTIALS.md" target="_blank" rel="noopener noreferrer"><b>🔑 Test Credentials</b></a>
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="utkarshhsmreport.pdf" target="_blank" rel="noopener noreferrer"><b>📄 PDF System Report</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="#-interactive-documentation-center"><b>📖 Documentation Hub</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
