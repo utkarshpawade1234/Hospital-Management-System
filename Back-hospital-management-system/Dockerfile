@@ -3,15 +3,12 @@ FROM maven:3.9.9-eclipse-temurin-21 AS builder
 
 WORKDIR /app
 
-# Copy only required files first (better caching)
+# Copy pom.xml and source code
 COPY pom.xml .
-RUN mvn dependency:go-offline
-
-# Copy source code
 COPY src ./src
 
-# Build jar
-RUN mvn clean package -DskipTests
+# Build jar directly
+RUN mvn clean package -DskipTests -B
 
 FROM eclipse-temurin:21-jdk
 
