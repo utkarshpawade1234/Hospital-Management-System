@@ -10,7 +10,7 @@ This document contains a complete list of pre-configured demo user accounts (Adm
 
 | Account Type | Standard Password |
 | :--- | :--- |
-| **👑 Admin** | `admin123` *(or `doctor123`)* |
+| **👑 Admin** | `admin123` |
 | **🩺 Doctors** | `doctor123` |
 | **👨‍⚕️ Patients** | `patient123` |
 
@@ -20,7 +20,7 @@ This document contains a complete list of pre-configured demo user accounts (Adm
 
 | Role | Name | Email / Username | Password | Access Level |
 | :--- | :--- | :--- | :--- | :--- |
-| **ADMIN** | Hospital Admin | `admin@hospital.com` | `admin123` / `doctor123` | Full System Control & Analytics |
+| **ADMIN** | Hospital Admin | `admin@hospital.com` | `admin123` | Full System Control & Analytics |
 
 ---
 
