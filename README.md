@@ -8,9 +8,6 @@
   <a href="https://medicare-hospital.duckdns.org">
     <img src="https://img.shields.io/badge/🌐_Live_Demo-medicare--hospital.duckdns.org-0070f3?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" />
   </a>
-  <a href="USER_CREDENTIALS.md">
-    <img src="https://img.shields.io/badge/🔑_Demo_Credentials-USER__CREDENTIALS.md-10B981?style=for-the-badge&logo=1password&logoColor=white" alt="Demo Credentials" />
-  </a>
   <img src="https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot" />
   <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
@@ -21,7 +18,7 @@
 <p align="center">
   <a href="https://medicare-hospital.duckdns.org"><b>🚀 Try the Live Demo</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
-  <a href="USER_CREDENTIALS.md"><b>🔐 Test User Accounts</b></a>
+  <a href="#-project-structure"><b>📁 Project Structure</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="#-quick-start-guide"><b>⚡ Quick Start Guide</b></a>
 </p>
@@ -41,23 +38,49 @@ The **Hospital Management System (HMS)** is a complete healthcare ecosystem desi
 
 ---
 
-## 🔑 Demo Credentials
+## 📁 Project Structure
 
-Test the live application at **[medicare-hospital.duckdns.org](https://medicare-hospital.duckdns.org)** using any of these roles:
+HMS is structured as a decoupled monorepo featuring a **Spring Boot 3.x** backend REST API and a **React 18 SPA** frontend, fully orchestrated with Docker Compose:
 
-| Role | Email / Username | Password | What You Can Do |
-| :--- | :--- | :--- | :--- |
-| **👑 Admin** | `admin@hospital.com` | `admin123` | Manage doctors, departments, pharmacy stock, rosters, and analytics |
-| **🩺 Doctor (Pre-configured)** | `amit.patel@hospital.com` | `doctor123` | View appointment list, manage schedule, write digital prescriptions |
-| **🩺 Doctor (Admin Created)** | *(Assigned by Admin)* | **`1234`** | Login for newly onboarded doctors |
-| **👨‍⚕️ Patient** | `aarav.sharma@gmail.com` | `patient123` | Search doctors, book time slots, pay online, view digital health history |
-| **👁️ Guest Visitor** | *(No login required)* | N/A | Browse doctor profiles, department listings, fee schedules, and available slots |
-
-> 💡 For the complete list of test accounts, view [USER_CREDENTIALS.md](USER_CREDENTIALS.md).
+```
+Hospital-Management-System/
+├── Back-hospital-management-system/          # Spring Boot 3.x Backend Service
+│   ├── src/main/java/com/hospital/hospital_management_system/
+│   │   ├── RestController/                    # REST API Endpoints (Auth, Doctors, Appointments, Payments)
+│   │   ├── service/                           # Core Business Logic & Payment Processing
+│   │   ├── model/                             # JPA Entity Definitions (10 Core Tables)
+│   │   ├── repository/                        # Spring Data JPA Data Access Repositories
+│   │   ├── DTO/                               # Data Transfer Objects
+│   │   ├── config/                            # Security, CORS, & App Configurations
+│   │   ├── filter/                            # JWT Authentication Filters
+│   │   ├── utils/                             # Utility Helpers (JWT Tokens, HMAC Verification)
+│   │   └── Exceptions/                        # Custom Exception Handlers
+│   ├── Dockerfile                             # Backend Container Definition
+│   └── pom.xml                                # Maven Dependencies & Build Config
+│
+├── Front-hospital-management-system/          # React 18 SPA Frontend Service
+│   └── hospital managment system/
+│       ├── src/
+│       │   ├── admin/                         # Admin Dashboard, Roster Management & Analytics
+│       │   ├── doctor/                        # Doctor Portal, Appointments & Prescription Modules
+│       │   ├── patient/                       # Patient Portal, Doctor Search & Slot Booking
+│       │   ├── components/                    # Shared UI Components (Modals, Tables, Navigation)
+│       │   ├── config/                        # Axios HTTP Client & API Routes Config
+│       │   ├── utils/                         # Token Storage & Formatting Helpers
+│       │   ├── App.jsx                        # Main Application Router & State Gateway
+│       │   └── main.jsx                       # React Application Entrypoint
+│       ├── Dockerfile                         # Frontend Container Definition
+│       ├── nginx.conf                         # Nginx Reverse Proxy Config for SPA
+│       └── package.json                       # Node.js Dependencies & Build Scripts
+│
+├── docker-compose.yml                         # Container Orchestration (DB, Backend, Frontend, Nginx)
+├── .env                                       # Environment Variables Template
+└── README.md                                  # Project Documentation
+```
 
 ---
 
-## 👥 Interactive User Flow & System Roles
+## 👥 System User Roles & Capabilities
 
 <details open>
 <summary><b>🔍 Click to view System Roles & Capabilities Overview</b></summary>
