@@ -159,6 +159,7 @@ public class PaymentServiceImplementation implements PaymentService {
             payment.setPaidAt(LocalDateTime.now());
             if (payment.getAppointment() != null) {
                 payment.getAppointment().setPaymentStatus(PaymentStatus.SUCCESS);
+                payment.getAppointment().setStatus(AppointmentStatus.CONFIRMED);
                 appointmentRepo.save(payment.getAppointment());
             }
         }

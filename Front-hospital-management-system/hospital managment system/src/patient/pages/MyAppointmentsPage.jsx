@@ -33,16 +33,14 @@ export default function MyAppointmentsPage() {
 
   const fetchAppointments = useCallback(async () => {
     let patientId = getSessionItem('patientId');
-    if (!patientId) {
-      try {
-        const profile = await getProfile();
-        if (profile && profile.patientId) {
-          patientId = profile.patientId;
-          setSessionItem('patientId', patientId);
-        }
-      } catch (err) {
-        console.error('Error loading patient profile:', err);
+    try {
+      const profile = await getProfile();
+      if (profile && profile.patientId) {
+        patientId = profile.patientId;
+        setSessionItem('patientId', patientId);
       }
+    } catch (err) {
+      console.error('Error loading patient profile:', err);
     }
 
     if (!patientId) {
