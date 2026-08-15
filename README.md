@@ -8,15 +8,19 @@
   <a href="https://medicare-hospital.duckdns.org">
     <img src="https://img.shields.io/badge/🌐_Live_Demo-medicare--hospital.duckdns.org-0070f3?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" />
   </a>
+  <a href="USER_CREDENTIALS.md">
+    <img src="https://img.shields.io/badge/🔑_Demo_Credentials-USER__CREDENTIALS.md-10B981?style=for-the-badge&logo=1password&logoColor=white" alt="Demo Credentials" />
+  </a>
   <img src="https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot" />
   <img src="https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
   <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   <img src="https://img.shields.io/badge/AWS-EC2_%26_RDS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS" />
-  <img src="https://img.shields.io/badge/SSL-Free_HTTPS-003A70?style=for-the-badge&logo=letsencrypt&logoColor=white" alt="SSL Free" />
 </p>
 
 <p align="center">
   <a href="https://medicare-hospital.duckdns.org"><b>🚀 Click Here to Visit Live Application</b></a>
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="USER_CREDENTIALS.md"><b>🔐 View All Test User Credentials</b></a>
 </p>
 
 ---
@@ -26,6 +30,19 @@
 **Medicare** is a full-stack healthcare web platform built to automate patient registrations, doctor consultations, appointment scheduling, online payment verification, and real-time email notifications.
 
 Designed with **Spring Boot 3** on the backend and **React 18** on the frontend, Medicare is containerized using **Docker Compose** and deployed live on **AWS EC2 & RDS** with Nginx reverse proxying and automated Let's Encrypt SSL encryption.
+
+---
+
+## 🔑 Quick Login Credentials
+
+To quickly test the live demo, click on **[USER_CREDENTIALS.md](USER_CREDENTIALS.md)** or use the quick accounts below:
+
+| Role | Username / Email | Default Password | Link |
+| :--- | :--- | :--- | :--- |
+| **👑 Admin** | `admin@hospital.com` | `admin123` | [🔐 Full Guide](USER_CREDENTIALS.md) |
+| **🩺 Newly Created Doctor** | *(Any new email created by Admin)* | **`1234`** | [🔐 Full Guide](USER_CREDENTIALS.md) |
+| **🩺 Pre-seeded Doctor** | `amit.patel@hospital.com` | `doctor123` | [🔐 Full Guide](USER_CREDENTIALS.md) |
+| **👨‍⚕️ Patient** | `aarav.sharma@gmail.com` | `patient123` | [🔐 Full Guide](USER_CREDENTIALS.md) |
 
 ---
 
@@ -45,11 +62,11 @@ Designed with **Spring Boot 3** on the backend and **React 18** on the frontend,
 ## 🛠️ Technology Stack
 
 ```
- Frontend  : React 18 • Vite • Axios • Vanilla CSS • Lucide Icons
- Backend   : Java 21 • Spring Boot 3 • Spring Security (JWT) • Spring Data JPA
- Database  : MySQL 8.0 • Amazon RDS
- Payments  : Razorpay Gateway REST API
- Cloud/DevOps: AWS EC2 • Docker & Docker Compose • Nginx • Let's Encrypt (Certbot)
+ Frontend     : React 18 • Vite • Axios • Vanilla CSS • Lucide Icons
+ Backend      : Java 21 • Spring Boot 3 • Spring Security (JWT) • Spring Data JPA
+ Database     : MySQL 8.0 • Amazon RDS
+ Payments     : Razorpay Gateway REST API
+ Cloud/DevOps : AWS EC2 • Docker & Docker Compose • Nginx • Let's Encrypt (Certbot)
 ```
 
 ---
@@ -97,5 +114,5 @@ docker compose up -d --build
 ---
 
 <p align="center">
-  Developed by <b>Utkarsh Pawade</b> • <a href="https://medicare-hospital.duckdns.org">Visit Live Project</a>
+  Developed by <b>Utkarsh Pawade</b> • <a href="https://medicare-hospital.duckdns.org">Visit Live Project</a> • <a href="USER_CREDENTIALS.md">Credentials Guide</a>
 </p>
