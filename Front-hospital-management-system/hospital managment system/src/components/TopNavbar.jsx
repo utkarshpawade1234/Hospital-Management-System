@@ -92,7 +92,7 @@ export default function TopNavbar({ role = 'PATIENT' }) {
         {/* Logo Left */}
         <div className="shared-nav-logo">
           <IconActivity size={22} className="logo-icon" />
-          <span>Medicare</span>
+          <span>CarePulse HMS</span>
         </div>
 
         {/* Center / Left Nav Links */}

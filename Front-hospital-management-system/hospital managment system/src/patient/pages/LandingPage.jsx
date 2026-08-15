@@ -165,7 +165,7 @@ export default function LandingPage() {
       <section id="about" className="landing-about-section">
         <div className="about-container">
           <div className="section-header">
-            <h2 className="section-title">About Medicare HMS</h2>
+            <h2 className="section-title">About CarePulse HMS</h2>
             <p className="section-desc">
               Empowering healthcare providers and patients with modern digital infrastructure.
             </p>
@@ -246,7 +246,7 @@ export default function LandingPage() {
             </div>
             <h4 className="contact-card-title">Main Facility</h4>
             <span className="contact-card-detail" style={{ color: '#0B1F3F' }}>
-              Medicare Healthcare Tower
+              CarePulse Medical Tower
             </span>
             <p className="contact-card-sub">City Medical Zone, Building 4B</p>
           </div>
