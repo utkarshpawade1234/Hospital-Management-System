@@ -1,46 +1,56 @@
-# 🏥 Medicare - Full-Stack Hospital Management System
+<h1 align="center">🏥 Medicare - Hospital Management System</h1>
 
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen?style=for-the-badge&logo=springboot)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
-[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
-[![AWS EC2](https://img.shields.io/badge/AWS-EC2%20%26%20RDS-FF9900?style=for-the-badge&logo=amazonaws)](https://aws.amazon.com/)
-[![SSL Free](https://img.shields.io/badge/SSL-Let's%20Encrypt-003A70?style=for-the-badge&logo=letsencrypt)](https://letsencrypt.org/)
+<p align="center">
+  <b>A Modern, Production-Grade Full-Stack Healthcare Management Platform</b>
+</p>
 
-**Medicare** is a comprehensive, production-ready Full-Stack Hospital Management System designed to streamline patient appointments, doctor schedules, administrative operations, online payment verification, and automated email notifications.
+<p align="center">
+  <a href="https://medicare-hospital.duckdns.org">
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-medicare--hospital.duckdns.org-0070f3?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" />
+  </a>
+  <img src="https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot" />
+  <img src="https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/AWS-EC2_%26_RDS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" alt="AWS" />
+  <img src="https://img.shields.io/badge/SSL-Free_HTTPS-003A70?style=for-the-badge&logo=letsencrypt&logoColor=white" alt="SSL Free" />
+</p>
 
-🌐 **Live Demo**: [https://medicare-hospital.duckdns.org](https://medicare-hospital.duckdns.org)
+<p align="center">
+  <a href="https://medicare-hospital.duckdns.org"><b>🚀 Click Here to Visit Live Application</b></a>
+</p>
 
 ---
 
-## ✨ Features & Key Highlights
+## 🌟 Overview
 
-### 👨‍⚕️ Patient Portal
-- **User Authentication**: Secure JWT-based registration and login system.
-- **Appointment Booking**: Browse doctors by specialization, select available time slots, and book appointments.
-- **Online Payment Integration**: Integrated with **Razorpay Payment Gateway** for instant appointment confirmation upon successful payment.
-- **Real-Time Sorting**: Displays most recently booked appointments at the top of the patient dashboard.
-- **Automated Email Notifications**: Real-time email confirmations sent to patients via JavaMailSender upon booking/payment updates.
+**Medicare** is a full-stack healthcare web platform built to automate patient registrations, doctor consultations, appointment scheduling, online payment verification, and real-time email notifications.
 
-### 🩺 Doctor & Admin Management
-- **Doctor Schedules**: Manage availability slots, appointment approvals, and patient consult histories.
-- **Admin Control Center**: Comprehensive dashboard to monitor system users, doctor registrations, and revenue analytics.
+Designed with **Spring Boot 3** on the backend and **React 18** on the frontend, Medicare is containerized using **Docker Compose** and deployed live on **AWS EC2 & RDS** with Nginx reverse proxying and automated Let's Encrypt SSL encryption.
 
-### 🛡️ Security & Performance
-- **Custom Spring Security CORS**: Configured with explicit origin whitelisting (`setAllowedOrigins`) to prevent unauthorized cross-origin requests.
-- **Nginx Reverse Proxy**: Single-origin architecture serving frontend static assets and proxying `/api/` calls seamlessly on Port 80 & Port 443.
-- **HTTPS SSL Encryption**: Free automated SSL certificate via **Let's Encrypt / Certbot** with 301 HTTPS auto-redirects.
+---
+
+## ⚡ Key Features
+
+| Portal | Feature Capabilities |
+| :--- | :--- |
+| **👨‍⚕️ Patient Dashboard** | JWT Registration/Login, Doctor Search by Specialization, Real-time Appointment Slot Selection, Payment Checkout |
+| **💳 Online Payments** | **Razorpay Gateway** integration with server-side payment verification & instant status confirmation |
+| **📩 Email Alerts** | Automated booking confirmation & payment receipt emails powered by Spring Boot Mail Service |
+| **🩺 Doctor Portal** | Schedule Management, Patient Appointment Approvals, Consultation Tracking |
+| **🔐 Admin Operations** | System Analytics, User & Doctor Registration Control |
+| **🛡️ Infrastructure** | Nginx Reverse Proxy, CORS Whitelisting, Free HTTPS via Let's Encrypt SSL, Dockerized Containers |
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technologies Used |
-| :--- | :--- |
-| **Frontend** | React 18, Vite, Vanilla CSS, Axios, Lucide Icons, Tabler Icons |
-| **Backend** | Java 21, Spring Boot 3, Spring Security, Spring Data JPA, Hibernate, JWT |
-| **Database** | MySQL 8.0, Amazon RDS |
-| **Payments & Mail** | Razorpay REST API, JavaMailSender (SMTP) |
-| **DevOps & Cloud** | Docker, Docker Compose, Nginx, AWS EC2, Let's Encrypt (Certbot), DuckDNS |
+```
+ Frontend  : React 18 • Vite • Axios • Vanilla CSS • Lucide Icons
+ Backend   : Java 21 • Spring Boot 3 • Spring Security (JWT) • Spring Data JPA
+ Database  : MySQL 8.0 • Amazon RDS
+ Payments  : Razorpay Gateway REST API
+ Cloud/DevOps: AWS EC2 • Docker & Docker Compose • Nginx • Let's Encrypt (Certbot)
+```
 
 ---
 
@@ -49,7 +59,7 @@
 ```mermaid
 graph TD
     Client["📱 Web & Mobile Browsers<br>(https://medicare-hospital.duckdns.org)"] -->|HTTPS / Port 443| Nginx["⚡ Nginx Reverse Proxy Container"]
-    Nginx -->|Static Assets| ReactApp["🎨 React Frontend Container"]
+    Nginx -->|Serve Build| ReactApp["🎨 React Frontend Container"]
     Nginx -->|Proxy /api/| SpringBoot["🍃 Spring Boot Backend Container (Port 8080)"]
     SpringBoot -->|JPA/JDBC| RDS[("🗄️ Amazon RDS MySQL Database")]
     SpringBoot -->|REST API| Razorpay["💳 Razorpay Payment Gateway"]
@@ -58,64 +68,34 @@ graph TD
 
 ---
 
-## 🚀 Getting Started Locally
+## 🚀 Quick Deployment & Local Setup
 
-### Prerequisites
-- Java 21 JDK
-- Node.js (v18+ or v20+)
-- Docker & Docker Compose
-- MySQL Server 8.0
-
-### 1. Clone the Repository
+### 1. Clone Repository
 ```bash
 git clone https://github.com/utkarshpawade1234/Hospital-Management-System.git
 cd Hospital-Management-System
 ```
 
-### 2. Configure Environment Variables
-Create a `.env` file in the root directory (or configure application properties):
-
+### 2. Environment Configuration
+Create a `.env` file in the project root:
 ```env
 DB_URL=jdbc:mysql://localhost:3306/hospital_management_system
 DB_USERNAME=root
 DB_PASSWORD=yourpassword
-
 FRONTEND_URL=http://localhost:5173
-
 MAIL_USERNAME=your-email@gmail.com
 MAIL_PASSWORD=your-app-password
-
-RAZORPAY_KEY_ID=rzp_test_your_key_id
-RAZORPAY_KEY_SECRET=your_key_secret
+RAZORPAY_KEY_ID=your_razorpay_key
+RAZORPAY_KEY_SECRET=your_razorpay_secret
 ```
 
-### 3. Run using Docker Compose
+### 3. Launch with Docker Compose
 ```bash
 docker compose up -d --build
 ```
 
-Access the application locally at `http://localhost`.
-
 ---
 
-## ☁️ Deployment Architecture (AWS EC2 + Docker)
-
-The project is configured for automated containerized deployment on AWS EC2:
-
-1. **Docker Compose Orchestration**: Both frontend (Nginx) and backend (Spring Boot) services are containerized and connected via an internal Docker bridge network.
-2. **Reverse Proxying**: Nginx routes standard HTTP/HTTPS traffic to the Spring Boot backend container (`http://backend:8080/`), preventing CORS errors in production.
-3. **Automated SSL**: Certbot manages SSL certificates automatically inside `/etc/letsencrypt`.
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
-## 👨‍💻 Author
-
-**Utkarsh Pawade**  
-- GitHub: [@utkarshpawade1234](https://github.com/utkarshpawade1234)  
-- Live Project: [https://medicare-hospital.duckdns.org](https://medicare-hospital.duckdns.org)
+<p align="center">
+  Developed by <b>Utkarsh Pawade</b> • <a href="https://medicare-hospital.duckdns.org">Visit Live Project</a>
+</p>
