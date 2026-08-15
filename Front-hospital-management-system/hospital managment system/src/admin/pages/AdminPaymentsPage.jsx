@@ -22,7 +22,43 @@ export default function AdminPaymentsPage() {
     try {
       const res = await patientAxios.get(`/payment/all?page=${pageNum}&size=${size}`);
       const data = res.data;
-      setPayments(data.content || []);
+      const rawList = data.content || [];
+
+      const apptGroups = new Map();
+      rawList.forEach((p) => {
+        if (!p.appointmentId) return;
+        if (!apptGroups.has(p.appointmentId)) {
+          apptGroups.set(p.appointmentId, []);
+        }
+        apptGroups.get(p.appointmentId).push(p);
+      });
+
+      const filteredList = rawList.filter((p) => {
+        if (!p.appointmentId) return true;
+        const group = apptGroups.get(p.appointmentId);
+        if (group.length <= 1) return true;
+
+        const s = (p.paymentStatus || '').toUpperCase();
+        const hasCompletedOrRefunding = group.some((other) => {
+          const os = (other.paymentStatus || '').toUpperCase();
+          return os === 'SUCCESS' || os === 'REFUNDED' || os === 'REFUNDING';
+        });
+
+        if (s === 'PENDING' && hasCompletedOrRefunding) {
+          return false;
+        }
+
+        if (s === 'PENDING') {
+          const latestPending = group
+            .filter((o) => (o.paymentStatus || '').toUpperCase() === 'PENDING')
+            .sort((a, b) => (b.paymentId || 0) - (a.paymentId || 0))[0];
+          return p.paymentId === latestPending.paymentId;
+        }
+
+        return true;
+      });
+
+      setPayments(filteredList);
       setTotalPages(data.totalPages || 0);
       setTotalElements(data.totalElements || 0);
     } catch (err) {
@@ -93,16 +129,16 @@ export default function AdminPaymentsPage() {
   ];
 
   const renderRow = (row) => {
-    const isSuccess = (row.paymentStatus || '').toUpperCase() === 'SUCCESS';
-    const isCancelled = (row.appointmentStatus || '').toUpperCase() === 'CANCELLED';
-    const isRefundable = isSuccess && isCancelled && row.refundStatus !== 'PROCESSED';
-    const tooltipText = !isSuccess
-      ? 'Refund only available for successful payments'
-      : !isCancelled
-        ? 'Refund only available when appointment is CANCELLED'
-        : row.refundStatus === 'PROCESSED'
-          ? 'Refund already processed'
-          : 'Refund patient payment';
+    const payStatus = (row.paymentStatus || '').toUpperCase();
+    const isSuccess = payStatus === 'SUCCESS';
+    const isRefunded = payStatus === 'REFUNDED' || row.refundStatus === 'PROCESSED';
+    const isRefundable = isSuccess && !isRefunded;
+
+    const tooltipText = isRefunded
+      ? 'Refund already processed'
+      : isSuccess
+        ? 'Refund patient payment and cancel appointment'
+        : 'Refund only available for successful payments';
 
     return (
       <tr key={row.paymentId}>
@@ -128,17 +164,32 @@ export default function AdminPaymentsPage() {
         <td style={{ fontWeight: 600, color: '#0B1F3F' }}>
           {formatCurrency(row.amount)}
         </td>
-        <td>{renderStatusPill(row.paymentStatus)}</td>
+        <td>{renderStatusPill(isRefunded ? 'REFUNDED' : row.paymentStatus)}</td>
         <td>{formatDate(row.paidAt || row.createdAt)}</td>
         <td>
-          <button
-            className="refund-btn"
-            disabled={!isRefundable}
-            title={tooltipText}
-            onClick={() => setRefundTarget(row)}
-          >
-            <IconRefresh size={14} /> Refund
-          </button>
+          {isRefunded ? (
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#6B7690',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              Refunded
+            </span>
+          ) : (
+            <button
+              className="refund-btn"
+              disabled={!isRefundable}
+              title={tooltipText}
+              onClick={() => setRefundTarget(row)}
+            >
+              <IconRefresh size={14} /> Refund
+            </button>
+          )}
         </td>
       </tr>
     );

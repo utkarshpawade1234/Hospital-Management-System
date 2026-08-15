@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { IconX, IconTrash, IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconX, IconTrash, IconPlus, IconSearch, IconDownload } from "@tabler/icons-react";
 import api from "../api";
 import toast from "react-hot-toast";
+import { downloadPrescription } from "../../utils/downloadPrescription";
 
-export default function PrescriptionModal({ open, onClose, appointmentId, prescription, onSaveSuccess }) {
+export default function PrescriptionModal({ open, onClose, appointmentId, prescription, patientName, onSaveSuccess }) {
   const [diagnosis, setDiagnosis] = useState("");
   const [notes, setNotes] = useState("");
   const [medicines, setMedicines] = useState([
@@ -507,15 +508,29 @@ export default function PrescriptionModal({ open, onClose, appointmentId, prescr
           </div>
 
           {/* Footer Actions */}
-          <div style={{ padding: "16px 24px", borderTop: "0.5px solid var(--border)", display: "flex", justifyContent: "flex-end", gap: "10px" }}>
-            <button type="button" className="btn btn-outline" onClick={onClose} disabled={loading}>
-              {isReadOnly ? "Close" : "Cancel"}
-            </button>
-            {!isReadOnly && (
-              <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? "Submitting..." : "Save Prescription"}
+          <div style={{ padding: "16px 24px", borderTop: "0.5px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              {prescription && (
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => downloadPrescription(prescription, { patientName: prescription?.patientName || patientName })}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--teal)", borderColor: "var(--teal)", fontSize: "13px" }}
+                >
+                  <IconDownload size={16} /> Download PDF
+                </button>
+              )}
+            </div>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button type="button" className="btn btn-outline" onClick={onClose} disabled={loading}>
+                {isReadOnly ? "Close" : "Cancel"}
               </button>
-            )}
+              {!isReadOnly && (
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? "Submitting..." : "Save Prescription"}
+                </button>
+              )}
+            </div>
           </div>
         </form>
       </div>

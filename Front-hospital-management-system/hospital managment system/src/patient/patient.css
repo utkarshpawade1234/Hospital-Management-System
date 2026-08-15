@@ -53,59 +53,78 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0B1F3F 0%, #132C52 50%, #1D9E75 100%);
-  padding: 20px;
+  background: radial-gradient(circle at 50% 30%, #16365C 0%, #0B1F3F 55%, #071326 100%);
+  padding: 32px 20px;
 }
 
 .auth-card {
-  background: var(--color-card);
+  background: #FFFFFF;
   border-radius: 16px;
-  padding: 40px;
+  padding: 36px 32px;
   width: 100%;
   max-width: 440px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  animation: authFadeIn 0.4s ease-out;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  animation: authFadeIn 0.35s ease-out;
+}
+
+.auth-card.auth-card-wide {
+  max-width: 540px;
 }
 
 @keyframes authFadeIn {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.auth-logo {
-  display: flex;
+.auth-logo-brand {
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--color-navy);
-  margin-bottom: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  text-decoration: none;
 }
 
-.auth-logo svg { color: var(--color-teal); }
+.auth-logo-brand .logo-icon-box {
+  width: 28px;
+  height: 28px;
+  background-color: #0B1F3F;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-logo-brand .logo-wordmark {
+  font-weight: 700;
+  font-size: 18px;
+  color: #0B1F3F;
+  letter-spacing: -0.3px;
+}
 
 .auth-title {
   font-size: 22px;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: #0B1F3F;
   margin-bottom: 4px;
 }
 
 .auth-subtitle {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  margin-bottom: 28px;
+  font-size: 13px;
+  color: #6B7690;
+  margin-bottom: 24px;
+  line-height: 1.5;
 }
 
 .auth-footer {
   text-align: center;
   margin-top: 24px;
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: #6B7690;
 }
 
 .auth-footer a {
-  color: var(--color-teal);
+  color: #1D9E75;
   text-decoration: none;
   font-weight: 600;
 }

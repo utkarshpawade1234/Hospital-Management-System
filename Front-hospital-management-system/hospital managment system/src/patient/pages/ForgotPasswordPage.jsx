@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IconActivity, IconCircleCheck } from '@tabler/icons-react';
 import { forgotPassword } from '../api/patientApi';
 
 export default function ForgotPasswordPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,9 +36,11 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="auth-card">
-      <div className="auth-logo">
-        <IconActivity size={26} />
-        Medicare
+      <div className="auth-logo-brand" onClick={() => navigate('/')}>
+        <div className="logo-icon-box">
+          <IconActivity size={18} color="#1D9E75" />
+        </div>
+        <span className="logo-wordmark">HMS</span>
       </div>
       <h1 className="auth-title">Forgot password</h1>
       <p className="auth-subtitle">
@@ -80,7 +83,7 @@ export default function ForgotPasswordPage() {
       )}
 
       <p className="auth-footer">
-        <Link to="/">← Back to login</Link>
+        <Link to="/login">← Back to login</Link>
       </p>
     </div>
   );

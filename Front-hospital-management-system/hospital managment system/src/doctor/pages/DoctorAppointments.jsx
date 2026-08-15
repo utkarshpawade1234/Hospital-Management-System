@@ -445,6 +445,7 @@ export default function DoctorAppointments() {
         onClose={() => setPrescriptionModalOpen(false)}
         appointmentId={selected?.appointmentId}
         prescription={prescription}
+        patientName={selected?.patientName}
         onSaveSuccess={() => {
           if (selected) openDetail(selected);
         }}

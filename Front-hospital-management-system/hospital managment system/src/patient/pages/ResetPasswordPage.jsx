@@ -41,7 +41,7 @@ export default function ResetPasswordPage() {
       const res = await resetPassword({ token, newPassword: form.newPassword });
       toast.success(res.message || 'Password reset successfully!');
       setSuccess(true);
-      setTimeout(() => navigate('/'), 2000);
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       const msg =
         err.response?.data?.message || 'Failed to reset password';
@@ -58,9 +58,11 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="auth-card">
-      <div className="auth-logo">
-        <IconActivity size={26} />
-        Medicare
+      <div className="auth-logo-brand" onClick={() => navigate('/')}>
+        <div className="logo-icon-box">
+          <IconActivity size={18} color="#1D9E75" />
+        </div>
+        <span className="logo-wordmark">HMS</span>
       </div>
       <h1 className="auth-title">Reset password</h1>
       <p className="auth-subtitle">Enter your new password below</p>
@@ -140,7 +142,7 @@ export default function ResetPasswordPage() {
       )}
 
       <p className="auth-footer">
-        <Link to="/">← Back to login</Link>
+        <Link to="/login">← Back to login</Link>
       </p>
     </div>
   );

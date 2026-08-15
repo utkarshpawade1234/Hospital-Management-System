@@ -19,7 +19,7 @@ function MedicineDetailModal({ medicineId, onClose }) {
 
   const fetchDetail = useCallback(async () => {
     try {
-      const res = await api.get(`/admin/medicines/${medicineId}`);
+      const res = await api.get(`/doctor/medicines/${medicineId}`);
       setDetail(res.data);
       setStatus('ok');
     } catch {

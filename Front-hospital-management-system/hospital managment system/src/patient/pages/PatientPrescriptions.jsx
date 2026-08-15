@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { IconChevronDown, IconChevronUp, IconCalendar, IconUser, IconFileText, IconPills } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp, IconCalendar, IconUser, IconFileText, IconPills, IconDownload } from "@tabler/icons-react";
 import api from "../api/patientAxios";
 import toast from "react-hot-toast";
+import { downloadPrescription } from "../../utils/downloadPrescription";
 
 export default function PatientPrescriptions() {
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedCardId, setExpandedCardId] = useState(null);
+  const [patientName, setPatientName] = useState("");
 
   useEffect(() => {
+    api.get("/patient/profile/myProfile")
+      .then((res) => {
+        const u = res.data?.user || res.data;
+        if (u && (u.firstName || u.lastName)) {
+          setPatientName(`${u.firstName || ''} ${u.lastName || ''}`.trim());
+        }
+      })
+      .catch(() => {});
+
     api.get("/patient/prescriptions")
       .then((res) => {
         setPrescriptions(res.data || []);
@@ -79,33 +90,55 @@ export default function PatientPrescriptions() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => toggleExpand(pres.prescriptionId)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      fontSize: "12px",
-                      fontWeight: 500,
-                      color: "var(--teal)",
-                      padding: "4px 8px",
-                      borderRadius: "6px",
-                      backgroundColor: "var(--bg)"
-                    }}
-                  >
-                    {isExpanded ? (
-                      <>
-                        Hide Details <IconChevronUp size={16} />
-                      </>
-                    ) : (
-                      <>
-                        View Medicines ({pres.medicines?.length || 0}) <IconChevronDown size={16} />
-                      </>
-                    )}
-                  </button>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <button
+                      onClick={() => downloadPrescription(pres, { patientName: pres.patientName || patientName })}
+                      style={{
+                        background: "var(--blue-bg)",
+                        border: "0.5px solid var(--border)",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        fontSize: "12px",
+                        fontWeight: 600,
+                        color: "var(--teal)",
+                        padding: "5px 10px",
+                        borderRadius: "6px"
+                      }}
+                      title="Download or Print Prescription PDF"
+                    >
+                      <IconDownload size={15} /> Download PDF
+                    </button>
+
+                    <button
+                      onClick={() => toggleExpand(pres.prescriptionId)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        fontSize: "12px",
+                        fontWeight: 500,
+                        color: "var(--teal)",
+                        padding: "5px 10px",
+                        borderRadius: "6px",
+                        backgroundColor: "var(--bg)"
+                      }}
+                    >
+                      {isExpanded ? (
+                        <>
+                          Hide Details <IconChevronUp size={16} />
+                        </>
+                      ) : (
+                        <>
+                          View Medicines ({pres.medicines?.length || 0}) <IconChevronDown size={16} />
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Diagnosis snippet */}

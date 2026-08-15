@@ -22,7 +22,44 @@ export default function PatientPaymentsPage() {
       const data = res.data;
       const rawList = data.content || [];
       rawList.sort((a, b) => (b.paymentId || 0) - (a.paymentId || 0));
-      setPayments(rawList);
+
+      // Filter out orphan PENDING payments when a SUCCESS/REFUNDING/REFUNDED payment exists for the same appointment,
+      // or duplicate PENDING payments for the same appointment.
+      const apptGroups = new Map();
+      rawList.forEach((p) => {
+        if (!p.appointmentId) return;
+        if (!apptGroups.has(p.appointmentId)) {
+          apptGroups.set(p.appointmentId, []);
+        }
+        apptGroups.get(p.appointmentId).push(p);
+      });
+
+      const filteredList = rawList.filter((p) => {
+        if (!p.appointmentId) return true;
+        const group = apptGroups.get(p.appointmentId);
+        if (group.length <= 1) return true;
+
+        const s = (p.paymentStatus || '').toUpperCase();
+        const hasCompletedOrRefunding = group.some((other) => {
+          const os = (other.paymentStatus || '').toUpperCase();
+          return os === 'SUCCESS' || os === 'REFUNDED' || os === 'REFUNDING';
+        });
+
+        if (s === 'PENDING' && hasCompletedOrRefunding) {
+          return false;
+        }
+
+        if (s === 'PENDING') {
+          const latestPending = group
+            .filter((o) => (o.paymentStatus || '').toUpperCase() === 'PENDING')
+            .sort((a, b) => (b.paymentId || 0) - (a.paymentId || 0))[0];
+          return p.paymentId === latestPending.paymentId;
+        }
+
+        return true;
+      });
+
+      setPayments(filteredList);
       setTotalPages(data.totalPages || 0);
       setTotalElements(data.totalElements || 0);
     } catch (err) {

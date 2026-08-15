@@ -75,9 +75,11 @@ export default function LoginPage() {
 
   return (
     <div className="auth-card">
-      <div className="auth-logo">
-        <IconActivity size={26} />
-        Medicare
+      <div className="auth-logo-brand" onClick={() => navigate('/')}>
+        <div className="logo-icon-box">
+          <IconActivity size={18} color="#1D9E75" />
+        </div>
+        <span className="logo-wordmark">HMS</span>
       </div>
       <h1 className="auth-title">Welcome back</h1>
       <p className="auth-subtitle">Sign in to your account to continue</p>

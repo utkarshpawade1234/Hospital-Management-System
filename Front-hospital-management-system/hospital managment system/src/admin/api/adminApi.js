@@ -100,3 +100,9 @@ export const activateMedicine = (id) =>
 
 export const deactivateMedicine = (id) =>
   adminAxios.put(`/medicines/${id}/deactivate`).then((r) => r.data);
+
+export const deleteMedicine = (id) =>
+  adminAxios.delete(`/medicines/${id}`).then((r) => r.data);
+
+export const deleteMultipleMedicines = (ids) =>
+  adminAxios.post('/medicines/delete-multiple', ids).then((r) => r.data);

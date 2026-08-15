@@ -1,14 +1,11 @@
 import axios from 'axios';
 import { getSessionItem } from '../../utils/sessionStorage';
-
-const getBackendUrl = () => {
-  const host = typeof window !== 'undefined' && window.location.hostname ? window.location.hostname : 'localhost';
-  return `http://${host}:8080/doctor`;
-};
+import { API_BASE_URL } from '../../config/apiConfig';
 
 const doctorAxios = axios.create({
-  baseURL: getBackendUrl(),
+  baseURL: `${API_BASE_URL}/doctor`,
 });
+
 
 doctorAxios.interceptors.request.use(
   (config) => {

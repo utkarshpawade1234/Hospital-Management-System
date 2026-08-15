@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   IconCheck,
@@ -50,6 +50,7 @@ export default function PaymentPage() {
   const [lastPaymentId, setLastPaymentId] = useState(null);
   const [initError, setInitError] = useState(null);
   const [failureInfo, setFailureInfo] = useState(null);
+  const creatingRef = useRef(false);
 
   // Step 1: Create Order on Mount
   const createOrder = useCallback(async () => {
@@ -57,6 +58,8 @@ export default function PaymentPage() {
       setInitError('No appointment selected. Please navigate from booking.');
       return;
     }
+    if (creatingRef.current) return;
+    creatingRef.current = true;
     try {
       const res = await patientAxios.post('/payment/create-order', { appointmentId });
       setOrder(res.data);
@@ -81,6 +84,8 @@ export default function PaymentPage() {
         return;
       }
       setInitError(msg || 'Failed to create payment order. Please try again.');
+    } finally {
+      creatingRef.current = false;
     }
   }, [appointmentId, navigate]);
 

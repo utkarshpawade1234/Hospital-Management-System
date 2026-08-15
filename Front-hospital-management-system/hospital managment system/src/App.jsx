@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Patient
 import AuthLayout from './patient/components/AuthLayout';
 import PatientLayout from './patient/components/PatientLayout';
+import LandingPage from './patient/pages/LandingPage';
 import LoginPage from './patient/pages/LoginPage';
 import RegisterPage from './patient/pages/RegisterPage';
 import ForgotPasswordPage from './patient/pages/ForgotPasswordPage';
@@ -37,9 +38,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Auth routes (centered card, no navbar) */}
+        {/* Public Landing Page */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/landing" element={<LandingPage />} />
+
+        {/* Auth routes (centered card layout) */}
         <Route element={<AuthLayout />}>
-          <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />

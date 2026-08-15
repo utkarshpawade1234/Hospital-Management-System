@@ -8,11 +8,12 @@ import {
   IconStethoscope,
   IconCreditCard,
   IconCheck,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
-import { getMyAppointments, cancelAppointment } from '../api/patientApi';
+import { getMyAppointments, cancelAppointment, getProfile } from '../api/patientApi';
 import ConfirmModal from '../components/ConfirmModal';
-import { getSessionItem } from '../../utils/sessionStorage';
+import { getSessionItem, setSessionItem } from '../../utils/sessionStorage';
 
 const STATUS_MAP = {
   CONFIRMED: { cls: 'pill-green', label: 'Confirmed' },
@@ -31,7 +32,19 @@ export default function MyAppointmentsPage() {
   const [cancelling, setCancelling] = useState(false);
 
   const fetchAppointments = useCallback(async () => {
-    const patientId = getSessionItem('patientId');
+    let patientId = getSessionItem('patientId');
+    if (!patientId) {
+      try {
+        const profile = await getProfile();
+        if (profile && profile.patientId) {
+          patientId = profile.patientId;
+          setSessionItem('patientId', patientId);
+        }
+      } catch (err) {
+        console.error('Error loading patient profile:', err);
+      }
+    }
+
     if (!patientId) {
       setLoading(false);
       return;
@@ -206,7 +219,7 @@ export default function MyAppointmentsPage() {
                       <IconClock size={14} />
                       Refunded
                     </span>
-                  ) : payStatusKey === 'SUCCESS' ? (
+                  ) : payStatusKey === 'SUCCESS' || payStatusKey === 'PAID' ? (
                     statusKey === 'CANCELLED' ? (
                       <span
                         style={{
@@ -239,15 +252,15 @@ export default function MyAppointmentsPage() {
                         }}
                       >
                         <IconCheck size={14} />
-                        Payment Successful
+                        Paid
                       </span>
                     )
                   ) : statusKey !== 'CANCELLED' ? (
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                       <span
                         style={{
-                          background: '#FEF6E0',
-                          color: '#B45309',
+                          background: payStatusKey === 'FAILED' ? '#FCE8E6' : '#FEF6E0',
+                          color: payStatusKey === 'FAILED' ? '#C5221F' : '#B45309',
                           padding: '4px 10px',
                           borderRadius: '6px',
                           fontSize: '12px',
@@ -257,8 +270,8 @@ export default function MyAppointmentsPage() {
                           gap: '4px',
                         }}
                       >
-                        <IconClock size={14} />
-                        Payment Pending
+                        {payStatusKey === 'FAILED' ? <IconAlertTriangle size={14} /> : <IconClock size={14} />}
+                        {payStatusKey === 'FAILED' ? 'Payment Failed' : 'Payment Pending'}
                       </span>
                       <button
                         className="btn btn-sm"

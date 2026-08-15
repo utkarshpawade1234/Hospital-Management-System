@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import TopNavbar from '../../components/TopNavbar';
 import CompleteProfileModal from './CompleteProfileModal';
-import { getSessionItem, removeSessionItem } from '../../utils/sessionStorage';
+import { getSessionItem, removeSessionItem, useSessionGuard } from '../../utils/sessionStorage';
 import '../patient.css';
 
 export default function PatientLayout() {
+  const token = useSessionGuard();
+  const rawRole = getSessionItem('userRole');
+  const role = rawRole ? rawRole.toUpperCase() : '';
+
   const [showCompleteModal, setShowCompleteModal] = useState(() => {
     const isFirstTime = getSessionItem('firstTimeLogin') === 'true';
     const hasPatientId = !!getSessionItem('patientId');
@@ -17,6 +21,11 @@ export default function PatientLayout() {
     removeSessionItem('firstTimeLogin');
     setShowCompleteModal(false);
   };
+
+  // Route guard: if no token or role is not PATIENT, redirect to login page
+  if (!token || role !== 'PATIENT') {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="patient-root">

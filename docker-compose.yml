@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./Back-hospital-management-system
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:mysql://hospital-db.ct64m60g4evg.ap-south-1.rds.amazonaws.com:3306/hospital_management_system
+      - DB_USERNAME=hospital_admin
+      - DB_PASSWORD=Utkarshpawade
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
+      - MAIL_USERNAME=medicarenotify2003@gmail.com
+      - MAIL_PASSWORD=qqdvesqiuoamihbn
+      - RAZORPAY_KEY_ID=rzp_test_TLxh0pCseBQt01
+      - RAZORPAY_KEY_SECRET=TZGuJ2xDRU0RJAjDN0gaOuI5
+    restart: always
+
+  frontend:
+    build:
+      context: "./Front-hospital-management-system/hospital managment system"
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always

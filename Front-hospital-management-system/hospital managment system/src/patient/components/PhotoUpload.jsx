@@ -3,14 +3,8 @@ import { IconCamera } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { getSessionItem } from '../../utils/sessionStorage';
+import { API_BASE_URL } from '../../config/apiConfig';
 
-const getBackendUrl = () => {
-  const host =
-    typeof window !== 'undefined' && window.location.hostname
-      ? window.location.hostname
-      : 'localhost';
-  return `http://${host}:8080`;
-};
 
 export default function PhotoUpload({
   value,
@@ -65,7 +59,7 @@ export default function PhotoUpload({
 
     try {
       const res = await axios.post(
-        `${getBackendUrl()}/api/upload/image`,
+        `${API_BASE_URL}/api/upload/image`,
         formData,
         { headers }
       );

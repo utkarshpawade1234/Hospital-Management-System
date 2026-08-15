@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   IconUsers,
   IconStethoscope,
@@ -9,38 +10,42 @@ import {
   IconCircleCheck,
   IconCheck,
   IconX,
+  IconReceipt,
+  IconRefresh,
 } from '@tabler/icons-react';
 import StatCard from '../components/StatCard';
 import StatusPill from '../components/StatusPill';
+import PaymentDetailModal from '../../components/PaymentDetailModal';
+import patientAxios from '../../patient/api/patientAxios';
+import { formatCurrency, formatDate } from '../../utils/formatUtils';
 import { getDashboard, getAppointments } from '../api/adminApi';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [recentAppts, setRecentAppts] = useState([]);
+  const [recentPayments, setRecentPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPaymentId, setSelectedPaymentId] = useState(null);
+
+  const fetchDashboardData = async () => {
+    try {
+      const [dashData, apptsData, paymentsRes] = await Promise.all([
+        getDashboard(),
+        getAppointments(0, 5),
+        patientAxios.get('/payment/all?page=0&size=5').catch(() => ({ data: { content: [] } })),
+      ]);
+      setStats(dashData);
+      setRecentAppts(apptsData.content || []);
+      setRecentPayments(paymentsRes.data?.content || []);
+    } catch (err) {
+      console.error('Dashboard fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let ignore = false;
-    async function load() {
-      try {
-        const [dashData, apptsData] = await Promise.all([
-          getDashboard(),
-          getAppointments(0, 5),
-        ]);
-        if (!ignore) {
-          setStats(dashData);
-          setRecentAppts(apptsData.content || []);
-        }
-      } catch (err) {
-        console.error('Dashboard fetch error:', err);
-      } finally {
-        if (!ignore) setLoading(false);
-      }
-    }
-    load();
-    return () => {
-      ignore = true;
-    };
+    fetchDashboardData();
   }, []);
 
   const statCards = stats
@@ -272,6 +277,154 @@ export default function AdminDashboard() {
           </div>
         )}
       </div>
+
+      {/* Recent Payments Table */}
+      <div className="admin-table-wrapper" style={{ marginTop: '24px' }}>
+        <div className="admin-table-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="admin-table-title">Recent payments</div>
+          <Link to="/admin/payments" style={{ fontSize: '13px', color: '#1D9E75', fontWeight: 600, textDecoration: 'none' }}>
+            View all payments →
+          </Link>
+        </div>
+
+        {loading ? (
+          <>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="admin-skeleton-row">
+                <div className="admin-skeleton admin-skeleton-circle" />
+                <div
+                  className="admin-skeleton admin-skeleton-line"
+                  style={{ width: '120px', flex: 1 }}
+                />
+                <div
+                  className="admin-skeleton admin-skeleton-line"
+                  style={{ width: '80px' }}
+                />
+              </div>
+            ))}
+          </>
+        ) : recentPayments.length === 0 ? (
+          <div className="admin-empty">
+            <IconReceipt size={48} />
+            <div className="admin-empty-title">No payments yet</div>
+            <div className="admin-empty-text">
+              System payment records will appear here.
+            </div>
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Receipt / ID</th>
+                  <th>Patient</th>
+                  <th>Doctor</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentPayments.map((p) => {
+                  const payStatus = (p.paymentStatus || '').toUpperCase();
+                  const isRefunded = payStatus === 'REFUNDED' || p.refundStatus === 'PROCESSED';
+                  const isSuccess = payStatus === 'SUCCESS';
+
+                  return (
+                    <tr key={p.paymentId}>
+                      <td>
+                        <button
+                          onClick={() => setSelectedPaymentId(p.paymentId)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#1D9E75',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            padding: 0,
+                            textDecoration: 'underline',
+                            fontFamily: 'monospace',
+                          }}
+                        >
+                          {p.receiptNumber || `PAY-${p.paymentId}`}
+                        </button>
+                      </td>
+                      <td>{p.patientName || 'Unknown patient'}</td>
+                      <td>{p.doctorName || 'Unknown doctor'}</td>
+                      <td style={{ fontWeight: 600, color: '#0B1F3F' }}>
+                        {formatCurrency(p.amount)}
+                      </td>
+                      <td>
+                        <span
+                          className={`status-pill ${
+                            isRefunded
+                              ? 'gray'
+                              : isSuccess
+                              ? 'green'
+                              : payStatus === 'PENDING'
+                              ? 'amber'
+                              : 'red'
+                          }`}
+                        >
+                          {isRefunded ? 'REFUNDED' : payStatus || 'PENDING'}
+                        </span>
+                      </td>
+                      <td>{formatDate(p.paidAt || p.createdAt)}</td>
+                      <td>
+                        {isRefunded ? (
+                          <span
+                            style={{
+                              fontSize: '12px',
+                              fontWeight: 600,
+                              color: '#6B7690',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            Refunded
+                          </span>
+                        ) : isSuccess ? (
+                          <button
+                            className="refund-btn"
+                            onClick={() => setSelectedPaymentId(p.paymentId)}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              padding: '4px 10px',
+                              fontSize: '12px',
+                              borderRadius: '6px',
+                              border: '1px solid #791F1F',
+                              color: '#791F1F',
+                              background: '#FFF',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            <IconRefresh size={13} /> Refund
+                          </button>
+                        ) : (
+                          <span style={{ fontSize: '12px', color: '#8C96AD' }}>—</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {selectedPaymentId && (
+        <PaymentDetailModal
+          paymentId={selectedPaymentId}
+          isAdmin={true}
+          onClose={() => setSelectedPaymentId(null)}
+          onRefundSuccess={() => fetchDashboardData()}
+        />
+      )}
     </div>
   );
 }

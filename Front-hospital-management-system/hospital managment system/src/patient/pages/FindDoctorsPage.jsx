@@ -270,7 +270,7 @@ export default function FindDoctorsPage() {
                   <div>
                     <div className="doctor-detail-label">Department</div>
                     <div className="doctor-detail-value">
-                      {doc.department?.departmentName || '—'}
+                      {doc.departmentName || doc.department?.departmentName || '—'}
                     </div>
                   </div>
                   <div>
@@ -359,7 +359,7 @@ export default function FindDoctorsPage() {
                   <IconUser size={14} /> {bookingDoc.specialization || 'General'}
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <IconBuildingHospital size={14} /> {bookingDoc.department?.departmentName || 'General'}
+                  <IconBuildingHospital size={14} /> {bookingDoc.departmentName || bookingDoc.department?.departmentName || 'General'}
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600, color: 'var(--color-teal)' }}>
                   <IconCurrencyRupee size={14} /> Fee: {bookingDoc.consultationFee ? `₹${bookingDoc.consultationFee}` : 'Free'}

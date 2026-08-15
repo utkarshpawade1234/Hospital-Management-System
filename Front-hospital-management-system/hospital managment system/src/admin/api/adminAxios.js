@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { getSessionItem, clearSession } from '../../utils/sessionStorage';
+import { API_BASE_URL } from '../../config/apiConfig';
 
 const adminAxios = axios.create({
-  baseURL: 'http://localhost:8080/admin',
+  baseURL: `${API_BASE_URL}/admin`,
 });
+
 
 // Request interceptor — attach JWT token
 adminAxios.interceptors.request.use(

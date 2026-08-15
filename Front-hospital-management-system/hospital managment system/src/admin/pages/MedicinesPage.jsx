@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { IconPlus, IconEdit, IconCheck, IconPower } from '@tabler/icons-react';
+import { IconPlus, IconEdit, IconCheck, IconPower, IconTrash } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import PaginatedTable from '../components/PaginatedTable';
 import SearchBar from '../components/SearchBar';
@@ -12,6 +12,8 @@ import {
   updateMedicine,
   activateMedicine,
   deactivateMedicine,
+  deleteMedicine,
+  deleteMultipleMedicines,
 } from '../api/adminApi';
 
 export default function MedicinesPage() {
@@ -36,9 +38,17 @@ export default function MedicinesPage() {
   const [strength, setStrength] = useState('');
   const [dosageForm, setDosageForm] = useState('');
 
+  // Multi-selection state
+  const [selectedIds, setSelectedIds] = useState([]);
+
   // Deactivate modal
   const [deactivateModal, setDeactivateModal] = useState({ open: false, medicine: null });
   const [deactivating, setDeactivating] = useState(false);
+
+  // Single & Multiple Delete modals
+  const [deleteSingleModal, setDeleteSingleModal] = useState({ open: false, medicine: null });
+  const [deleteMultipleModal, setDeleteMultipleModal] = useState({ open: false });
+  const [deleting, setDeleting] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -48,6 +58,7 @@ export default function MedicinesPage() {
       setData(res.content || []);
       setTotalPages(res.totalPages || 0);
       setTotalElements(res.totalElements || 0);
+      setSelectedIds([]);
     } catch {
       toast.error('Failed to load medicines');
     } finally {
@@ -72,6 +83,20 @@ export default function MedicinesPage() {
     setKeyword(val);
     setPage(0);
   }, []);
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(data.map((m) => m.medicineId));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
 
   const handleAddClick = () => {
     setFormData(null);
@@ -117,7 +142,7 @@ export default function MedicinesPage() {
 
     try {
       if (formData) {
-        // Edit mode: Send only changed fields
+        // Edit mode: Send changed fields
         const changedFields = {};
         if (dto.medicineName !== formData.medicineName) changedFields.medicineName = dto.medicineName;
         if (dto.genericName !== formData.genericName) changedFields.genericName = dto.genericName;
@@ -141,7 +166,7 @@ export default function MedicinesPage() {
         const message = err.response.data?.message || 'Medicine already exists.';
         setInlineError(message);
       } else {
-        toast.error(formData ? 'Failed to update medicine' : 'Failed to add medicine');
+        toast.error(err.response?.data?.message || (formData ? 'Failed to update medicine' : 'Failed to add medicine'));
       }
     } finally {
       setFormLoading(false);
@@ -173,19 +198,74 @@ export default function MedicinesPage() {
     }
   };
 
+  const handleDeleteSingle = async () => {
+    if (!deleteSingleModal.medicine) return;
+    setDeleting(true);
+    try {
+      await deleteMedicine(deleteSingleModal.medicine.medicineId);
+      toast.success('Medicine deleted successfully');
+      setDeleteSingleModal({ open: false, medicine: null });
+      setSelectedIds((prev) => prev.filter((id) => id !== deleteSingleModal.medicine.medicineId));
+      fetchData();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete medicine');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteMultiple = async () => {
+    if (selectedIds.length === 0) return;
+    setDeleting(true);
+    try {
+      await deleteMultipleMedicines(selectedIds);
+      toast.success(`Successfully deleted ${selectedIds.length} medicine(s)`);
+      setSelectedIds([]);
+      setDeleteMultipleModal({ open: false });
+      fetchData();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete selected medicines');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const allSelected = data.length > 0 && selectedIds.length === data.length;
+
   const columns = [
+    {
+      header: (
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={handleSelectAll}
+          title="Select all medicines on this page"
+          style={{ cursor: 'pointer' }}
+        />
+      ),
+      width: '40px',
+    },
     { header: 'Medicine Name' },
     { header: 'Generic Name' },
     { header: 'Manufacturer' },
     { header: 'Strength' },
     { header: 'Dosage Form' },
     { header: 'Status' },
-    { header: 'Actions', width: '120px' },
+    { header: 'Actions', width: '150px' },
   ];
 
   const renderRow = (medicine, i) => {
+    const isSelected = selectedIds.includes(medicine.medicineId);
     return (
       <tr key={medicine.medicineId || i} style={!medicine.isActive ? { opacity: 0.65 } : {}}>
+        <td>
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => handleSelectOne(medicine.medicineId)}
+            style={{ cursor: 'pointer' }}
+          />
+        </td>
         <td>
           <div style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>
             {medicine.medicineName}
@@ -233,6 +313,13 @@ export default function MedicinesPage() {
                 <IconCheck size={16} />
               </button>
             )}
+            <button
+              className="admin-action-btn danger"
+              title="Delete medicine"
+              onClick={() => setDeleteSingleModal({ open: true, medicine })}
+            >
+              <IconTrash size={16} />
+            </button>
           </div>
         </td>
       </tr>
@@ -263,6 +350,22 @@ export default function MedicinesPage() {
         title="Medicine Catalog"
         headerRight={
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {selectedIds.length > 0 && (
+              <button
+                className="admin-btn admin-btn-danger"
+                style={{
+                  backgroundColor: 'var(--color-status-red)',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+                onClick={() => setDeleteMultipleModal({ open: true })}
+              >
+                <IconTrash size={16} />
+                Delete Selected ({selectedIds.length})
+              </button>
+            )}
             <button className="admin-btn admin-btn-primary" onClick={handleAddClick}>
               <IconPlus size={16} style={{ marginRight: '6px' }} />
               Add Medicine
@@ -385,6 +488,28 @@ export default function MedicinesPage() {
         onConfirm={handleDeactivate}
         onCancel={() => setDeactivateModal({ open: false, medicine: null })}
         loading={deactivating}
+      />
+
+      {/* Confirm Single Delete Modal */}
+      <ConfirmModal
+        open={deleteSingleModal.open}
+        title="Delete Medicine"
+        message={`Are you sure you want to permanently delete "${deleteSingleModal.medicine?.medicineName || 'this medicine'}"? This action cannot be undone.`}
+        confirmLabel="Delete"
+        onConfirm={handleDeleteSingle}
+        onCancel={() => setDeleteSingleModal({ open: false, medicine: null })}
+        loading={deleting}
+      />
+
+      {/* Confirm Multiple Delete Modal */}
+      <ConfirmModal
+        open={deleteMultipleModal.open}
+        title="Delete Multiple Medicines"
+        message={`Are you sure you want to permanently delete the selected ${selectedIds.length} medicine(s)? This action cannot be undone.`}
+        confirmLabel={`Delete (${selectedIds.length})`}
+        onConfirm={handleDeleteMultiple}
+        onCancel={() => setDeleteMultipleModal({ open: false })}
+        loading={deleting}
       />
     </div>
   );

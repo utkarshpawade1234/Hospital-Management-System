@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import TopNavbar from '../../components/TopNavbar';
-import { getSessionItem } from '../../utils/sessionStorage';
+import { getSessionItem, useSessionGuard } from '../../utils/sessionStorage';
 import api from '../api';
 import '../doctor.css';
 
 export default function DoctorLayout() {
-  const token = getSessionItem('token');
-  const role = getSessionItem('userRole');
+  const token = useSessionGuard();
+  const rawRole = getSessionItem('userRole');
+  const role = rawRole ? rawRole.toUpperCase() : '';
 
   const [profile, setProfile] = useState(null);
 

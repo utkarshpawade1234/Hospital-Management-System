@@ -53,7 +53,7 @@ export default function RegisterPage() {
       delete payload.confirmPassword;
       const res = await register(payload);
       toast.success(res.message || 'Registration successful!');
-      setTimeout(() => navigate('/'), 500);
+      setTimeout(() => navigate('/login'), 500);
     } catch (err) {
       const status = err.response?.status;
       const msg = err.response?.data?.message || 'Registration failed';
@@ -73,10 +73,12 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="auth-card">
-      <div className="auth-logo">
-        <IconActivity size={26} />
-        Medicare
+    <div className="auth-card auth-card-wide">
+      <div className="auth-logo-brand" onClick={() => navigate('/')}>
+        <div className="logo-icon-box">
+          <IconActivity size={18} color="#1D9E75" />
+        </div>
+        <span className="logo-wordmark">HMS</span>
       </div>
       <h1 className="auth-title">Create an account</h1>
       <p className="auth-subtitle">Fill in your details to get started</p>
@@ -206,7 +208,7 @@ export default function RegisterPage() {
       </form>
 
       <p className="auth-footer">
-        Already have an account? <Link to="/">Sign in</Link>
+        Already have an account? <Link to="/login">Sign in</Link>
       </p>
     </div>
   );

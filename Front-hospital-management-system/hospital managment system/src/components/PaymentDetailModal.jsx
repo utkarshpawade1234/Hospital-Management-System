@@ -143,7 +143,7 @@ export default function PaymentDetailModal({ paymentId, onClose, isAdmin = false
 
         {/* Footer */}
         <div className="modal-footer">
-          {isAdmin && payment && payment.paymentStatus === 'SUCCESS' && (
+          {isAdmin && payment && payment.paymentStatus === 'SUCCESS' && payment.refundStatus !== 'PROCESSED' && (
             <button
               className="refund-btn"
               onClick={() => setShowRefundConfirm(true)}
@@ -152,6 +152,11 @@ export default function PaymentDetailModal({ paymentId, onClose, isAdmin = false
               <IconRefresh size={16} />
               Refund Payment
             </button>
+          )}
+          {payment && (payment.paymentStatus === 'REFUNDED' || payment.refundStatus === 'PROCESSED') && (
+            <span className="status-pill gray" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px' }}>
+              <IconCheck size={14} /> Refund Processed
+            </span>
           )}
           <button className="secondary-btn" onClick={onClose}>
             Close
