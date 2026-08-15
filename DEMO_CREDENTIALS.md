@@ -96,5 +96,4 @@ userRepo.save(user);
 | **39** | Kavya Hegde | `kavya.hegde@gmail.com` | `patient123` |
 | **40** | Shaurya Singh | `shaurya.singh@gmail.com` | `patient123` |
 | **41** | Vivaan Malhotra | `vivaan.malhotra@gmail.com` | `patient123` |
-| **42** | Rituraj Shirdhone | `rutujashirdhone@gmail.com` | `patient123` |
 | **43** | Utkarsh Pawade | `utkarshpawade9@gmail.com` | `patient123` |
