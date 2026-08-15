@@ -22,6 +22,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,7 +36,7 @@ public class AuthServiceImplementation implements AuthService {
     private final PasswordResetRepo passwordResetRepo;
     private final EmailService emailService;
 
-    @org.springframework.beans.factory.annotation.Value("${frontend.url:http://localhost:5173}")
+    @Value("${frontend.url:http://localhost:5173}")
     private String frontendUrl;
 
 
