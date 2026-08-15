@@ -70,13 +70,13 @@ public class AdminController {
 
     @PostMapping("/departments")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> addDepartment(@RequestBody DepartmentDTO departmentDTO) {
+    public ResponseEntity<ResponseDTO> addDepartment(@Valid @RequestBody DepartmentDTO departmentDTO) {
         return ResponseEntity.ok(adminService.addDepartment(departmentDTO));
     }
 
     @PutMapping("/departments/{departmentId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> updateDepartment(@PathVariable Long departmentId, @RequestBody DepartmentUpdateDTO departmentUpdateDTO) {
+    public ResponseEntity<ResponseDTO> updateDepartment(@PathVariable Long departmentId, @Valid @RequestBody DepartmentUpdateDTO departmentUpdateDTO) {
         return ResponseEntity.ok(adminService.updateDepartment(departmentId, departmentUpdateDTO));
     }
 

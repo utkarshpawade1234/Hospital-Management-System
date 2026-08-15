@@ -22,9 +22,14 @@ public class PrescriptionDTO {
 
     private LocalDateTime createdAt;
 
+    @jakarta.validation.Valid
     private List<PrescriptionMedicineDTO> medicines;
 
     private String doctorName;
+
+    private String patientName;
+
+    private Long patientId;
 
     private LocalDate appointmentDate;
 }

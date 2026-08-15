@@ -2,6 +2,7 @@ package com.hospital.hospital_management_system.RestController;
 
 import com.hospital.hospital_management_system.DTO.MedicineMasterDTO;
 import com.hospital.hospital_management_system.service.MedicineMasterService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +22,14 @@ public class MedicineMasterController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MedicineMasterDTO> addMedicine(@RequestBody MedicineMasterDTO dto) {
+    public ResponseEntity<MedicineMasterDTO> addMedicine(@Valid @RequestBody MedicineMasterDTO dto) {
         MedicineMasterDTO response = medicineMasterService.addMedicine(dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/{medicineId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MedicineMasterDTO> updateMedicine(@PathVariable Long medicineId, @RequestBody MedicineMasterDTO dto) {
+    public ResponseEntity<MedicineMasterDTO> updateMedicine(@PathVariable Long medicineId, @Valid @RequestBody MedicineMasterDTO dto) {
         MedicineMasterDTO response = medicineMasterService.updateMedicine(medicineId, dto);
         return ResponseEntity.ok(response);
     }
@@ -66,5 +67,26 @@ public class MedicineMasterController {
     public ResponseEntity<String> deactivateMedicine(@PathVariable Long medicineId) {
         medicineMasterService.deactivateMedicine(medicineId);
         return ResponseEntity.ok("Medicine deactivated successfully.");
+    }
+
+    @DeleteMapping("/{medicineId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteMedicine(@PathVariable Long medicineId) {
+        medicineMasterService.deleteMedicine(medicineId);
+        return ResponseEntity.ok("Medicine deleted successfully.");
+    }
+
+    @PostMapping("/delete-multiple")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteMultipleMedicinesPost(@RequestBody java.util.List<Long> medicineIds) {
+        medicineMasterService.deleteMultipleMedicines(medicineIds);
+        return ResponseEntity.ok("Selected medicines deleted successfully.");
+    }
+
+    @DeleteMapping("/bulk")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteMultipleMedicinesDelete(@RequestBody java.util.List<Long> medicineIds) {
+        medicineMasterService.deleteMultipleMedicines(medicineIds);
+        return ResponseEntity.ok("Selected medicines deleted successfully.");
     }
 }

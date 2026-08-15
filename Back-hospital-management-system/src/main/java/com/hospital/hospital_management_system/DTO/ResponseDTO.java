@@ -1,9 +1,7 @@
 package com.hospital.hospital_management_system.DTO;
 
 import com.hospital.hospital_management_system.model.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
@@ -11,17 +9,20 @@ import lombok.Setter;
 public class ResponseDTO {
     private Role role;
     private String message;
-
+    
     private Long appointmentId;
 
-
+    
     public ResponseDTO(Role role, String message) {
         this.role = role;
         this.message = message;
         this.appointmentId = null;
     }
 
-    public ResponseDTO(String s) {
+    public ResponseDTO(String message) {
+        this.role = null;
+        this.message = message;
+        this.appointmentId = null;
     }
 }
 

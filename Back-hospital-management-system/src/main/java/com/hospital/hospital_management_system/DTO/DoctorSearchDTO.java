@@ -9,5 +9,7 @@ public class DoctorSearchDTO {
     private String firstName;
     private String lastName;
     private String specialization;
+    private String specializatin;
     private String departmentName;
+
 }

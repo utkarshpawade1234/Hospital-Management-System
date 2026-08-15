@@ -8,6 +8,8 @@ import com.hospital.hospital_management_system.repository.PasswordResetRepo;
 import com.hospital.hospital_management_system.repository.UserRepo;
 import com.hospital.hospital_management_system.Exceptions.UserNotFoundException;
 import com.hospital.hospital_management_system.utils.JwtUtils;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +33,14 @@ public class AuthServiceImplementation implements AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final PasswordResetRepo passwordResetRepo;
     private final EmailService emailService;
+
+
+    @PostConstruct
+    public void generateRandomPassword(){
+        System.out.println("Patient-"+passwordEncoder.encode("patient123"));
+        System.out.println("Doctor:-"+passwordEncoder.encode("doctor123"));
+        System.out.println("Admin:-"+passwordEncoder.encode("admin123"));
+    }
 
     @Override
     public ResponseDTO registerUser(RegistrationDTO dto) {

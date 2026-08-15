@@ -137,6 +137,14 @@ public class CommonMethods {
                 String dLast = appt.getDoctor().getUser().getLastName() != null ? appt.getDoctor().getUser().getLastName() : "";
                 dto.setDoctorName(("Dr. " + dFirst + " " + dLast).trim());
             }
+            if (appt.getPatient() != null) {
+                dto.setPatientId(appt.getPatient().getPatientId());
+                if (appt.getPatient().getUser() != null) {
+                    String pFirst = appt.getPatient().getUser().getFirstName() != null ? appt.getPatient().getUser().getFirstName() : "";
+                    String pLast = appt.getPatient().getUser().getLastName() != null ? appt.getPatient().getUser().getLastName() : "";
+                    dto.setPatientName((pFirst + " " + pLast).trim());
+                }
+            }
             if (appt.getAppointmentDate() != null) {
                 dto.setAppointmentDate(appt.getAppointmentDate());
             }

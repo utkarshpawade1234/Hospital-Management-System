@@ -97,11 +97,19 @@ public class AppointmentServiceImplement implements AppointmentService {
 
     @Override
     public List<Appointment> getAllAppointmentByPatientAndDoctorName(String firstName, String lastName) {
-        return appointmentRepo.searchAppointmentsByDoctorOrPatientName(firstName, lastName);
+        List<Appointment> appointments = appointmentRepo.searchAppointmentsByDoctorOrPatientName(firstName, lastName);
+        for (Appointment appt : appointments) {
+            setAppointmentPaymentStatus(appt);
+        }
+        return appointments;
     }
 
     public List<Appointment> getAllAppointmentByStatus(AppointmentStatus status) {
-        return appointmentRepo.findByStatus(status);
+        List<Appointment> appointments = appointmentRepo.findByStatus(status);
+        for (Appointment appt : appointments) {
+            setAppointmentPaymentStatus(appt);
+        }
+        return appointments;
     }
 
     @Override

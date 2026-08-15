@@ -2,6 +2,7 @@ package com.hospital.hospital_management_system.RestController;
 
 import com.hospital.hospital_management_system.DTO.PrescriptionDTO;
 import com.hospital.hospital_management_system.service.PrescriptionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class PrescriptionController {
 
     @PostMapping("/doctor/appointments/{appointmentId}/prescription")
     @PreAuthorize("hasRole('DOCTOR')")
-    public ResponseEntity<PrescriptionDTO> createPrescription(Authentication authentication, @PathVariable Long appointmentId, @RequestBody PrescriptionDTO dto) {
+    public ResponseEntity<PrescriptionDTO> createPrescription(Authentication authentication, @PathVariable Long appointmentId, @Valid @RequestBody PrescriptionDTO dto) {
         String doctorEmail = authentication.getName();
         PrescriptionDTO response = prescriptionService.createPrescription(doctorEmail, appointmentId, dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

@@ -7,6 +7,7 @@ import com.hospital.hospital_management_system.DTO.ResponseDTO;
 import com.hospital.hospital_management_system.model.Doctor;
 import com.hospital.hospital_management_system.service.DoctorService;
 import com.hospital.hospital_management_system.service.MedicineMasterService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class DoctorController {
 
     @PutMapping("/profile")
     @PreAuthorize("hasRole('DOCTOR')")
-    public ResponseEntity<ResponseDTO> updateMyProfile(Authentication authentication, @RequestBody DoctorDTO doctorDTO) {
+    public ResponseEntity<ResponseDTO> updateMyProfile(Authentication authentication, @Valid @RequestBody DoctorDTO doctorDTO) {
         String email = authentication.getName();
         return ResponseEntity.ok(doctorService.updateMyProfile(email, doctorDTO));
     }
@@ -91,5 +92,11 @@ public class DoctorController {
     @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
     public ResponseEntity<Page<MedicineMasterDTO>> searchMedicine(@RequestParam String keyword, @PageableDefault(page = 0, size = 10) Pageable pageable) {
         return ResponseEntity.ok(medicineMasterService.searchActiveMedicine(keyword, pageable));
+    }
+
+    @GetMapping("/medicines/{medicineId}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
+    public ResponseEntity<MedicineMasterDTO> getMedicineById(@PathVariable Long medicineId) {
+        return ResponseEntity.ok(medicineMasterService.getMedicineById(medicineId));
     }
 }

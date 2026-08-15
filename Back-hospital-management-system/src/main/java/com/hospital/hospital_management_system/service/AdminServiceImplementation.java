@@ -207,7 +207,7 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     public Page<DoctorDTO> searchDoctor(String keyword, int page, int size) {
-        return doctorRepo.findByUser_FirstNameContainingIgnoreCase(keyword, PageRequest.of(page, size))
+        return doctorRepo.searchByKeyword(keyword, PageRequest.of(page, size))
                 .map(commonMethods::convertToDTO);
     }
 

@@ -1,5 +1,6 @@
 package com.hospital.hospital_management_system.DTO;
 
+import com.hospital.hospital_management_system.model.AppointmentStatus;
 import com.hospital.hospital_management_system.model.OrderStatus;
 import com.hospital.hospital_management_system.model.PaymentMethod;
 import com.hospital.hospital_management_system.model.PaymentStatus;
@@ -18,7 +19,7 @@ public class PaymentResponseDTO {
 
     private Long appointmentId;
 
-    private com.hospital.hospital_management_system.model.AppointmentStatus appointmentStatus;
+    private AppointmentStatus appointmentStatus;
 
     private Long patientId;
 

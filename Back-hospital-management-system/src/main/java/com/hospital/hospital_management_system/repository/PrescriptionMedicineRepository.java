@@ -19,4 +19,6 @@ public interface PrescriptionMedicineRepository
     void deleteByPrescriptionMedicineIdAndPrescriptionPrescriptionId(
             Long prescriptionMedicineId,
             Long prescriptionId);
+
+    boolean existsByMedicine_MedicineId(Long medicineId);
 }

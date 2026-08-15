@@ -39,7 +39,7 @@ public class PrescriptionServiceImplementation implements PrescriptionService {
     @Override
     @Transactional
     public PrescriptionDTO createPrescription(String doctorEmail, Long appointmentId, PrescriptionDTO dto) {
-        com.hospital.hospital_management_system.model.Appointment appointment = appointmentRepository.findByDoctorUserEmailAndAppointmentId(doctorEmail, appointmentId).orElseThrow(() -> new AppointmentNotFoundException("No such appointment found for this doctor"));
+        Appointment appointment = appointmentRepository.findByDoctorUserEmailAndAppointmentId(doctorEmail, appointmentId).orElseThrow(() -> new AppointmentNotFoundException("No such appointment found for this doctor"));
 
         if (appointment.getStatus() != AppointmentStatus.CONFIRMED && appointment.getStatus() != AppointmentStatus.COMPLETED) {
             throw new IllegalArgumentException("Prescription can only be written for CONFIRMED or COMPLETED appointments.");

@@ -77,7 +77,6 @@ public class EmailService {
 
         } catch (Exception e) {
             System.err.println("Email delivery failed: " + e.getMessage());
-            System.out.println("PASSWORD_RESET_LINK: " + resetLink);
         }
     }
 }

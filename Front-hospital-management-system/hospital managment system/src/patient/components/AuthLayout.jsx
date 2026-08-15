@@ -1,8 +1,12 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import '../patient.css';
 
 export default function AuthLayout() {
+  if (localStorage.getItem('token')) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <div className="auth-root">
       <div>

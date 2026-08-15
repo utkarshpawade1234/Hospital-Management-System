@@ -139,7 +139,9 @@ public class PatientServiceImplement implements PatientService {
 
     @Override
     public List<DoctorDTO> fetchDoctorDetailsByFirstAndLastName(String firstName, String lastName) {
-        List<Doctor> doctors = doctorrepo.findByUserFirstNameStartingWithIgnoreCaseOrUserLastNameStartingWithIgnoreCase(firstName, lastName);
+        String fn = (firstName != null) ? firstName.trim() : "";
+        String ln = (lastName != null) ? lastName.trim() : "";
+        List<Doctor> doctors = doctorrepo.searchByName(fn, ln);
         return doctors.stream().map(commonMethods::convertToDTO).toList();
     }
 

@@ -27,4 +27,8 @@ public interface MedicineMasterService {
     void activateMedicine(Long medicineId);
 
     void deactivateMedicine(Long medicineId);
+
+    void deleteMedicine(Long medicineId);
+
+    void deleteMultipleMedicines(List<Long> medicineIds);
 }

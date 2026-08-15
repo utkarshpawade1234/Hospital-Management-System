@@ -46,7 +46,7 @@ public class PaymentServiceImplementation implements PaymentService {
 
     @Override
     @Transactional
-    public CreateOrderResponseDTO createOrder(CreateOrderRequestDTO dto, String email) {
+    public synchronized CreateOrderResponseDTO createOrder(CreateOrderRequestDTO dto, String email) {
         if (dto == null || dto.getAppointmentId() == null) {
             throw new IllegalArgumentException("Appointment ID must not be null");
         }
@@ -257,11 +257,12 @@ public class PaymentServiceImplementation implements PaymentService {
         }
 
         Appointment appointment = payment.getAppointment();
-        if (appointment == null || appointment.getStatus() != AppointmentStatus.CANCELLED) {
-            throw new PaymentGatewayException("Appointment is not cancelled. Refund is only allowed for cancelled appointments.");
+        if (appointment != null && appointment.getStatus() != AppointmentStatus.CANCELLED) {
+            appointment.setStatus(AppointmentStatus.CANCELLED);
+            appointmentRepo.save(appointment);
         }
 
-        if (payment.getRefundStatus() == RefundStatus.PROCESSED) {
+        if (payment.getRefundStatus() == RefundStatus.PROCESSED || payment.getPaymentStatus() == PaymentStatus.REFUNDED) {
             throw new PaymentAlreadyDoneException("Refund already processed.");
         }
 
@@ -279,7 +280,7 @@ public class PaymentServiceImplementation implements PaymentService {
                     refundId = refund.get("id").toString();
                 }
             } catch (Exception e) {
-                // Local fallback for test/simulated environment
+
             }
         }
 
