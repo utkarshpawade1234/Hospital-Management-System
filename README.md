@@ -1,7 +1,7 @@
 <h1 align="center">🏥 Hospital Management System (HMS)</h1>
 
 <p align="center">
-  <b>A modern, full-stack healthcare platform built to streamline clinical workflows, patient care, and hospital operations.</b>
+  <b>A modern healthcare platform designed for streamlined patient care, doctor scheduling, and hospital administration.</b>
 </p>
 
 <p align="center">
@@ -16,74 +16,78 @@
 </p>
 
 <p align="center">
-  <a href="https://medicare-hospital.duckdns.org"><b>🚀 Try the Live Demo</b></a>
+  <a href="https://medicare-hospital.duckdns.org"><b>🚀 Launch Live Application</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
-  <a href="#-project-structure"><b>📁 Project Structure</b></a>
+  <a href="#-interactive-documentation-center"><b>📖 Documentation Hub</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
-  <a href="#-quick-start-guide"><b>⚡ Quick Start Guide</b></a>
+  <a href="#-quick-start-guide"><b>⚡ Quick Start</b></a>
 </p>
 
 ---
 
 ## 👋 Welcome to HMS
 
-The **Hospital Management System (HMS)** is a complete healthcare ecosystem designed to replace manual paperwork with automated, digital workflows. It connects patients, doctors, and administrators under one unified system—making it effortless to search for specialists, book consultation slots in 30-minute intervals, process payments online, write digital prescriptions, and track pharmacy stock.
+The **Hospital Management System (HMS)** is an intuitive, web-based platform built to eliminate administrative friction in healthcare facilities. It brings patients, medical practitioners, and hospital administrators into a single, cohesive digital portal.
 
-### 🌟 Key Highlights
-- ⏱️ **Conflict-Free Booking**: Smart slot management prevents double-booking across 30-minute time slots (09:00 AM - 05:00 PM).
-- 💳 **Instant Online Payments**: Integrated Razorpay gateway with secure HMAC signature verification and email receipts.
-- 📋 **Digital Prescriptions**: Doctors can issue digital prescriptions linked directly to patient consultation histories.
-- 💊 **Pharmacy Inventory**: Automatic medicine stock tracking linked with digital prescription issuances.
-- 🔍 **Guest Doctor Discovery**: Allows visitors to search doctors by specialty, fee, or room number without logging in.
+Whether it's a patient searching for a specialist, a doctor updating digital consultation records, or an administrator tracking pharmacy stock, HMS makes the experience fast, transparent, and hassle-free.
+
+### 🌟 Core Capabilities
+- ⏱️ **Real-Time 30-Min Slot Booking**: Prevents schedule conflicts between 09:00 AM and 05:00 PM.
+- 💳 **Online Payment Processing**: Seamless Razorpay gateway integration with signature verification and email receipts.
+- 📋 **Digital Prescriptions**: Linked directly to patient consultation history and medical logs.
+- 💊 **Integrated Pharmacy Control**: Automatic inventory updates tied directly to prescribed medications.
+- 🔍 **Instant Doctor Search**: Public guest discovery by department, specialization, room number, or fee without registration.
 
 ---
 
-## 📁 Project Structure
+## 📖 Interactive Documentation Center
 
-HMS is structured as a decoupled monorepo featuring a **Spring Boot 3.x** backend REST API and a **React 18 SPA** frontend, fully orchestrated with Docker Compose:
+Click on any section below to explore the detailed technical specifications, architecture diagrams, and system designs:
+
+<details>
+<summary><b>📁 1. Project Repository Structure</b></summary>
+
+HMS follows a clean monorepo architecture separating the Spring Boot 3.x backend service and the React 18 SPA frontend:
 
 ```
 Hospital-Management-System/
-├── Back-hospital-management-system/          # Spring Boot 3.x Backend Service
+├── Back-hospital-management-system/          # Spring Boot 3.x REST API Backend
 │   ├── src/main/java/com/hospital/hospital_management_system/
-│   │   ├── RestController/                    # REST API Endpoints (Auth, Doctors, Appointments, Payments)
-│   │   ├── service/                           # Core Business Logic & Payment Processing
-│   │   ├── model/                             # JPA Entity Definitions (10 Core Tables)
-│   │   ├── repository/                        # Spring Data JPA Data Access Repositories
+│   │   ├── RestController/                    # REST Controller Endpoints
+│   │   ├── service/                           # Core Business Services & Integrations
+│   │   ├── model/                             # Hibernate Entity Models (10 Core Tables)
+│   │   ├── repository/                        # Spring Data JPA Repositories
 │   │   ├── DTO/                               # Data Transfer Objects
-│   │   ├── config/                            # Security, CORS, & App Configurations
-│   │   ├── filter/                            # JWT Authentication Filters
-│   │   ├── utils/                             # Utility Helpers (JWT Tokens, HMAC Verification)
-│   │   └── Exceptions/                        # Custom Exception Handlers
-│   ├── Dockerfile                             # Backend Container Definition
-│   └── pom.xml                                # Maven Dependencies & Build Config
+│   │   ├── config/                            # Security, CORS, & Mail Configurations
+│   │   ├── filter/                            # JWT Security Filters
+│   │   ├── utils/                             # Utility & Helper Classes
+│   │   └── Exceptions/                        # Global Exception Handlers
+│   ├── Dockerfile                             # Backend Docker Configuration
+│   └── pom.xml                                # Maven Dependencies & Build Configuration
 │
-├── Front-hospital-management-system/          # React 18 SPA Frontend Service
+├── Front-hospital-management-system/          # React 18 SPA Frontend
 │   └── hospital managment system/
 │       ├── src/
-│       │   ├── admin/                         # Admin Dashboard, Roster Management & Analytics
-│       │   ├── doctor/                        # Doctor Portal, Appointments & Prescription Modules
-│       │   ├── patient/                       # Patient Portal, Doctor Search & Slot Booking
-│       │   ├── components/                    # Shared UI Components (Modals, Tables, Navigation)
-│       │   ├── config/                        # Axios HTTP Client & API Routes Config
-│       │   ├── utils/                         # Token Storage & Formatting Helpers
-│       │   ├── App.jsx                        # Main Application Router & State Gateway
-│       │   └── main.jsx                       # React Application Entrypoint
-│       ├── Dockerfile                         # Frontend Container Definition
-│       ├── nginx.conf                         # Nginx Reverse Proxy Config for SPA
-│       └── package.json                       # Node.js Dependencies & Build Scripts
+│       │   ├── admin/                         # Admin Dashboard & Roster Management Views
+│       │   ├── doctor/                        # Doctor Portal & Prescription Issuance Views
+│       │   ├── patient/                       # Patient Portal, Doctor Search & Booking Views
+│       │   ├── components/                    # Reusable UI Components & Modals
+│       │   ├── config/                        # Axios Interceptors & Endpoint Routes
+│       │   ├── utils/                         # Token Management & Helpers
+│       │   ├── App.jsx                        # Main Application Gateway
+│       │   └── main.jsx                       # React DOM Entrypoint
+│       ├── Dockerfile                             # Frontend Docker Configuration
+│       ├── nginx.conf                         # Nginx Reverse Proxy Config
+│       └── package.json                       # Dependencies & Scripts
 │
-├── docker-compose.yml                         # Container Orchestration (DB, Backend, Frontend, Nginx)
-├── .env                                       # Environment Variables Template
-└── README.md                                  # Project Documentation
+├── docker-compose.yml                         # Container Orchestration
+├── .env                                       # Environment Configuration
+└── README.md                                  # Documentation
 ```
+</details>
 
----
-
-## 👥 System User Roles & Capabilities
-
-<details open>
-<summary><b>🔍 Click to view System Roles & Capabilities Overview</b></summary>
+<details>
+<summary><b>👥 2. User Roles & Workflow Capabilities</b></summary>
 
 ```
                   ┌──────────────────────────────────────────────┐
@@ -109,22 +113,10 @@ Hospital-Management-System/
 ```
 </details>
 
----
-
-## ⚡ Performance & SLA Standards
-
-- 🚀 **High Throughput**: Built to handle **≥ 1,000 requests/sec** with Spring Boot 3.x stateless REST and Hibernate ORM level-2 caching.
-- ⚡ **Lightning Fast**: Sub-**200ms** query response times for all REST endpoints.
-- 🛡️ **Data Integrity**: Enforces strict **ACID compliance** across multi-table transactions (Booking ➔ Payment ➔ Stock Deduction).
-
----
-
-## 📐 System Architecture & Diagrams
-
 <details>
-<summary><b>📌 Click to expand Architecture Diagrams (Use Case, DFD, Class Architecture)</b></summary>
+<summary><b>📐 3. System Architecture & Flow Diagrams</b></summary>
 
-### 1. Use Case Diagram
+### Use Case Diagram
 ```mermaid
 graph LR
     subgraph Users ["System Actors"]
@@ -162,7 +154,7 @@ graph LR
 
 ---
 
-### 2. Level-1 Data Flow Diagram (DFD)
+### Level-1 Data Flow Diagram (DFD)
 ```mermaid
 graph TD
     User["👨‍⚕️ Patient / Guest"] -->|Credentials / Search Query| P1["1.0 Authentication & Search"]
@@ -182,7 +174,7 @@ graph TD
 
 ---
 
-### 3. Service Layer Architecture
+### Service Layer Architecture
 ```mermaid
 classDiagram
     class PatientController {
@@ -222,16 +214,10 @@ classDiagram
 ```
 </details>
 
----
-
-## 🗄️ Database Design (10 Core Relational Tables)
-
-HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and indexes:
-
 <details>
-<summary><b>🗄️ Click to expand Database Table Schemas (10 Tables)</b></summary>
+<summary><b>🗄️ 4. Relational Database Schema (10 Core Tables)</b></summary>
 
-### 1. `users` — Account Identities
+### 1. `users` — Account Identity Store
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `userid` | BigInt(20) | PK, Auto Increment | Account ID |
@@ -246,7 +232,7 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | `timeofcreation` | Timestamp | Not Null | Account creation time |
 | `UserRole` | Varchar(50) | Enum | `PATIENT`, `DOCTOR`, `ADMIN` |
 
-### 2. `patients` — Patient Metadata
+### 2. `patients` — Patient Profile Details
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `patient_id` | BigInt(20) | PK, Auto Increment | Patient ID |
@@ -257,7 +243,7 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | `emergency_contact_relation` | Varchar(20) | Nullable | Contact relationship |
 | `description` | Varchar(255) | Nullable | Patient background notes |
 
-### 3. `doctor` — Doctor Profiles
+### 3. `doctor` — Medical Practitioner Directory
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `doctorid` | BigInt(20) | PK, Auto Increment | Doctor ID |
@@ -272,14 +258,14 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | `availabilityStatus` | Varchar(50) | Enum | `AVAILABLE`, `NOT_AVAILABLE`, `ON_LEAVE` |
 | `description` | Varchar(1000) | Nullable | Doctor biography |
 
-### 4. `department` — Hospital Departments
+### 4. `department` — Clinical Departments
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `departmentId` | BigInt(20) | PK, Auto Increment | Department ID |
 | `departmentName` | Varchar(255) | Unique, Not Null | Department name |
 | `description` | Varchar(500) | Nullable | Department overview |
 
-### 5. `appointments` — Booking Ledger
+### 5. `appointments` — Consultation Ledger
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `appointment_id` | BigInt(20) | PK, Auto Increment | Appointment ID |
@@ -293,7 +279,7 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | `status` | Varchar(50) | Enum | `PENDING`, `CONFIRMED`, `CANCELLED`, `COMPLETED` |
 | `remarks` | Varchar(500) | Nullable | Notes |
 
-### 6. `payments` — Transaction Records
+### 6. `payments` — Transaction Audit Log
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `payment_id` | BigInt(20) | PK, Auto Increment | Payment ID |
@@ -312,7 +298,7 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | `paid_at` | Timestamp | Nullable | Payment confirmation timestamp |
 | `created_at` | Timestamp | Nullable | Order creation timestamp |
 
-### 7. `medicine_master` — Pharmacy Stock
+### 7. `medicine_master` — Pharmacy Inventory
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `medicine_id` | BigInt(20) | PK, Auto Increment | Medicine ID |
@@ -332,7 +318,7 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | `notes` | Varchar(1000) | Nullable | Doctor advice |
 | `createdAt` | Timestamp | Nullable | Issuance timestamp |
 
-### 9. `prescription_medicine` — Prescribed Medicines
+### 9. `prescription_medicine` — Prescribed Medications
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `prescription_medicine_id` | BigInt(20) | PK, Auto Increment | Line item ID |
@@ -344,7 +330,7 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | `instructions` | Varchar(300) | Nullable | Special instructions |
 | `quantity` | Varchar(30) | Nullable | Dispensed quantity |
 
-### 10. `password_reset_token` — Auth Recovery
+### 10. `password_reset_token` — Security Tokens
 | Column | Data Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | BigInt(20) | PK, Auto Increment | Token entry ID |
@@ -354,12 +340,8 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | `used` | Boolean | Not Null | Token used status |
 </details>
 
----
-
-## 💻 Code Style & Conventions
-
 <details>
-<summary><b>📜 Click to view Code Conventions Matrix</b></summary>
+<summary><b>💻 5. Code Standards & Naming Conventions</b></summary>
 
 | Identifier Category | Casing Pattern | Example Implementation | Context & Rules |
 | :--- | :--- | :--- | :--- |
@@ -372,26 +354,26 @@ HMS uses MySQL 8.0 with 10 structured tables enforcing strict foreign keys and i
 | **Exceptions** | `PascalCase` + `Exception` | `ResourceNotFoundException`, `UnauthorizedAccessException` | Suffix mandatory for all custom exception handlers. |
 </details>
 
----
-
-## 🗓️ Development Milestones
+<details>
+<summary><b>🗓️ 6. Development Milestones & History</b></summary>
 
 ```
-2026-04-12  ──  Project Kickoff & Feasibility Planning
-2026-04-25  ──  SRS Documentation & Requirements Finalization
+2026-04-12  ──  Project Kickoff & Requirements Planning
+2026-04-25  ──  SRS Documentation & Scope Finalization
 2026-06-10  ──  System Architecture & 10-Table Database Design Approval
-2026-07-02  ──  Backend Core Setup (Spring Boot 3.x + MySQL 8.0)
-2026-07-08  ──  JWT Authentication & User REST APIs
+2026-07-02  ──  Backend Core Infrastructure Setup (Spring Boot 3.x + MySQL 8.0)
+2026-07-08  ──  JWT Authentication & User Account REST APIs
 2026-07-14  ──  Doctor Discovery & 30-Minute Slot Scheduling Logic
 2026-07-20  ──  React 18 Single Page Application Frontend
 2026-07-26  ──  Admin Control Panel & Department Roster Management
-2026-07-30  ──  Razorpay Payment Gateway & Email Receipt Integration
+2026-07-30  ──  Razorpay Payment Gateway & Transaction Email Receipts
 2026-08-02  ──  Pharmacy Inventory Stock & Digital Prescription Module
 2026-08-05  ──  Security Audit & Role-Based Access Control Checks
 2026-08-07  ──  Pilot Trial & Staff Workflow Optimization
 2026-08-09  ──  Query Index Optimization & Performance Tuning
-2026-08-11  ──  Production Deployment on AWS EC2 & RDS
+2026-08-11  ──  Production Build Compilation & AWS Cloud Deployment
 ```
+</details>
 
 ---
 
