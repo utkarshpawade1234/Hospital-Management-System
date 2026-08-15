@@ -18,6 +18,8 @@
 <p align="center">
   <a href="https://medicare-hospital.duckdns.org"><b>🚀 Launch Live Application</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="utkarshhsmreport.pdf"><b>📄 PDF System Report</b></a>
+  &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="#-interactive-documentation-center"><b>📖 Documentation Hub</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="#-quick-start-guide"><b>⚡ Quick Start</b></a>
