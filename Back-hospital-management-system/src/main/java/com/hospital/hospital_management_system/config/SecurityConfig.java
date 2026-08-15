@@ -21,7 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -29,101 +28,95 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-    private final JwtFilter jwtFilter;
+        private final UserDetailsService userDetailsService;
+        private final JwtFilter jwtFilter;
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
+        @Value("${frontend.url}")
+        private String frontendUrl;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-       http
-             // 1. Disable CSRF (Cross-Site Request Forgery) since REST APIs use Stateless JWT tokens instead of cookies.
-             .csrf(AbstractHttpConfigurer::disable)
-             
-             // 2. Enable CORS (Cross-Origin Resource Sharing) so React frontend (port 5173) can call Backend (port 8080).
-             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-             
-             // 3. Define Endpoint Access Control Rules
-             .authorizeHttpRequests(auth -> auth
-                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers(
-                            "/uploads/**",             // Publicly accessible uploaded photos
-                            "/auth/**",                // Auth endpoints (login, register, forgot/reset password)
-                            "/patient/login",          // Backwards compatibility
-                            "/patient/register",
-                            "/patient/forgot-password",
-                            "/patient/reset-password",
-                            "/swagger-ui/**",          // Swagger UI static files for API testing
-                            "/v3/api-docs/**",         // OpenAPI documentation schema endpoint
-                            "/swagger-ui.html"
-                    ).permitAll()                      // bypass security verification for these endpoints
-                    .anyRequest().authenticated()      // All other endpoints require a valid JWT token
-             )
-             
-             // 4. Force Stateless Session Management (Spring Boot will not create HTTP session cookies).
-             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-             
-             // 5. Inject our custom JwtFilter before UsernamePasswordAuthenticationFilter to validate token in each request header.
-             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                // 1. Disable CSRF (Cross-Site Request Forgery) since REST APIs use Stateless
+                                // JWT tokens instead of cookies.
+                                .csrf(AbstractHttpConfigurer::disable)
 
-       return http.build();
-    }
+                                // 2. Enable CORS (Cross-Origin Resource Sharing) so React frontend (port 5173)
+                                // can call Backend (port 8080).
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+                                // 3. Define Endpoint Access Control Rules
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**")
+                                                .permitAll()
+                                                .requestMatchers(
+                                                                "/uploads/**", // Publicly accessible uploaded photos
+                                                                "/auth/**", // Auth endpoints (login, register,
+                                                                            // forgot/reset password)
+                                                                "/patient/login", // Backwards compatibility
+                                                                "/patient/register",
+                                                                "/patient/forgot-password",
+                                                                "/patient/reset-password",
+                                                                "/swagger-ui/**", // Swagger UI static files for API
+                                                                                  // testing
+                                                                "/v3/api-docs/**", // OpenAPI documentation schema
+                                                                                   // endpoint
+                                                                "/swagger-ui.html")
+                                                .permitAll() // bypass security verification for these endpoints
+                                                .anyRequest().authenticated() // All other endpoints require a valid JWT
+                                                                              // token
+                                )
 
-            CorsConfiguration configuration = new CorsConfiguration();
+                                // 4. Force Stateless Session Management (Spring Boot will not create HTTP
+                                // session cookies).
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            List<String> origins = new ArrayList<>();
-            if (frontendUrl != null && !frontendUrl.isBlank()) {
-                for (String origin : frontendUrl.split(",")) {
-                    origins.add(origin.trim());
-                }
-            }
-            // Explicitly list all approved web, EC2, and mobile app/emulator origins (No wildcard "*")
-            origins.addAll(List.of(
-                    "http://13.233.68.7",
-                    "http://13.233.68.7:80",
-                    "http://13.233.68.7:8080",
-                    "http://localhost:5173",
-                    "http://localhost:3000",
-                    "http://localhost:8080",
-                    "http://10.0.2.2:8080",
-                    "http://10.0.2.2:5173",
-                    "capacitor://localhost",
-                    "http://localhost"
-            ));
+                                // 5. Inject our custom JwtFilter before UsernamePasswordAuthenticationFilter to
+                                // validate token in each request header.
+                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-            configuration.setAllowedOrigins(origins.stream().distinct().toList());
+                return http.build();
+        }
 
-            configuration.setAllowedMethods(List.of(
-                    "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
-            ));
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
 
-            configuration.setAllowedHeaders(List.of("*"));
+                CorsConfiguration configuration = new CorsConfiguration();
 
-            configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
+                configuration.setAllowedOrigins(List.of(
+                                frontendUrl,
+                                "http://13.233.68.7",
+                                "http://localhost:5173",
+                                "http://localhost:3000"));
 
-            configuration.setAllowCredentials(true);
+                configuration.setAllowedMethods(List.of(
+                                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
+                configuration.setAllowedHeaders(List.of("*"));
 
-            return source;
+                configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
 
-    }
+                configuration.setAllowCredentials(true);
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
 
-    @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        return new ProviderManager(daoAuthenticationProvider);
-    }
+                return source;
+
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
+
+        @Bean
+        public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+                        PasswordEncoder passwordEncoder) {
+                DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+                daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+                daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+                return new ProviderManager(daoAuthenticationProvider);
+        }
 }
