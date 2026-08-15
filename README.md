@@ -1,11 +1,11 @@
 <h1 align="center">🏥 Hospital Management System (HMS)</h1>
 
 <p align="center">
-  <b>A modern healthcare platform designed for streamlined patient care, doctor scheduling, and hospital administration.</b>
+  <b>A modern, full-stack healthcare platform built to streamline clinical workflows, patient care, and hospital operations.</b>
 </p>
 
 <p align="center">
-  <a href="https://medicare-hospital.duckdns.org">
+  <a href="https://medicare-hospital.duckdns.org" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/🌐_Live_Demo-medicare--hospital.duckdns.org-0070f3?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" />
   </a>
   <img src="https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot" />
@@ -20,7 +20,7 @@
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="USER_CREDENTIALS.md" target="_blank" rel="noopener noreferrer"><b>🔑 Test Credentials</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
-  <a href="utkarshhsmreport.pdf" target="_blank" rel="noopener noreferrer"><b>📄 PDF System Report</b></a>
+  <a href="utkarshhsmreport.pdf" target="_blank" rel="noopener noreferrer"><b>📄 View System Report (PDF)</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="#-interactive-documentation-center"><b>📖 Documentation Hub</b></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
@@ -31,321 +31,244 @@
 
 ## 👋 Welcome to HMS
 
-The **Hospital Management System (HMS)** is an intuitive, web-based platform built to eliminate administrative friction in healthcare facilities. It brings patients, medical practitioners, and hospital administrators into a single, cohesive digital portal.
+The **Hospital Management System (HMS)** is a complete healthcare ecosystem designed to eliminate paper-based administrative friction in medical facilities. It connects patients, medical practitioners, and hospital administrators under one unified, secure platform—making it effortless to search for specialists, book consultation slots in 30-minute intervals, process online payments, issue digital prescriptions, and track pharmacy stock in real time.
 
-Whether it's a patient searching for a specialist, a doctor updating digital consultation records, or an administrator tracking pharmacy stock, HMS makes the experience fast, transparent, and hassle-free.
-
-### 🌟 Core Capabilities
-- ⏱️ **Real-Time 30-Min Slot Booking**: Prevents schedule conflicts between 09:00 AM and 05:00 PM.
+### 🌟 Key Features & Capabilities
+- ⏱️ **30-Minute Slot Reservations**: Smart scheduling prevents double-bookings between 09:00 AM and 05:00 PM.
 - 💳 **Online Payment Processing**: Seamless Razorpay gateway integration with signature verification and email receipts.
-- 📋 **Digital Prescriptions**: Linked directly to patient consultation history and medical logs.
-- 💊 **Integrated Pharmacy Control**: Automatic inventory updates tied directly to prescribed medications.
-- 🔍 **Instant Doctor Search**: Public guest discovery by department, specialization, room number, or fee without registration.
+- 📋 **Digital Prescriptions**: Linked directly to patient consultation records, tracking diagnosis, dosage, and frequency.
+- 💊 **Pharmacy Inventory Control**: Real-time medicine stock updates linked automatically to digital prescription issuance.
+- 🔍 **Guest Doctor Discovery**: Allows visitors to search doctors by specialty, consultation fee, or room number without logging in.
+
+---
+
+## 🖼️ Application Screenshots & UI Preview
+
+<details open>
+<summary><b>✨ Click to expand Visual Application Screenshots</b></summary>
+
+<br/>
+
+### 1. Homepage & Quick Doctor Search
+![Homepage](docs_images/landing_page.png)
+
+---
+
+### 2. Patient Portal Dashboard
+![Patient Dashboard](docs_images/patient_dashboard.png)
+
+---
+
+### 3. Administrator Control Panel
+![Admin Control Panel](docs_images/admin_dashboard.png)
+
+---
+
+### 4. Authentication & User Registration
+<p align="center">
+  <img src="docs_images/login_page.png" width="48%" alt="Login Page" />
+  &nbsp;
+  <img src="docs_images/register_page.png" width="48%" alt="Registration Page" />
+</p>
+</details>
 
 ---
 
 ## 📖 Interactive Documentation Center
 
-Click on any section below to explore the detailed technical specifications, architecture diagrams, and system designs:
-
 <details>
-<summary><b>📁 1. Project Repository Structure</b></summary>
+<summary><b>📁 1. Project Directory & Architecture</b></summary>
 
-HMS follows a clean monorepo architecture separating the Spring Boot 3.x backend service and the React 18 SPA frontend:
+HMS follows a clean, decoupled monorepo architecture featuring a **Spring Boot 3.x** backend service and a **React 18 SPA** frontend, orchestrated via Docker Compose:
 
 ```
 Hospital-Management-System/
-├── Back-hospital-management-system/          # Spring Boot 3.x REST API Backend
+├── Back-hospital-management-system/          # Spring Boot 3.x Backend Service
 │   ├── src/main/java/com/hospital/hospital_management_system/
-│   │   ├── RestController/                    # REST Controller Endpoints
+│   │   ├── RestController/                    # REST API Controllers (Auth, Doctor, Appts, Payment)
 │   │   ├── service/                           # Core Business Services & Integrations
-│   │   ├── model/                             # Hibernate Entity Models (10 Core Tables)
+│   │   ├── model/                             # JPA Entity Definitions (10 Core Tables)
 │   │   ├── repository/                        # Spring Data JPA Repositories
 │   │   ├── DTO/                               # Data Transfer Objects
-│   │   ├── config/                            # Security, CORS, & Mail Configurations
+│   │   ├── config/                            # Security, CORS, & Mail Configuration
 │   │   ├── filter/                            # JWT Security Filters
-│   │   ├── utils/                             # Utility & Helper Classes
-│   │   └── Exceptions/                        # Global Exception Handlers
-│   ├── Dockerfile                             # Backend Docker Configuration
-│   └── pom.xml                                # Maven Dependencies & Build Configuration
+│   │   ├── utils/                             # Token & Verification Utilities
+│   │   └── Exceptions/                        # Custom Global Exception Handlers
+│   ├── Dockerfile                             # Backend Dockerfile
+│   └── pom.xml                                # Maven Dependencies
 │
-├── Front-hospital-management-system/          # React 18 SPA Frontend
+├── Front-hospital-management-system/          # React 18 SPA Frontend Service
 │   └── hospital managment system/
 │       ├── src/
-│       │   ├── admin/                         # Admin Dashboard & Roster Management Views
-│       │   ├── doctor/                        # Doctor Portal & Prescription Issuance Views
-│       │   ├── patient/                       # Patient Portal, Doctor Search & Booking Views
+│       │   ├── admin/                         # Admin Dashboard & Roster Views
+│       │   ├── doctor/                        # Doctor Portal & Prescription Issuance
+│       │   ├── patient/                       # Patient Portal, Doctor Search & Booking
 │       │   ├── components/                    # Reusable UI Components & Modals
-│       │   ├── config/                        # Axios Interceptors & Endpoint Routes
-│       │   ├── utils/                         # Token Management & Helpers
+│       │   ├── config/                        # Axios Interceptors & Routes
+│       │   ├── utils/                         # Token Management
 │       │   ├── App.jsx                        # Main Application Gateway
 │       │   └── main.jsx                       # React DOM Entrypoint
-│       ├── Dockerfile                             # Frontend Docker Configuration
+│       ├── Dockerfile                         # Frontend Dockerfile
 │       ├── nginx.conf                         # Nginx Reverse Proxy Config
 │       └── package.json                       # Dependencies & Scripts
 │
+├── docs_images/                               # Architecture Diagrams & Screenshots
 ├── docker-compose.yml                         # Container Orchestration
-├── .env                                       # Environment Configuration
-└── README.md                                  # Documentation
+├── utkarshhsmreport.pdf                       # System Architectural PDF Report
+└── README.md                                  # Repository Documentation
 ```
 </details>
 
 <details>
-<summary><b>👥 2. User Roles & Workflow Capabilities</b></summary>
-
-```
-                  ┌──────────────────────────────────────────────┐
-                  │          Hospital Management System          │
-                  └──────┬─────────────────┬──────────────┬──────┘
-                         │                 │              │
-           ┌─────────────┴─────┐    ┌──────┴───────┐   ┌──┴──────────┐
-           │   Patient / User  │    │    Doctor    │   │ Admin User  │
-           └─────────────┬─────┘    └──────┬───────┘   └──┬──────────┘
-                         │                 │              │
-     • Quick Doctor Search                 │              │
-     • 30-Min Slot Booking                 │              │
-     • Razorpay Online Payment             │              │
-     • View Prescriptions & History ───────┼──────────────┤
-     • Profile & Password Reset            │              │
-                                   • Manage Availability  │
-                                   • Issue Prescriptions  │
-                                   • Review Patient List  │
-                                                          • Doctor Onboarding
-                                                          • Department Config
-                                                          • Pharmacy Stock
-                                                          • System Analytics
-```
-</details>
-
-<details>
-<summary><b>📐 3. System Architecture & Flow Diagrams</b></summary>
+<summary><b>📐 2. Visual Architecture & Flow Diagrams</b></summary>
 
 ### Use Case Diagram
-```mermaid
-graph LR
-    subgraph Users ["System Actors"]
-        Patient["👨‍⚕️ Patient / User"]
-        Doctor["🩺 Doctor"]
-        Admin["👑 Administrator"]
-    end
-
-    subgraph HMS ["Hospital Management System"]
-        UC1["Login & Registration"]
-        UC2["Quick Doctor Search"]
-        UC3["Book Appointment Slot"]
-        UC4["Make Online Payment"]
-        UC5["View My Prescriptions"]
-        UC6["Issue Prescription & Dosage"]
-        UC7["Manage Doctor & Department Roster"]
-        UC8["Pharmacy Inventory Stock Control"]
-    end
-
-    Patient --> UC1
-    Patient --> UC2
-    Patient --> UC3
-    Patient --> UC4
-    Patient --> UC5
-
-    Doctor --> UC1
-    Doctor --> UC3
-    Doctor --> UC5
-    Doctor --> UC6
-
-    Admin --> UC1
-    Admin --> UC7
-    Admin --> UC8
-```
+![Use Case Diagram](docs_images/diagram_usecase.png)
 
 ---
 
 ### Level-1 Data Flow Diagram (DFD)
-```mermaid
-graph TD
-    User["👨‍⚕️ Patient / Guest"] -->|Credentials / Search Query| P1["1.0 Authentication & Search"]
-    P1 <-->|Read / Write User Data| D1[("D1: User_DB")]
-    P1 <-->|Read Doctor Schedules| D2[("D2: Doctor_DB")]
-
-    User -->|Select Time Slot & Doctor| P2["2.0 Appointment Booking"]
-    P2 -->|Reserve Appointment| D3[("D3: Appointment_DB")]
-
-    User -->|Payment Info| P3["3.0 Razorpay Payment Processing"]
-    P3 -->|Update Transaction Ledger| D4[("D4: Payment_DB")]
-
-    Doc["🩺 Doctor / Admin"] -->|Prescription & Stock Update| P4["4.0 Clinical & Inventory Service"]
-    P4 -->|Write Medical Record| D5[("D5: Prescription_DB")]
-    P4 -->|Deduct Stock| D6[("D6: Pharmacy_DB")]
-```
+![Data Flow Diagram](docs_images/diagram_dfd.png)
 
 ---
 
-### Service Layer Architecture
-```mermaid
-classDiagram
-    class PatientController {
-        +getPatientProfile()
-        +updateProfile()
-        +getMedicalHistory()
-    }
-    class DoctorController {
-        +getAllDoctors()
-        +getAvailableSlots()
-        +addConsultationNotes()
-    }
-    class AdminController {
-        +registerDoctor()
-        +manageDepartments()
-        +updateInventory()
-    }
-    class AppointmentsService {
-        +createAppointment()
-        +cancelAppointment()
-        +getPatientAppointments()
-    }
-    class PaymentService {
-        +createRazorpayOrder()
-        +verifyPaymentSignature()
-        +getPaymentLedger()
-    }
-    class PrescriptionService {
-        +issuePrescription()
-        +getPrescriptionByAppt()
-    }
+### System Class Diagram Architecture
+![Class Diagram Architecture](docs_images/diagram_class.png)
 
-    PatientController --> AppointmentsService
-    DoctorController --> PrescriptionService
-    AdminController --> DoctorController
-    AppointmentsService --> PaymentService
-```
+---
+
+### Entity Relationship Diagram (10 Database Tables)
+![Entity Relationship Diagram](docs_images/diagram_er.png)
 </details>
 
 <details>
-<summary><b>🗄️ 4. Relational Database Schema (10 Core Tables)</b></summary>
+<summary><b>🗄️ 3. Relational Database Schema (10 Core Tables)</b></summary>
 
-### 1. `users` — Account Identity Store
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `userid` | BigInt(20) | PK, Auto Increment | Account ID |
-| `email` | Varchar(255) | Unique, Not Null | Login email address |
-| `password` | Varchar(255) | Not Null | BCrypt hashed password |
-| `firstName` | Varchar(30) | Nullable | First name |
-| `lastName` | Varchar(30) | Nullable | Last name |
-| `contactdetails` | Varchar(10) | Not Null | 10-digit mobile number |
-| `address` | Varchar(255) | Nullable | Residential address |
-| `profile_photo` | Varchar(255) | Nullable | Profile photo URL |
-| `date_of_birth` | Date | Not Null | Date of birth |
-| `timeofcreation` | Timestamp | Not Null | Account creation time |
-| `UserRole` | Varchar(50) | Enum | `PATIENT`, `DOCTOR`, `ADMIN` |
+### 1. `users` Table — Account Identity Store
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `userid` | BigInt | 20 | No | Primary Key | Unique user account ID |
+| `email` | Varchar | 255 | No | Unique | Login email address |
+| `password` | Varchar | 255 | No | None | BCrypt hashed password |
+| `firstName` | Varchar | 30 | Yes | None | User first name |
+| `lastName` | Varchar | 30 | Yes | None | User last name |
+| `contactdetails` | Varchar | 10 | No | None | 10-digit mobile number |
+| `address` | Varchar | 255 | Yes | None | Residential address |
+| `profile_photo` | Varchar | 255 | Yes | None | Profile picture URL |
+| `date_of_birth` | Date | - | No | None | Date of birth |
+| `timeofcreation` | Timestamp | - | No | None | Creation timestamp |
+| `UserRole` | Varchar | 50 | Yes | Enum | `PATIENT`, `DOCTOR`, `ADMIN` |
 
-### 2. `patients` — Patient Profile Details
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `patient_id` | BigInt(20) | PK, Auto Increment | Patient ID |
-| `user_id` | BigInt(20) | FK ➔ `users(userid)` | Linked user account |
-| `blood_group` | Varchar(10) | Nullable | Blood group |
-| `emergency_contact_name` | Varchar(50) | Nullable | Emergency contact name |
-| `emergency_contact_number` | Varchar(15) | Nullable | Emergency contact phone |
-| `emergency_contact_relation` | Varchar(20) | Nullable | Contact relationship |
-| `description` | Varchar(255) | Nullable | Patient background notes |
+### 2. `patients` Table — Patient Metadata
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `patient_id` | BigInt | 20 | No | Primary Key | Patient record ID |
+| `user_id` | BigInt | 20 | No | FK (Unique) | Linked `users(userid)` |
+| `blood_group` | Varchar | 10 | Yes | None | Blood group |
+| `emergency_contact_name` | Varchar | 50 | Yes | None | Emergency contact name |
+| `emergency_contact_number` | Varchar | 15 | Yes | None | Emergency contact phone |
+| `emergency_contact_relation` | Varchar | 20 | Yes | None | Contact relationship |
+| `description` | Varchar | 255 | Yes | None | Background notes |
 
-### 3. `doctor` — Medical Practitioner Directory
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `doctorid` | BigInt(20) | PK, Auto Increment | Doctor ID |
-| `user_id` | BigInt(20) | FK ➔ `users(userid)` | Linked user account |
-| `department_id` | BigInt(20) | FK ➔ `department(departmentId)` | Assigned department |
-| `specialization` | Varchar(255) | Not Null | Medical specialty |
-| `qualification` | Varchar(255) | Not Null | Degrees (e.g., MBBS, MD) |
-| `yearsOfExperience` | Int(11) | Not Null | Years of practice |
-| `consultationFee` | Double(10,2) | Not Null | Consultation charge |
-| `licenseNumber` | Varchar(255) | Unique, Not Null | Medical license number |
-| `roomNumber` | Int(11) | Nullable | Consultation room number |
-| `availabilityStatus` | Varchar(50) | Enum | `AVAILABLE`, `NOT_AVAILABLE`, `ON_LEAVE` |
-| `description` | Varchar(1000) | Nullable | Doctor biography |
+### 3. `doctor` Table — Doctor Directory
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `doctorid` | BigInt | 20 | No | Primary Key | Doctor record ID |
+| `user_id` | BigInt | 20 | No | FK (Unique) | Linked `users(userid)` |
+| `department_id` | BigInt | 20 | Yes | FK | Linked `department(departmentId)` |
+| `specialization` | Varchar | 255 | No | None | Medical specialty |
+| `qualification` | Varchar | 255 | No | None | Academic degrees |
+| `yearsOfExperience` | Int | 11 | No | None | Years of clinical practice |
+| `consultationFee` | Double | 10,2 | No | None | Consultation charge |
+| `licenseNumber` | Varchar | 255 | No | Unique | Medical license number |
+| `roomNumber` | Int | 11 | Yes | None | OPD room number |
+| `availabilityStatus` | Varchar | 50 | Yes | Enum | `AVAILABLE`, `NOT_AVAILABLE`, `ON_LEAVE` |
+| `description` | Varchar | 1000 | Yes | None | Bio summary |
 
-### 4. `department` — Clinical Departments
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `departmentId` | BigInt(20) | PK, Auto Increment | Department ID |
-| `departmentName` | Varchar(255) | Unique, Not Null | Department name |
-| `description` | Varchar(500) | Nullable | Department overview |
+### 4. `department` Table — Hospital Departments
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `departmentId` | BigInt | 20 | No | Primary Key | Department ID |
+| `departmentName` | Varchar | 255 | No | Unique | Department title |
+| `description` | Varchar | 500 | Yes | None | Clinical services summary |
 
-### 5. `appointments` — Consultation Ledger
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `appointment_id` | BigInt(20) | PK, Auto Increment | Appointment ID |
-| `patient_id` | BigInt(20) | FK ➔ `patients` | Patient ID |
-| `doctor_id` | BigInt(20) | FK ➔ `doctor` | Doctor ID |
-| `department_id` | BigInt(20) | FK ➔ `department` | Department ID |
-| `appointment_date` | Date | Not Null | Date of consultation |
-| `appointment_start_time` | Time | Not Null | Slot start time |
-| `appointment_end_time` | Time | Not Null | Slot end time |
-| `appointmentType` | Varchar(50) | Enum | Consultation type |
-| `status` | Varchar(50) | Enum | `PENDING`, `CONFIRMED`, `CANCELLED`, `COMPLETED` |
-| `remarks` | Varchar(500) | Nullable | Notes |
+### 5. `appointments` Table — Booking Ledger
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `appointment_id` | BigInt | 20 | No | Primary Key | Booking ID |
+| `patient_id` | BigInt | 20 | No | FK | Linked `patients` |
+| `doctor_id` | BigInt | 20 | No | FK | Linked `doctor` |
+| `department_id` | BigInt | 20 | No | FK | Linked `department` |
+| `appointment_date` | Date | - | No | None | Consultation date |
+| `appointment_start_time` | Time | - | No | None | Slot start time (09:00 - 17:00) |
+| `appointment_end_time` | Time | - | No | None | Slot end time |
+| `appointmentType` | Varchar | 50 | No | Enum | Consultation type |
+| `status` | Varchar | 50 | No | Enum | `PENDING`, `CONFIRMED`, `CANCELLED`, `COMPLETED` |
+| `remarks` | Varchar | 500 | Yes | None | Additional notes |
 
-### 6. `payments` — Transaction Audit Log
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `payment_id` | BigInt(20) | PK, Auto Increment | Payment ID |
-| `appointment_id` | BigInt(20) | FK ➔ `appointments` | Booking ID |
-| `patient_id` | BigInt(20) | FK ➔ `patients` | Patient ID |
-| `doctor_id` | BigInt(20) | FK ➔ `doctor` | Doctor ID |
-| `razorpay_order_id` | Varchar(100) | Unique, Not Null | Razorpay order ID |
-| `razorpay_payment_id` | Varchar(255) | Unique, Nullable | Gateway payment ID |
-| `razorpay_signature` | Varchar(500) | Nullable | HMAC SHA-256 signature |
-| `receipt_number` | Varchar(255) | Unique, Not Null | Receipt reference |
-| `amount` | Decimal(10,2) | Not Null | Transaction amount |
-| `currency` | Varchar(10) | Not Null | Currency code |
-| `payment_method` | Varchar(50) | Enum | Payment mode |
-| `order_status` | Varchar(50) | Enum | Order processing state |
-| `payment_status` | Varchar(50) | Enum | `PENDING`, `SUCCESS`, `FAILED` |
-| `paid_at` | Timestamp | Nullable | Payment confirmation timestamp |
-| `created_at` | Timestamp | Nullable | Order creation timestamp |
+### 6. `payments` Table — Transaction Audit Log
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `payment_id` | BigInt | 20 | No | Primary Key | Payment transaction ID |
+| `appointment_id` | BigInt | 20 | No | FK | Linked `appointments` |
+| `patient_id` | BigInt | 20 | No | FK | Linked `patients` |
+| `doctor_id` | BigInt | 20 | No | FK | Linked `doctor` |
+| `razorpay_order_id` | Varchar | 100 | No | Unique | Gateway order ID |
+| `razorpay_payment_id` | Varchar | 255 | Yes | Unique | Gateway payment ID |
+| `razorpay_signature` | Varchar | 500 | Yes | None | HMAC SHA-256 signature |
+| `receipt_number` | Varchar | 255 | No | Unique | Receipt reference |
+| `amount` | Decimal | 10,2 | No | None | Transaction total amount |
+| `currency` | Varchar | 10 | No | None | Currency identifier |
+| `payment_method` | Varchar | 50 | Yes | Enum | Card, UPI, Netbanking |
+| `order_status` | Varchar | 50 | Yes | Enum | Processing state |
+| `payment_status` | Varchar | 50 | Yes | Enum | `PENDING`, `SUCCESS`, `FAILED` |
+| `paid_at` | Timestamp | - | Yes | None | Payment success timestamp |
+| `created_at` | Timestamp | - | Yes | None | Payment initiation timestamp |
 
-### 7. `medicine_master` — Pharmacy Inventory
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `medicine_id` | BigInt(20) | PK, Auto Increment | Medicine ID |
-| `medicine_name` | Varchar(100) | Not Null | Medicine name |
-| `generic_name` | Varchar(100) | Nullable | Active ingredient |
-| `manufacturer` | Varchar(100) | Nullable | Manufacturer |
-| `strength` | Varchar(50) | Nullable | Dosage strength |
-| `dosage_form` | Varchar(50) | Nullable | Tablet, Syrup, etc. |
-| `is_active` | Boolean | Not Null | Stock active status |
+### 7. `medicine_master` Table — Pharmacy Stock
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `medicine_id` | BigInt | 20 | No | Primary Key | Medicine inventory ID |
+| `medicine_name` | Varchar | 100 | No | None | Commercial name |
+| `generic_name` | Varchar | 100 | Yes | None | Active ingredient |
+| `manufacturer` | Varchar | 100 | Yes | None | Manufacturer |
+| `strength` | Varchar | 50 | Yes | None | Dosage strength |
+| `dosage_form` | Varchar | 50 | Yes | None | Tablet, Syrup, etc. |
+| `is_active` | Boolean | 1 | No | None | Active stock flag |
 
-### 8. `prescription` — Diagnostic Headers
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `prescription_id` | BigInt(20) | PK, Auto Increment | Prescription ID |
-| `appointment_id` | BigInt(20) | FK ➔ `appointments` | Appointment reference |
-| `diagnosis` | Varchar(500) | Not Null | Diagnosis summary |
-| `notes` | Varchar(1000) | Nullable | Doctor advice |
-| `createdAt` | Timestamp | Nullable | Issuance timestamp |
+### 8. `prescription` Table — Diagnostic Headers
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `prescription_id` | BigInt | 20 | No | Primary Key | Digital prescription ID |
+| `appointment_id` | BigInt | 20 | No | FK (Unique) | Linked `appointments` |
+| `diagnosis` | Varchar | 500 | No | None | Clinical diagnosis notes |
+| `notes` | Varchar | 1000 | Yes | None | Doctor advice and instructions |
+| `createdAt` | Timestamp | - | Yes | None | Timestamp of creation |
 
-### 9. `prescription_medicine` — Prescribed Medications
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `prescription_medicine_id` | BigInt(20) | PK, Auto Increment | Line item ID |
-| `prescription_id` | BigInt(20) | FK ➔ `prescription` | Prescription ID |
-| `medicine_id` | BigInt(20) | FK ➔ `medicine_master` | Medicine ID |
-| `dosage` | Varchar(50) | Not Null | Unit dosage |
-| `frequency` | Varchar(50) | Not Null | Intake frequency |
-| `duration` | Varchar(50) | Not Null | Intake duration |
-| `instructions` | Varchar(300) | Nullable | Special instructions |
-| `quantity` | Varchar(30) | Nullable | Dispensed quantity |
+### 9. `prescription_medicine` Table — Prescribed Line Items
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `prescription_medicine_id` | BigInt | 20 | No | Primary Key | Record ID |
+| `prescription_id` | BigInt | 20 | No | FK | Linked `prescription` |
+| `medicine_id` | BigInt | 20 | No | FK | Linked `medicine_master` |
+| `dosage` | Varchar | 50 | No | None | Unit dosage |
+| `frequency` | Varchar | 50 | No | None | Intake frequency |
+| `duration` | Varchar | 50 | No | None | Course duration |
+| `instructions` | Varchar | 300 | Yes | None | Specific instructions |
+| `quantity` | Varchar | 30 | Yes | None | Quantity dispensed |
 
-### 10. `password_reset_token` — Security Tokens
-| Column | Data Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `id` | BigInt(20) | PK, Auto Increment | Token entry ID |
-| `token` | Varchar(255) | Unique, Not Null | Secure UUID token |
-| `user_id` | BigInt(20) | FK ➔ `users` | Linked user ID |
-| `expiryTime` | Timestamp | Not Null | Expiration timestamp |
-| `used` | Boolean | Not Null | Token used status |
+### 10. `password_reset_token` Table — Security Tokens
+| Column Name | Data Type | Length | Allow Null | Constraint | Description |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `id` | BigInt | 20 | No | Primary Key | Token entry ID |
+| `token` | Varchar | 255 | No | Unique | Secure UUID token |
+| `user_id` | BigInt | 20 | Yes | FK | Linked `users(userid)` |
+| `expiryTime` | Timestamp | - | No | None | Token expiration timestamp |
+| `used` | Boolean | 1 | No | None | Token consumption status |
 </details>
 
 <details>
-<summary><b>💻 5. Code Standards & Naming Conventions</b></summary>
+<summary><b>💻 4. Code Standards & Conventions</b></summary>
 
 | Identifier Category | Casing Pattern | Example Implementation | Context & Rules |
 | :--- | :--- | :--- | :--- |
@@ -359,7 +282,7 @@ classDiagram
 </details>
 
 <details>
-<summary><b>🗓️ 6. Development Milestones & History</b></summary>
+<summary><b>🗓️ 5. Development Milestones & History</b></summary>
 
 ```
 2026-04-12  ──  Project Kickoff & Requirements Planning
@@ -375,7 +298,7 @@ classDiagram
 2026-08-05  ──  Security Audit & Role-Based Access Control Checks
 2026-08-07  ──  Pilot Trial & Staff Workflow Optimization
 2026-08-09  ──  Query Index Optimization & Performance Tuning
-2026-08-11  ──  Production Build Compilation & AWS Cloud Deployment
+2026-08-11  ──  Production Deployment on AWS EC2 & RDS
 ```
 </details>
 
