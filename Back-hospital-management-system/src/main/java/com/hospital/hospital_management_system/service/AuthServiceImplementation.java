@@ -39,14 +39,6 @@ public class AuthServiceImplementation implements AuthService {
     @Value("${frontend.url}")
     private String frontendUrl;
 
-
-    @PostConstruct
-    public void generateRandomPassword(){
-        System.out.println("Patient-"+passwordEncoder.encode("patient123"));
-        System.out.println("Doctor:-"+passwordEncoder.encode("doctor123"));
-        System.out.println("Admin:-"+passwordEncoder.encode("admin123"));
-    }
-
     @Override
     public ResponseDTO registerUser(RegistrationDTO dto) {
 
@@ -65,7 +57,6 @@ public class AuthServiceImplementation implements AuthService {
         user.setAddress(dto.getAddress());
         user.setProfilePhoto(dto.getProfilephoto());
 
-
         User savedUser = userRepo.save(user);
 
         return new ResponseDTO(savedUser.getUser_role(), "User Created Successfully");
@@ -74,7 +65,8 @@ public class AuthServiceImplementation implements AuthService {
     @Override
     public LoginResponseDTO login(LoginRequestDTO dto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
-        User u = userRepo.findByEmail(dto.getEmail()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
+        User u = userRepo.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
         String token = jwtUtils.generateJwtToken(u.getEmail());
 
         return new LoginResponseDTO(token, u.getUser_role(), "Login Successfully");
@@ -103,7 +95,8 @@ public class AuthServiceImplementation implements AuthService {
 
     @Override
     public ResponseDTO resetPassword(ResetPasswordDTO dto) {
-        PasswordResetToken resetToken = passwordResetRepo.findByToken(dto.getToken()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid password reset token"));
+        PasswordResetToken resetToken = passwordResetRepo.findByToken(dto.getToken())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid password reset token"));
 
         if (resetToken.isUsed()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token has already been used");
