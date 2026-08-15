@@ -36,7 +36,7 @@ public class AuthServiceImplementation implements AuthService {
     private final PasswordResetRepo passwordResetRepo;
     private final EmailService emailService;
 
-    @Value("${frontend.url:http://localhost:5173}")
+    @Value("${frontend.url}")
     private String frontendUrl;
 
 
