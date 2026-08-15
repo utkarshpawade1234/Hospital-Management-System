@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -74,12 +75,27 @@ public class SecurityConfig {
 
             CorsConfiguration configuration = new CorsConfiguration();
 
-            configuration.setAllowedOrigins(List.of(
-                    frontendUrl,
+            List<String> origins = new ArrayList<>();
+            if (frontendUrl != null && !frontendUrl.isBlank()) {
+                for (String origin : frontendUrl.split(",")) {
+                    origins.add(origin.trim());
+                }
+            }
+            // Explicitly list all approved web, EC2, and mobile app/emulator origins (No wildcard "*")
+            origins.addAll(List.of(
                     "http://13.233.68.7",
+                    "http://13.233.68.7:80",
+                    "http://13.233.68.7:8080",
                     "http://localhost:5173",
-                    "http://localhost:3000"
+                    "http://localhost:3000",
+                    "http://localhost:8080",
+                    "http://10.0.2.2:8080",
+                    "http://10.0.2.2:5173",
+                    "capacitor://localhost",
+                    "http://localhost"
             ));
+
+            configuration.setAllowedOrigins(origins.stream().distinct().toList());
 
             configuration.setAllowedMethods(List.of(
                     "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
