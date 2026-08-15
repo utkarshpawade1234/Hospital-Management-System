@@ -94,8 +94,7 @@ public class AuthServiceImplementation implements AuthService {
 
         passwordResetRepo.save(resetToken);
 
-        String baseUrl = (frontendUrl != null && !frontendUrl.isEmpty()) ? frontendUrl.replaceAll("/+$", "") : "http://localhost:5173";
-        String resetLink = baseUrl + "/reset-password?token=" + token;
+        String resetLink = frontendUrl + "/reset-password?token=" + token;
 
         emailService.sendPasswordResetEmail(dto.getEmail(), u.getFirstName() + " " + u.getLastName(), resetLink);
 
