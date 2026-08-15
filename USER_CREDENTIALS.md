@@ -82,4 +82,3 @@ This guide provides login credentials for all user roles (Admin, Doctors, and Pa
 | **39** | Kavya Hegde | `kavya.hegde@gmail.com` | `patient123` |
 | **40** | Shaurya Singh | `shaurya.singh@gmail.com` | `patient123` |
 | **41** | Vivaan Malhotra | `vivaan.malhotra@gmail.com` | `patient123` |
-| **43** | Utkarsh Pawade | `utkarshpawade9@gmail.com` | `patient123` |
