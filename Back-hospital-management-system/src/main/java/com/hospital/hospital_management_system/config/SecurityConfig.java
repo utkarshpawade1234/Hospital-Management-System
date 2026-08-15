@@ -87,7 +87,9 @@ public class SecurityConfig {
                 configuration.setAllowedOrigins(List.of(
                                 frontendUrl,
                                 "http://medicare-hospital.duckdns.org",
+                                "https://medicare-hospital.duckdns.org",
                                 "http://13.233.68.7",
+                                "http://13.233.68.7:8080",
                                 "http://localhost:5173",
                                 "http://localhost:3000"));
 
