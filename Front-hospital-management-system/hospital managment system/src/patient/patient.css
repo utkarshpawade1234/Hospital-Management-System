@@ -903,3 +903,105 @@ body {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ─── Mobile Responsiveness (< 768px & < 480px) ────────────────────────── */
+@media (max-width: 768px) {
+  .auth-root {
+    padding: 16px 12px;
+  }
+
+  .auth-card,
+  .auth-card.auth-card-wide {
+    padding: 24px 18px;
+    border-radius: 12px;
+    max-width: 100%;
+  }
+
+  .patient-page,
+  .patient-container,
+  .page-container {
+    padding: 16px 12px 32px !important;
+  }
+
+  .form-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .form-group {
+    width: 100% !important;
+  }
+
+  .stats-grid,
+  .grid-2-col,
+  .grid-3-col,
+  .grid-4-col,
+  .doctor-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .table-responsive,
+  .table-container {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  table {
+    min-width: 600px;
+  }
+
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal {
+    padding: 20px 16px !important;
+    max-width: 100% !important;
+    border-radius: 12px !important;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+
+  .doctor-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .doctor-card-actions {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .doctor-card-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-title {
+    font-size: 19px;
+  }
+
+  .auth-subtitle {
+    font-size: 12px;
+  }
+
+  .btn,
+  .auth-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+

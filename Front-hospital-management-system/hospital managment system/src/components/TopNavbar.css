@@ -213,6 +213,14 @@
 }
 
 @media (max-width: 900px) {
+  .shared-nav-container {
+    padding: 0 12px;
+  }
+
+  .shared-nav-logo {
+    font-size: 16px;
+  }
+
   .shared-nav-links,
   .user-meta,
   .chevron-icon {
@@ -230,6 +238,7 @@
   .shared-mobile-menu .shared-nav-link {
     width: 100%;
     padding: 10px 14px;
+    font-size: 14px;
   }
 
   .mobile-logout {
@@ -237,3 +246,4 @@
     padding: 10px 14px;
   }
 }
+
