@@ -22,7 +22,8 @@ public class AdminController {
 
     @GetMapping("/patients")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<Patient>> getAllPatients(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<Patient>> getAllPatients(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.getAllPatients(page, size));
     }
 
@@ -34,13 +35,15 @@ public class AdminController {
 
     @GetMapping("/patients/search")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<PatientDTO>> searchPatient(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<PatientDTO>> searchPatient(@RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.searchPatient(keyword, page, size));
     }
 
     @GetMapping("/doctors")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<DoctorDTO>> getAllDoctors(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<DoctorDTO>> getAllDoctors(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.getAllDoctors(page, size));
     }
 
@@ -52,7 +55,8 @@ public class AdminController {
 
     @GetMapping("/doctors/search")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<DoctorDTO>> searchDoctor(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<DoctorDTO>> searchDoctor(@RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.searchDoctor(keyword, page, size));
     }
 
@@ -76,7 +80,8 @@ public class AdminController {
 
     @PutMapping("/departments/{departmentId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> updateDepartment(@PathVariable Long departmentId, @Valid @RequestBody DepartmentUpdateDTO departmentUpdateDTO) {
+    public ResponseEntity<ResponseDTO> updateDepartment(@PathVariable Long departmentId,
+            @Valid @RequestBody DepartmentUpdateDTO departmentUpdateDTO) {
         return ResponseEntity.ok(adminService.updateDepartment(departmentId, departmentUpdateDTO));
     }
 
@@ -88,7 +93,8 @@ public class AdminController {
 
     @GetMapping("/departments/{departmentId}/doctors")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<DoctorDTO>> getDoctorsByDepartment(@PathVariable Long departmentId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<DoctorDTO>> getDoctorsByDepartment(@PathVariable Long departmentId,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.getDoctorsByDepartment(departmentId, page, size));
     }
 
@@ -100,7 +106,8 @@ public class AdminController {
 
     @GetMapping("/appointments")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<ReqAppointmentDTO>> getAllAppointments(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReqAppointmentDTO>> getAllAppointments(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.getAllAppointments(page, size));
     }
 
@@ -118,25 +125,29 @@ public class AdminController {
 
     @GetMapping("/appointments/status/{status}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByStatus(@PathVariable AppointmentStatus status, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByStatus(@PathVariable AppointmentStatus status,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.getAppointmentsByStatus(status, page, size));
     }
 
     @GetMapping("/appointments/doctor/{doctorId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByDoctor(@PathVariable Long doctorId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByDoctor(@PathVariable Long doctorId,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.getAppointmentsByDoctor(doctorId, page, size));
     }
 
     @GetMapping("/appointments/patient/{patientId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByPatient(@PathVariable Long patientId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReqAppointmentDTO>> getAppointmentsByPatient(@PathVariable Long patientId,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.getAppointmentsByPatient(patientId, page, size));
     }
 
     @PatchMapping("/appointments/{appointmentId}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> updateAppointmentStatus(@PathVariable Long appointmentId, @RequestParam AppointmentStatus status) {
+    public ResponseEntity<ResponseDTO> updateAppointmentStatus(@PathVariable Long appointmentId,
+            @RequestParam AppointmentStatus status) {
         return ResponseEntity.ok(adminService.updateAppointmentStatus(appointmentId, status));
     }
 

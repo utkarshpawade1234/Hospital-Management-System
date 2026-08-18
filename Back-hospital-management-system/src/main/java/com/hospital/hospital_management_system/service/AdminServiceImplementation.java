@@ -33,19 +33,20 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     public Page<Patient> getAllPatients(int page, int size) {
-        return patientRepo.findAll(PageRequest.of(page, size));
+        return patientRepo.findByUser_IsDeletedFalse(PageRequest.of(page, size));
     }
 
     @Override
     public Page<DoctorDTO> getAllDoctors(int page, int size) {
-        Page<Doctor> doctors = doctorRepo.findAll(PageRequest.of(page, size));
+        Page<Doctor> doctors = doctorRepo.findByUser_IsDeletedFalse(PageRequest.of(page, size));
         return doctors.map(commonMethods::convertToDTO);
 
     }
 
     @Override
     public Page<ReqAppointmentDTO> getAllAppointments(int page, int size) {
-        Page<Appointment> appointments = appointmentRepo.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")));
+        Page<Appointment> appointments = appointmentRepo
+                .findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")));
         return appointments.map(commonMethods::convertToAppointmentDTO);
     }
 
@@ -55,12 +56,15 @@ public class AdminServiceImplementation implements AdminService {
         Doctor doctor = doctorRepo.findById(doctorId)
                 .orElseThrow(() -> new DoctorNotFoundException("No such doctor is found within the records"));
 
+        doctor.setAvailabilityStatus(Doctor.AvailabilityStatus.NOT_AVAILABLE);
+        doctorRepo.save(doctor);
+
         User user = doctor.getUser();
-        doctorRepo.delete(doctor);
         if (user != null) {
-            userRepo.delete(user);
+            user.setDeleted(true);
+            userRepo.save(user);
         }
-        return new ResponseDTO(Role.ADMIN, "Doctor is deleted successfully");
+        return new ResponseDTO(Role.ADMIN, "Doctor is deactivated successfully");
     }
 
     @Override
@@ -219,19 +223,25 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     public Page<ReqAppointmentDTO> getAppointmentsByStatus(AppointmentStatus status, int page, int size) {
-        return appointmentRepo.findByStatus(status, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
+        return appointmentRepo
+                .findByStatus(status,
+                        PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
                 .map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
     public Page<ReqAppointmentDTO> getAppointmentsByDoctor(Long doctorId, int page, int size) {
-        return appointmentRepo.findByDoctor_doctorId(doctorId, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
+        return appointmentRepo
+                .findByDoctor_doctorId(doctorId,
+                        PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
                 .map(commonMethods::convertToAppointmentDTO);
     }
 
     @Override
     public Page<ReqAppointmentDTO> getAppointmentsByPatient(Long patientId, int page, int size) {
-        return appointmentRepo.findByPatient_patientId(patientId, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
+        return appointmentRepo
+                .findByPatient_patientId(patientId,
+                        PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "appointmentDate", "appointmentId")))
                 .map(commonMethods::convertToAppointmentDTO);
     }
 
@@ -317,7 +327,8 @@ public class AdminServiceImplementation implements AdminService {
                     });
         } else if (dto.getDepartmentId() != null) {
             department = departmentRepo.findById(dto.getDepartmentId())
-                    .orElseThrow(() -> new DepartmentNotFoundException("Department not found with ID: " + dto.getDepartmentId()));
+                    .orElseThrow(() -> new DepartmentNotFoundException(
+                            "Department not found with ID: " + dto.getDepartmentId()));
         }
 
         doctor.setDepartment(department);
@@ -337,11 +348,11 @@ public class AdminServiceImplementation implements AdminService {
                 .orElseThrow(() -> new PatientNotFoundException("No Patient found"));
 
         User user = patient.getUser();
-        patientRepo.delete(patient);
         if (user != null) {
-            userRepo.delete(user);
+            user.setDeleted(true);
+            userRepo.save(user);
         }
-        return new ResponseDTO(Role.ADMIN, "Patient Deleted Successfully");
+        return new ResponseDTO(Role.ADMIN, "Patient Deactivated Successfully");
     }
 
     @Override

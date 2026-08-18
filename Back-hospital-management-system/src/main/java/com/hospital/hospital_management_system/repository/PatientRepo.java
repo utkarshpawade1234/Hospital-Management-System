@@ -23,4 +23,6 @@ public interface PatientRepo extends JpaRepository<Patient,Long> {
     Long findUserId(@Param("patientId") Long patientId);
 
     Page<Patient> findByUser_FirstNameContainingIgnoreCase(String name, Pageable page);
+
+    Page<Patient> findByUser_IsDeletedFalse(Pageable page);
 }

@@ -159,26 +159,8 @@ public class PatientServiceImplement implements PatientService {
         java.util.Optional<Department> dept = departmentRepo.findByDepartmentNameIgnoreCase(departmentName);
         return dept.map(department -> department.getDoctors().stream().map(commonMethods::convertToDTO).toList()).orElse(java.util.Collections.emptyList());
     }
-
-    @Override
-    public ResponseDTO deletePatient(Long patientId) {
-
-        Patient patient = patientrepo.findById(patientId)
-                .orElseThrow(() -> new PatientNotFoundException("No such Patient Found"));
-
-        Long userId = patient.getUser().getUser_id();
-
-        patientrepo.delete(patient);
-
-        userrepo.deleteById(userId);
-
-        return new ResponseDTO(
-
-                Role.PATIENT,
-                "Patient Deleted Successfully"
-        );
-    }
-
-
-
 }
+
+
+
+

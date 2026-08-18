@@ -59,6 +59,9 @@ public class User implements UserDetails {
     @Column(name = "UserRole")
     private Role user_role;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -89,6 +92,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return !isDeleted;
     }
 }

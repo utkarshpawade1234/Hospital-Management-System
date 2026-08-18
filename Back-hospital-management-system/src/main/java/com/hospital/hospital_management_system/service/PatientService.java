@@ -21,8 +21,4 @@ public interface PatientService {
     List<DoctorDTO> fetchDoctorDetailsBySpecialization(String specialization);
 
     List<DoctorDTO> fetchDoctorDetailsByDepartment(String departmentName);
-
-    ResponseDTO deletePatient(Long patientId);
-
-
 }
