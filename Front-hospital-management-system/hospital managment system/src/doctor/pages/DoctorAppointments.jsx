@@ -4,6 +4,7 @@ import api from "../api";
 import toast from "react-hot-toast";
 import PrescriptionModal from "../components/PrescriptionModal";
 import DoctorPaymentStatus from "../components/DoctorPaymentStatus";
+import { formatDateOnly, formatTime } from "../../utils/formatUtils";
 
 const APPT_STATUS_CLASS = {
   PENDING: "amber",
@@ -145,8 +146,8 @@ export default function DoctorAppointments() {
                         {a.patientName}
                       </div>
                     </td>
-                    <td>{a.appointmentDate}</td>
-                    <td>{a.startTime}</td>
+                    <td>{formatDateOnly(a.appointmentDate)}</td>
+                    <td>{formatTime(a.startTime)}</td>
                     <td>{a.appointmentType}</td>
                     <td>
                       <span className={`pill ${APPT_STATUS_CLASS[a.status] || "blue"}`}>
@@ -245,7 +246,7 @@ export default function DoctorAppointments() {
                 {selected.patientName}
               </h3>
               <p style={{ margin: 0, fontSize: "12px", color: "var(--text-secondary)" }}>
-                {selected.appointmentType} · {selected.appointmentDate}, {selected.startTime}
+                {selected.appointmentType} · {formatDateOnly(selected.appointmentDate)}, {formatTime(selected.startTime)}
               </p>
             </div>
 

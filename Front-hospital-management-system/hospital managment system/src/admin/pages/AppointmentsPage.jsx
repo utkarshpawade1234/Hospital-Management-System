@@ -7,6 +7,7 @@ import {
   getAppointmentsByStatus,
   updateAppointmentStatus,
 } from '../api/adminApi';
+import { formatDateOnly, formatTime } from '../../utils/formatUtils';
 
 const STATUSES = ['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
 
@@ -90,8 +91,8 @@ export default function AppointmentsPage() {
         ? `Doctor #${appt.doctorId}`
         : 'Unassigned Doctor';
 
-    const date = appt.appointmentDate || '—';
-    const time = appt.appointmentTime || appt.startTime || '—';
+    const date = formatDateOnly(appt.appointmentDate);
+    const time = formatTime(appt.appointmentTime || appt.startTime);
     const status = appt.status || '—';
     const type = appt.appointmentType || '—';
     const id = appt.appointmentId || appt.id;

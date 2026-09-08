@@ -15,6 +15,8 @@ import { getMyAppointments, cancelAppointment, getProfile } from '../api/patient
 import ConfirmModal from '../components/ConfirmModal';
 import { getSessionItem, setSessionItem } from '../../utils/sessionStorage';
 
+import { formatDateOnly, formatTime, parseDateSafe } from '../../utils/formatUtils';
+
 const STATUS_MAP = {
   CONFIRMED: { cls: 'pill-green', label: 'Confirmed' },
   PENDING: { cls: 'pill-amber', label: 'Pending' },
@@ -58,9 +60,9 @@ export default function MyAppointmentsPage() {
         if (idA && idB && idA !== idB) {
           return idB - idA;
         }
-        const strA = `${a.appointmentDate || ''}T${a.startTime || '00:00:00'}`;
-        const strB = `${b.appointmentDate || ''}T${b.startTime || '00:00:00'}`;
-        return new Date(strB) - new Date(strA);
+        const timeA = parseDateSafe(a.appointmentDate)?.getTime() || 0;
+        const timeB = parseDateSafe(b.appointmentDate)?.getTime() || 0;
+        return timeB - timeA;
       });
       setAppointments(list);
     } catch {
@@ -153,8 +155,8 @@ export default function MyAppointmentsPage() {
               label: appt.status || 'Pending',
             };
 
-            const date = appt.appointmentDate || '—';
-            const time = appt.startTime || '—';
+            const date = formatDateOnly(appt.appointmentDate);
+            const time = formatTime(appt.startTime);
             const apptType = appt.appointmentType
               ? appt.appointmentType.replace('_', ' ')
               : 'Consultation';

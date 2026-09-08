@@ -13,16 +13,7 @@ import {
   updatePatient,
   deletePatient,
 } from '../api/adminApi';
-
-function calcAge(dob) {
-  if (!dob) return '—';
-  const birth = new Date(dob);
-  const today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-  return age;
-}
+import { formatDateOnly, calcAgeSafe } from '../../utils/formatUtils';
 
 export default function PatientsPage() {
   const [data, setData] = useState([]);
@@ -138,7 +129,7 @@ export default function PatientsPage() {
     const name = `${firstName} ${lastName}`.trim() || '—';
     const initials = `${(firstName || '?')[0]}${(lastName || '')[0] || ''}`.toUpperCase();
     const dob = user.dob || patient.dob;
-    const age = calcAge(dob);
+    const age = calcAgeSafe(dob);
     const email = user.email || patient.email || '—';
     const contact = user.contactNumber || patient.phoneNumber || patient.emergencyContactNumber || '—';
 
@@ -268,11 +259,11 @@ export default function PatientsPage() {
             <DrawerField label="Address" value={drawerData.user?.address} />
             <DrawerField
               label="Date of birth"
-              value={drawerData.user?.dob}
+              value={formatDateOnly(drawerData.user?.dob)}
             />
             <DrawerField
               label="Age"
-              value={calcAge(drawerData.user?.dob)}
+              value={calcAgeSafe(drawerData.user?.dob)}
             />
             <DrawerField label="Blood group" value={drawerData.bloodGroup} />
             <DrawerField

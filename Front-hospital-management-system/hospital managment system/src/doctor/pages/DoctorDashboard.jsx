@@ -7,6 +7,7 @@ import {
   IconChevronDown,
 } from "@tabler/icons-react";
 import api from "../api";
+import { formatDateOnly, formatTime } from "../../utils/formatUtils";
 import useToast from "../components/useToast";
 
 const STATUS_OPTIONS = ["AVAILABLE", "NOT_AVAILABLE", "ON_LEAVE"];
@@ -220,8 +221,8 @@ export default function DoctorDashboard() {
               {recent.map((a) => (
                 <tr key={a.appointmentId}>
                   <td>{a.patientName}</td>
-                  <td>{a.appointmentDate}</td>
-                  <td>{a.startTime}</td>
+                  <td>{formatDateOnly(a.appointmentDate)}</td>
+                  <td>{formatTime(a.startTime)}</td>
                   <td>{a.appointmentType}</td>
                   <td>
                     <span className={`pill ${APPT_STATUS_CLASS[a.status] || "blue"}`}>

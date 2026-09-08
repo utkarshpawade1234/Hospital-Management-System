@@ -3,6 +3,7 @@ import { IconChevronDown, IconChevronUp, IconCalendar, IconUser, IconFileText, I
 import api from "../api/patientAxios";
 import toast from "react-hot-toast";
 import { downloadPrescription } from "../../utils/downloadPrescription";
+import { formatDateOnly } from "../../utils/formatUtils";
 
 export default function PatientPrescriptions() {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -86,7 +87,7 @@ export default function PatientPrescriptions() {
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--text-secondary)" }}>
                       <IconCalendar size={14} />
-                      {pres.appointmentDate}
+                      {formatDateOnly(pres.appointmentDate)}
                     </div>
                   </div>
 

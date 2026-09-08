@@ -2,16 +2,17 @@ version: '3.8'
 
 services:
   backend:
+    image: utkarshpawade1234/medicare-backend:latest
     build:
       context: ./Back-hospital-management-system
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
-      - DB_URL=jdbc:mysql://hospital-db.ct64m60g4evg.ap-south-1.rds.amazonaws.com:3306/hospital_management_system
-      - DB_USERNAME=hospital_admin
-      - DB_PASSWORD=Utkarshpawade
-      - FRONTEND_URL=${FRONTEND_URL:-http://13.233.68.7}
+      - DB_URL=${DB_URL:-jdbc:mysql://hospital-management-db.ckha0eaywwzm.us-east-1.rds.amazonaws.com:3306/hospital_management_system?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
+      - DB_USERNAME=${DB_USERNAME:-hospital_admin}
+      - DB_PASSWORD=${DB_PASSWORD:-Utkarshpawade}
+      - FRONTEND_URL=${FRONTEND_URL:-http://54.196.253.109}
       - MAIL_USERNAME=medicarenotify2003@gmail.com
       - MAIL_PASSWORD=qqdvesqiuoamihbn
       - RAZORPAY_KEY_ID=rzp_test_TLxh0pCseBQt01
@@ -19,6 +20,7 @@ services:
     restart: always
 
   frontend:
+    image: utkarshpawade1234/medicare-frontend:latest
     build:
       context: "./Front-hospital-management-system/hospital managment system"
       dockerfile: Dockerfile
@@ -30,3 +32,4 @@ services:
     depends_on:
       - backend
     restart: always
+
