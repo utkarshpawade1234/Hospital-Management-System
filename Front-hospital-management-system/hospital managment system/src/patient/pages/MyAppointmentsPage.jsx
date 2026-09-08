@@ -53,16 +53,16 @@ export default function MyAppointmentsPage() {
     try {
       const data = await getMyAppointments(patientId);
       const list = Array.isArray(data) ? data : [];
-      // Sort newest first (descending by appointmentId, fallback by date + time)
+      // Sort strictly chronologically by appointment date & time (future/latest dates first)
       list.sort((a, b) => {
-        const idA = Number(a.appointmentId || 0);
-        const idB = Number(b.appointmentId || 0);
-        if (idA && idB && idA !== idB) {
-          return idB - idA;
+        const strA = `${a.appointmentDate || ''}T${a.startTime || '00:00:00'}`;
+        const strB = `${b.appointmentDate || ''}T${b.startTime || '00:00:00'}`;
+        const timeA = new Date(strA).getTime() || 0;
+        const timeB = new Date(strB).getTime() || 0;
+        if (timeA !== timeB) {
+          return timeB - timeA; // Descending by actual appointment date & time
         }
-        const timeA = parseDateSafe(a.appointmentDate)?.getTime() || 0;
-        const timeB = parseDateSafe(b.appointmentDate)?.getTime() || 0;
-        return timeB - timeA;
+        return (Number(b.appointmentId) || 0) - (Number(a.appointmentId) || 0);
       });
       setAppointments(list);
     } catch {
